@@ -2,7 +2,7 @@ package net.etylop.immersivefarming.common.data.generators;
 
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.api.crafting.builders.ComposterRecipeBuilder;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -17,12 +17,12 @@ public class IFRecipes extends RecipeProvider{
     private final Map<String, Integer> PATH_COUNT = new HashMap<>();
 
     protected Consumer<FinishedRecipe> out;
-    public IFRecipes(DataGenerator generatorIn){
-        super(generatorIn);
+    public IFRecipes(PackOutput output){
+        super(output);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> out){
+    protected void buildRecipes(Consumer<FinishedRecipe> out){
         this.out = out;
 
         composterRecipes(out);

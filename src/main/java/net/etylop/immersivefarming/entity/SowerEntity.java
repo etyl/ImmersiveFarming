@@ -86,7 +86,7 @@ public final class SowerEntity extends AbstractDrawnInventoryEntity {
         if (this.getPulling() == null) {
             return;
         }
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             Player player = null;
             if (this.getPulling() instanceof Player pl) {
                 player = pl;
@@ -127,7 +127,7 @@ public final class SowerEntity extends AbstractDrawnInventoryEntity {
             final float offset = 38.0F - i * 38.0F;
             final double blockPosX = this.getX() + Mth.sin((float) Math.toRadians(this.getYRot() - offset)) * BLADEOFFSET;
             final double blockPosZ = this.getZ() - Mth.cos((float) Math.toRadians(this.getYRot() - offset)) * BLADEOFFSET;
-            final BlockPos blockPos = new BlockPos(blockPosX, this.getY() - 0.5D, blockPosZ);
+            final BlockPos blockPos = BlockPos.containing(blockPosX, this.getY() - 0.5D, blockPosZ);
 
             ItemStack seeds = getSeeds();
             if (seeds != null) {
@@ -151,16 +151,16 @@ public final class SowerEntity extends AbstractDrawnInventoryEntity {
     public InteractionResult interact(final Player player, final InteractionHand hand) {
         if (player.isSecondaryUseActive()) {
             this.openContainer(player);
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(PLOWING, !this.entityData.get(PLOWING));
         }
-        return InteractionResult.sidedSuccess(this.level.isClientSide);
+        return InteractionResult.sidedSuccess(this.level().isClientSide);
     }
 
     public void updateSlot(final int slot) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (this.inventory.getStackInSlot(slot).isEmpty()) {
                 this.entityData.set(INVENTORY.get(slot), ItemStack.EMPTY);
             } else {
@@ -202,7 +202,7 @@ public final class SowerEntity extends AbstractDrawnInventoryEntity {
 
     private void openContainer(final Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
-            NetworkHooks.openGui(serverPlayer,
+            NetworkHooks.openScreen(serverPlayer,
                 new SimpleMenuProvider((windowId, playerInventory, p) -> new SowerContainer(windowId, playerInventory, this), this.getDisplayName()),
                 buf -> buf.writeInt(this.getId())
             );

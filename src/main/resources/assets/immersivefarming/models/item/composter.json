@@ -1,207 +1,143 @@
 {
   "loader": "forge:obj",
   "model": "immersivefarming:models/block/multiblock/composter/composter.obj",
-  "flip-v": true,
-  "transform": {
+  "flip_v": true,
+  "display": {
     "thirdperson_righthand": {
+      "rotation": [
+        20.0,
+        -45.0,
+        0.0
+      ],
       "translation": [
         0.0,
         0.0,
         0.0
       ],
-      "rotation": [
-        0.16043,
-        -0.37686962,
-        -0.06645229,
-        0.9098437
-      ],
       "scale": [
         0.25,
         0.25,
         0.25
-      ],
-      "post-rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "origin": "corner"
+      ]
     },
     "thirdperson_lefthand": {
+      "rotation": [
+        20.0,
+        -45.0,
+        0.0
+      ],
       "translation": [
         0.0,
         0.0,
         0.0
       ],
-      "rotation": [
-        0.16043,
-        -0.37686962,
-        -0.06645229,
-        0.9098437
-      ],
       "scale": [
         0.25,
         0.25,
         0.25
-      ],
-      "post-rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "origin": "corner"
+      ]
     },
     "firstperson_righthand": {
+      "rotation": [
+        20.0,
+        -45.0,
+        0.0
+      ],
       "translation": [
         0.0,
         0.0,
         0.0
       ],
-      "rotation": [
-        0.16043,
-        -0.37686962,
-        -0.06645229,
-        0.9098437
-      ],
       "scale": [
         0.25,
         0.25,
         0.25
-      ],
-      "post-rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "origin": "corner"
+      ]
     },
     "firstperson_lefthand": {
+      "rotation": [
+        20.0,
+        -45.0,
+        0.0
+      ],
       "translation": [
         0.0,
         0.0,
         0.0
       ],
-      "rotation": [
-        0.16043,
-        -0.37686962,
-        -0.06645229,
-        0.9098437
-      ],
       "scale": [
         0.25,
         0.25,
         0.25
-      ],
-      "post-rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "origin": "corner"
+      ]
     },
     "head": {
+      "rotation": [
+        20.0,
+        -45.0,
+        0.0
+      ],
       "translation": [
         0.0,
         0.0,
         0.0
       ],
-      "rotation": [
-        0.16043,
-        -0.37686962,
-        -0.06645229,
-        0.9098437
-      ],
       "scale": [
         0.25,
         0.25,
         0.25
-      ],
-      "post-rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "origin": "corner"
+      ]
     },
     "gui": {
-      "translation": [
-        -0.36,
-        0.0,
+      "rotation": [
+        20.0,
+        -45.0,
         0.0
       ],
-      "rotation": [
-        0.16043,
-        -0.37686962,
-        -0.06645229,
-        0.9098437
+      "translation": [
+        -5.76,
+        0.0,
+        0.0
       ],
       "scale": [
         0.25,
         0.25,
         0.25
-      ],
-      "post-rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "origin": "corner"
+      ]
     },
     "ground": {
+      "rotation": [
+        20.0,
+        -45.0,
+        0.0
+      ],
       "translation": [
         0.0,
         0.0,
         0.0
       ],
-      "rotation": [
-        0.16043,
-        -0.37686962,
-        -0.06645229,
-        0.9098437
-      ],
       "scale": [
         0.25,
         0.25,
         0.25
-      ],
-      "post-rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "origin": "corner"
+      ]
     },
     "fixed": {
+      "rotation": [
+        20.0,
+        -45.0,
+        0.0
+      ],
       "translation": [
         0.0,
         0.0,
         0.0
       ],
-      "rotation": [
-        0.16043,
-        -0.37686962,
-        -0.06645229,
-        0.9098437
-      ],
       "scale": [
         0.25,
         0.25,
         0.25
-      ],
-      "post-rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "origin": "corner"
+      ]
     }
   }
 }

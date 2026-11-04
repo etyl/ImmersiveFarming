@@ -6,7 +6,7 @@ import blusunrize.immersiveengineering.api.crafting.IERecipeSerializer;
 import blusunrize.immersiveengineering.api.crafting.IngredientWithSize;
 import com.google.gson.JsonObject;
 import net.etylop.immersivefarming.api.crafting.ComposterRecipe;
-import net.etylop.immersivefarming.block.IFBlocks;
+import net.etylop.immersivefarming.block.IFMultiblockLogic;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -24,7 +24,7 @@ public class ComposterRecipeSerializer extends IERecipeSerializer<ComposterRecip
 	@Override
 	public ItemStack getIcon()
 	{
-		return new ItemStack(IFBlocks.COMPOSTER.get());
+		return new ItemStack(IFMultiblockLogic.COMPOSTER.block().get());
 	}
 
 	@Override
@@ -65,20 +65,35 @@ public class ComposterRecipeSerializer extends IERecipeSerializer<ComposterRecip
 	@Override
 	public ComposterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer)
 	{
-		FluidStack fluidOutput = buffer.readFluidStack();
-		FluidTagInput fluidInput = FluidTagInput.read(buffer);
-		int ingredientCount = buffer.readInt();
-		IngredientWithSize[] itemInputs = new IngredientWithSize[ingredientCount];
-		for(int i = 0; i < ingredientCount; i++)
-			itemInputs[i] = IngredientWithSize.read(buffer);
+		boolean fluidProduct = buffer.readBoolean();
 		int energy = buffer.readInt();
-		return new ComposterRecipe(recipeId, fluidInput, fluidInput,fluidInput, itemInputs[0], energy);
+		if (fluidProduct) {
+			FluidStack nitrogen = buffer.readFluidStack();
+			FluidStack carbon = buffer.readFluidStack();
+			IngredientWithSize input = IngredientWithSize.read(buffer);
+			return new ComposterRecipe(recipeId, nitrogen, carbon, input, energy);
+		}
+		FluidTagInput water = FluidTagInput.read(buffer);
+		FluidTagInput nitrogen = FluidTagInput.read(buffer);
+		FluidTagInput carbon = FluidTagInput.read(buffer);
+		IngredientWithSize output = IngredientWithSize.read(buffer);
+		return new ComposterRecipe(recipeId, water, nitrogen, carbon, output, energy);
 	}
 
-	// TODO
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, ComposterRecipe recipe)
 	{
-
+		buffer.writeBoolean(recipe.fluidProduct);
+		buffer.writeInt(recipe.energy);
+		if (recipe.fluidProduct) {
+			buffer.writeFluidStack(recipe.getFluidOutput()[0]);
+			buffer.writeFluidStack(recipe.getFluidOutput()[1]);
+			recipe.itemInput.write(buffer);
+		}
+		else {
+			for (FluidTagInput input : recipe.getFluidInput())
+				input.write(buffer);
+			recipe.itemOutput.write(buffer);
+		}
 	}
 }

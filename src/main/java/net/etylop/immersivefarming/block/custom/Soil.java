@@ -10,10 +10,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -27,8 +29,10 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
 import java.util.Set;
 
 import static net.etylop.immersivefarming.utils.IFFunctions.getHoeSpeed;
@@ -39,14 +43,14 @@ public class Soil extends FarmBlock {
     public static final int FERTILITY_MAX = 2;
     public static final IntegerProperty FERTILITY = IntegerProperty.create("fertility", 0, FERTILITY_MAX);
 
+    public static final IntegerProperty WATER = MOISTURE;
+    // Next to a water block
+    public static final int WATER_FLOODED = MAX_MOISTURE;
+    // Max level reached by watering
+    public static final int WATER_SATURATED = WATER_FLOODED - 1;
+
     private static final IFConfig.CropConfig cropConfig = IFConfig.get().cropConfig;
 
-    // Probability for a crop to become sick during a random tick
-    public static final double START_CONTAMINATION = cropConfig.start_contamination.get();
-    // Probability for a crop to contaminate an adjacent crop during a random tick
-    public static final double PROXIMITY_CONTAMINATION = cropConfig.proximity_contamination.get();
-    // Probability for a crop to die when contaminated during a random tick
-    public static final double LETHALITY_CONTAMINATION = cropConfig.lethality_contamination.get();
     public static final BooleanProperty CONTAMINATED = BooleanProperty.create("contaminated");
 
 
@@ -58,6 +62,12 @@ public class Soil extends FarmBlock {
                 .setValue(FERTILITY, 0)
                 .setValue(CONTAMINATED, false)
         );
+    }
+
+    public static BlockState fromFarmland(BlockState farmland) {
+        return IFBlocks.SOIL.get().defaultBlockState()
+                .setValue(TILL, TILL_MAX)
+                .setValue(WATER, Math.min(farmland.getValue(MOISTURE), WATER_SATURATED));
     }
 
     @Override
@@ -98,54 +108,68 @@ public class Soil extends FarmBlock {
         return InteractionResult.FAIL;
     }
 
+    @Nullable
     @Override
-    public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
-
-        // Update moisture level
-        int i = pState.getValue(MOISTURE);
-        int waterNearby = isNearWater(pLevel, pPos);
-        if (waterNearby==0 && !pLevel.isRainingAt(pPos.above())) {
-            if (i > 0) {
-                pLevel.setBlock(pPos, pState.setValue(MOISTURE, Integer.valueOf(i - 1)), 2);
-            } else if (!isUnderCrops(pLevel, pPos)) {
-                turnToDirt(pState, pLevel, pPos);
-            } else {
-                turnToDirt(pState, pLevel, pPos);
-            }
-        } else if (i < 7) {
-            pLevel.setBlock(pPos, pState.setValue(MOISTURE, Integer.valueOf(7)), 2);
+    public BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
+        if (toolAction == ToolActions.SHOVEL_FLATTEN) {
+            return Blocks.DIRT.defaultBlockState();
         }
+        return super.getToolModifiedState(state, context, toolAction, simulate);
+    }
+
+    @Override
+    public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+        BlockState newState = pState;
+
+        // Update water level
+        int water = pState.getValue(WATER);
+        int sprinkler = getSprinkler(pLevel, pPos);
+        if (isNextToWater(pLevel, pPos)) {
+            water = WATER_FLOODED;
+        }
+        else if (water == WATER_FLOODED) {
+            water = WATER_SATURATED;
+        }
+        else if (sprinkler > 0 || pLevel.isRainingAt(pPos.above())) {
+            water = Math.min(WATER_SATURATED, water + 1);
+        }
+        else if (water > 0 && pRandom.nextDouble() < cropConfig.evaporation.get()) {
+            water--;
+        }
+        newState = newState.setValue(WATER, water);
 
         // Update contaminated level
         boolean contaminated = pState.getValue(CONTAMINATED);
         boolean isUnderCrops = isUnderCrops(pLevel, pPos);
-        if (waterNearby==2) {
-            if (contaminated) {
-                pLevel.setBlock(pPos, pState.setValue(CONTAMINATED, false), 2);
-            }
+        if (sprinkler == 2 || !isUnderCrops) {
+            newState = newState.setValue(CONTAMINATED, false);
         }
-        else if (isUnderCrops && !contaminated && Math.random()<START_CONTAMINATION) {
-            pLevel.setBlock(pPos, pState.setValue(CONTAMINATED, true), 2);
+        else if (!contaminated && Math.random()<cropConfig.start_contamination.get()) {
+            newState = newState.setValue(CONTAMINATED, true);
         }
-        else if (!isUnderCrops && contaminated) {
-            pLevel.setBlock(pPos, pState.setValue(CONTAMINATED, false), 2);
-        }
-        else if (isUnderCrops && contaminated && Math.random()<LETHALITY_CONTAMINATION) {
+        else if (contaminated && Math.random()<cropConfig.lethality_contamination.get()) {
             pLevel.setBlock(pPos.above(), IFBlocks.DEAD_CROP.get().defaultBlockState(), 3);
             pLevel.setBlock(pPos, Blocks.DIRT.defaultBlockState(), 2);
+            return;
         }
-        else if (isUnderCrops && contaminated) {
+        else if (contaminated && cropConfig.spread_contamination.get()) {
             for (BlockPos blockpos : BlockPos.betweenClosed(pPos.offset(-1, 0, -1), pPos.offset(1, 1, 1))) {
-                if (pLevel.getBlockState(blockpos).getBlock() instanceof Soil && isUnderCrops(pLevel, blockpos) && Math.random()<PROXIMITY_CONTAMINATION) {
-                    BlockState newSoil = pLevel.getBlockState(blockpos).setValue(CONTAMINATED, true);
-                    pLevel.setBlock(blockpos, newSoil, 2);
+                if (blockpos.equals(pPos))
+                    continue;
+                BlockState neighbour = pLevel.getBlockState(blockpos);
+                if (neighbour.getBlock() instanceof Soil && !neighbour.getValue(CONTAMINATED) && isUnderCrops(pLevel, blockpos) && Math.random()<cropConfig.proximity_contamination.get()) {
+                    pLevel.setBlock(blockpos, neighbour.setValue(CONTAMINATED, true), 2);
                 }
             }
+        }
+
+        if (newState != pState) {
+            pLevel.setBlock(pPos, newState, 2);
         }
     }
 
     @Override
-    public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, Random pRandom) {
+    public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
         if (pState.getValue(CONTAMINATED)) {
             spawnContaminatedParticles(pLevel, pPos);
         }
@@ -159,12 +183,11 @@ public class Soil extends FarmBlock {
         }
     }
 
-    private static int isNearWater(LevelReader pLevel, BlockPos pPos) {
-        /**
-         * Checks nearby blocks for sources of water
-         * @return 0: no water found, 1: water found, 2: treated water found
-         */
-
+    /**
+     * Checks nearby blocks for active sprinklers
+     * @return 0: no sprinkler found, 1: sprinkler found, 2: sprinkler using treated water found
+     */
+    private static int getSprinkler(LevelReader pLevel, BlockPos pPos) {
         ChunkAccess chunk = pLevel.getChunk(pPos);
         boolean found_sprinkler = false;
         int chunkPosX = chunk.getPos().x;
@@ -190,14 +213,16 @@ public class Soil extends FarmBlock {
             }
         }
 
-        if (found_sprinkler)
-            return 1;
+        return found_sprinkler ? 1 : 0;
+    }
+
+    private static boolean isNextToWater(LevelReader pLevel, BlockPos pPos) {
         for (BlockPos blockpos : BlockPos.betweenClosed(pPos.offset(-1, 0, -1), pPos.offset(1, 1, 1))) {
             if (pLevel.getFluidState(blockpos).is(FluidTags.WATER)) {
-                return 1;
+                return true;
             }
         }
-        return 0;
+        return false;
     }
 
     private static boolean isUnderCrops(BlockGetter pLevel, BlockPos pPos) {
@@ -215,6 +240,6 @@ public class Soil extends FarmBlock {
 
     @Override
     public boolean isFertile(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(MOISTURE)>0;
+        return state.getValue(WATER)>0;
     }
 }

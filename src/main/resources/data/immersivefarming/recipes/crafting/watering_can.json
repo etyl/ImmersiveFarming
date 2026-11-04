@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "i  ",
+    "ibi",
+    " i "
+  ],
+  "key": {
+    "i": {
+      "tag": "forge:ingots/copper"
+    },
+    "b": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "immersivefarming:watering_can"
+  }
+}

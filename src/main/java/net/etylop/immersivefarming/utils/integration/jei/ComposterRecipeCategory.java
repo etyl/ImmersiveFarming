@@ -10,9 +10,10 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.api.crafting.ComposterRecipe;
-import net.etylop.immersivefarming.block.IFBlocks;
+import net.etylop.immersivefarming.block.IFMultiblockLogic;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 
 public class ComposterRecipeCategory extends IFRecipeCategory<ComposterRecipe>
 {
@@ -23,7 +24,7 @@ public class ComposterRecipeCategory extends IFRecipeCategory<ComposterRecipe>
 	{
 		super(TYPE, helper, "block.immersivefarming.composter");
 		setBackground(helper.createBlankDrawable(155, 60));
-		setIcon(new ItemStack(IFBlocks.COMPOSTER.get()));
+		setIcon(new ItemStack(IFMultiblockLogic.COMPOSTER.block().get()));
 
 	}
 
@@ -36,14 +37,14 @@ public class ComposterRecipeCategory extends IFRecipeCategory<ComposterRecipe>
 					.setBackground(JEIHelper.slotDrawable, -1, -1);
 
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 100, 10)
-					.setFluidRenderer(FluidAttributes.BUCKET_VOLUME/10, false, 16, 47)
+					.setFluidRenderer(FluidType.BUCKET_VOLUME/10, false, 16, 47)
 					.addIngredient(ForgeTypes.FLUID_STACK, recipe.getFluidOutput()[0])
 					.addTooltipCallback(blusunrize.immersiveengineering.common.util.compat.jei.JEIHelper.fluidTooltipCallback)
 					.setBackground(JEIHelper.fluidDrawable, -2, -2)
 					.setOverlay(JEIHelper.fluidOverlay, -2, -2);
 
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 125, 10)
-					.setFluidRenderer(FluidAttributes.BUCKET_VOLUME/10, false, 16, 47)
+					.setFluidRenderer(FluidType.BUCKET_VOLUME/10, false, 16, 47)
 					.addIngredient(ForgeTypes.FLUID_STACK, recipe.getFluidOutput()[1])
 					.addTooltipCallback(blusunrize.immersiveengineering.common.util.compat.jei.JEIHelper.fluidTooltipCallback)
 					.setBackground(JEIHelper.fluidDrawable, -2, -2)
@@ -60,11 +61,12 @@ public class ComposterRecipeCategory extends IFRecipeCategory<ComposterRecipe>
 	}
 
 	@Override
-	public void draw(ComposterRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack transform, double mouseX, double mouseY)
+	public void draw(ComposterRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY)
 	{
+		PoseStack transform = graphics.pose();
 		transform.pushPose();
 		transform.scale(3f, 3f, 1);
-		this.getIcon().draw(transform, 14, 2);
+		this.getIcon().draw(graphics, 14, 2);
 		transform.popPose();
 	}
 }

@@ -1,1 +1,6 @@
-{}
+{
+  "trowel": {
+    "type": "crafting",
+    "recipe": "immersivefarming:crafting/trowel"
+  }
+}

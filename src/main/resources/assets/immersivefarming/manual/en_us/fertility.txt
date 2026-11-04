@@ -3,7 +3,10 @@ A nice soil
 
 Having soil with low fertility will slow down crop growth.
 
-Switching to a different crop when replanting improves growth speed.
-
 You can boost the fertility of a soil tile by right clicking it with compost.
-Once a crop grows on a fertilized tile, it will consume the fertilization, and the tile will need to be fertilized again.
+Once a crop is fully grown on a fertilized tile, it will consume the fertilization, and the tile will need to be fertilized again.
+
+Soil can be turned back into dirt by right clicking it with a shovel. Farmland tilled by other mods, or that a crop grows on, is turned into soil (this can be disabled in the mod configuration).
+
+<&trowel>
+The trowel lets you inspect soil. Right click soil or a crop to see how far it is tilled, its water level, its fertility and whether it is contaminated.

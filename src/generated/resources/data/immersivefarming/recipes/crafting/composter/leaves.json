@@ -1,0 +1,17 @@
+{
+  "type": "immersivefarming:composter",
+  "energy": 10,
+  "fluidProduct": true,
+  "inputTag": {
+    "tag": "minecraft:leaves"
+  },
+  "inputs": [],
+  "output0": {
+    "amount": 0,
+    "fluid": "minecraft:empty"
+  },
+  "output1": {
+    "amount": 10,
+    "fluid": "immersivefarming:dry_matter_fluid"
+  }
+}

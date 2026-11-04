@@ -10,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class IFEntities {
 
-    private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, ImmersiveFarming.MOD_ID);
+    private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ImmersiveFarming.MOD_ID);
 
     public static final RegistryObject<EntityType<PlowEntity>> PLOW = ENTITIES.register("plow",
             () -> EntityType.Builder.of(PlowEntity::new, MobCategory.MISC)

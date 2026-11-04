@@ -1,21 +1,19 @@
 package net.etylop.immersivefarming.block;
 
 import blusunrize.immersiveengineering.common.blocks.BlockItemIE;
-import blusunrize.immersiveengineering.common.blocks.metal.MetalMultiblockBlock;
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.block.custom.DeadCrop;
 import net.etylop.immersivefarming.block.custom.Soil;
 import net.etylop.immersivefarming.block.custom.SprinklerBlock;
 import net.etylop.immersivefarming.block.custom.SprinklerExtendedBlock;
-import net.etylop.immersivefarming.block.multiblocks.composter.ComposterBlockEntity;
-import net.etylop.immersivefarming.item.IFCreativeTab;
 import net.etylop.immersivefarming.item.IFItems;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -25,7 +23,8 @@ import java.util.function.Supplier;
 
 public class IFBlocks {
 
-    public static final BlockBehaviour.Properties METAL_NO_OCCLUSION = Block.Properties.of(Material.METAL)
+    public static final BlockBehaviour.Properties METAL_NO_OCCLUSION = Block.Properties.of()
+            .mapColor(MapColor.METAL)
             .sound(SoundType.METAL)
             .strength(3, 15)
             .requiresCorrectToolForDrops()
@@ -50,14 +49,9 @@ public class IFBlocks {
             () -> new SprinklerExtendedBlock(METAL_NO_OCCLUSION)
     );
 
-    public static final RegistryObject<MetalMultiblockBlock<ComposterBlockEntity>> COMPOSTER = registerBlock(
-            "composter",
-            () -> new MetalMultiblockBlock<>(IFBlockEntities.COMPOSTER, METAL_NO_OCCLUSION)
-    );
-
     public static final RegistryObject<DeadCrop> DEAD_CROP = registerBlock(
             "dead_crop",
-            () -> new DeadCrop(BlockBehaviour.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.CROP))
+            () -> new DeadCrop(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).pushReaction(PushReaction.DESTROY).noCollission().instabreak().sound(SoundType.CROP))
     );
 
 
@@ -69,7 +63,7 @@ public class IFBlocks {
 
     private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block) {
         return IFItems.ITEMS.register(name, () -> new BlockItemIE(block.get(),
-                new Item.Properties().tab(IFCreativeTab.TAB)));
+                new Item.Properties()));
     }
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);

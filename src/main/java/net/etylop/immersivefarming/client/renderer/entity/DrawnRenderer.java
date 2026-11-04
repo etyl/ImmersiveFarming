@@ -3,7 +3,7 @@ package net.etylop.immersivefarming.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.etylop.immersivefarming.entity.AbstractDrawnEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
@@ -60,23 +61,23 @@ public abstract class DrawnRenderer<T extends AbstractDrawnEntity, M extends Ent
     }
 
     public void setupRotation(final T entity, final float entityYaw, final float delta, final PoseStack stack) {
-        stack.mulPose(Vector3f.YP.rotationDegrees(180.0F - entityYaw));
+        stack.mulPose(Axis.YP.rotationDegrees(180.0F - entityYaw));
         final float time = entity.getTimeSinceHit() - delta;
         if (time > 0.0F) {
             final double center = 1.2D;
             stack.translate(0.0D, center, 0.0D);
             final float damage = Math.max(entity.getDamageTaken() - delta, 0.0F);
             final float angle = Mth.sin(time) * time * damage / 60.0F;
-            stack.mulPose(Vector3f.ZP.rotationDegrees(angle * entity.getForwardDirection()));
+            stack.mulPose(Axis.ZP.rotationDegrees(angle * entity.getForwardDirection()));
             stack.translate(0.0D, -center, 0.0D);
             stack.translate(0.0D, angle / 32.0F, 0.0D);
         }
         stack.scale(-1.0F, -1.0F, 1.0F);
     }
 
-    protected void renderBanner(final PoseStack stack, final MultiBufferSource source, final int packedLight, final List<Pair<BannerPattern, DyeColor>> banner) {
+    protected void renderBanner(final PoseStack stack, final MultiBufferSource source, final int packedLight, final List<Pair<Holder<BannerPattern>, DyeColor>> banner) {
         stack.pushPose();
-        stack.mulPose(Vector3f.YP.rotationDegrees(90.0F));
+        stack.mulPose(Axis.YP.rotationDegrees(90.0F));
         final float scale = 2.0F / 3.0F;
         stack.scale(scale, scale, scale);
         VertexConsumer consumer = ModelBakery.BANNER_BASE.buffer(source, RenderType::entitySolid);

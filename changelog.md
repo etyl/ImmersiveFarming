@@ -1,3 +1,27 @@
+##### Version 1.20.1-0.4
+
+* Ported to Minecraft 1.20.1 (Forge 47, Immersive Engineering 10)
+* Soil water levels
+  * Crops don't grow on dry soil, and each growth stage consumes some water
+  * Rain and sprinklers water the soil, and unwatered soil slowly dries out
+  * Soil next to a water block is flooded (new texture), and crops on it grow slower
+* Watering can
+  * Right click soil or a plant to fully water it, right click a water source to refill it
+  * Crafted with copper ingots and a bucket
+* Trowel
+  * Right click soil or a crop to inspect its tilling, water level, fertility and health
+* Soil can be turned back into dirt with a shovel
+* Unfertilized soil now grows crops much slower
+* Removed crop rotation growth boost
+* Sick crops no longer contaminate adjacent crops by default
+* Compatibility
+  * Farmland tilled by other mods, or that a crop grows on, is turned into soil
+  * Bone meal and trampling are only blocked on soil, vanilla farmland behaves normally
+* Config file
+  * Toggle farmland replacement and disease spreading
+  * Change evaporation, flooded growth and unfertilized growth
+
+
 ##### Version 1.18.2-0.3
 
 * Plowing machine

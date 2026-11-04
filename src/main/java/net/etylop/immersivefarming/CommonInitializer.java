@@ -8,12 +8,10 @@ import net.etylop.immersivefarming.world.SimpleIFWorld;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolderRegistry;
 
@@ -29,11 +27,9 @@ public class CommonInitializer implements Initializer {
 
             @Override
             public void accept(final Predicate<ResourceLocation> filter) {
-                if (this.run && filter.test(ForgeRegistries.ENTITIES.getRegistryName())) {
+                if (this.run && filter.test(ForgeRegistries.ENTITY_TYPES.getRegistryName())) {
                     container.addConfig(new ModConfig(ModConfig.Type.COMMON, IFConfig.spec(), container));
                     this.run = false;
-                    LogicalSidedProvider.WORKQUEUE.get(EffectiveSide.get())
-                        .execute(() -> ObjectHolderRegistry.removeHandler(this));
                 }
             }
         });
@@ -44,9 +40,9 @@ public class CommonInitializer implements Initializer {
             .add(1, PullCartGoal::new)
             .build()
             .register(mod.bus());
-        mod.bus().<TickEvent.WorldTickEvent>addListener(e -> {
+        mod.bus().<TickEvent.LevelTickEvent>addListener(e -> {
             if (e.phase == TickEvent.Phase.END) {
-                IFWorld.get(e.world).ifPresent(IFWorld::tick);
+                IFWorld.get(e.level).ifPresent(IFWorld::tick);
             }
         });
     }

@@ -1,0 +1,17 @@
+{
+  "type": "immersivefarming:composter",
+  "energy": 10,
+  "fluidProduct": true,
+  "inputTag": {
+    "tag": "forge:fruits"
+  },
+  "inputs": [],
+  "output0": {
+    "amount": 10,
+    "fluid": "immersivefarming:wet_matter_fluid"
+  },
+  "output1": {
+    "amount": 0,
+    "fluid": "minecraft:empty"
+  }
+}

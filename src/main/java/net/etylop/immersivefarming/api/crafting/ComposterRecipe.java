@@ -27,6 +27,7 @@ public class ComposterRecipe extends IFMultiblockRecipe
 	private final FluidTagInput[] fluidInputs = new FluidTagInput[3];
 	public final IngredientWithSize itemInput;
 	public final IngredientWithSize itemOutput;
+	public final int energy; // value from the recipe json, needed to sync the recipe to clients
 
 	public ComposterRecipe(ResourceLocation id, FluidStack fluidNitrogen, FluidStack fluidCarbon, TagKey<Item> itemInput, int energy)
 	{
@@ -42,6 +43,7 @@ public class ComposterRecipe extends IFMultiblockRecipe
 		this.fluidOutputs[1] = fluidCarbon;
 		this.itemInput = itemInput;
 		this.itemOutput = null;
+		this.energy = energy;
 
 		timeAndEnergy(energy, energy);
 		this.fluidOutputList = Lists.newArrayList(fluidNitrogen, fluidCarbon);
@@ -57,6 +59,7 @@ public class ComposterRecipe extends IFMultiblockRecipe
 		this.fluidInputs[2] = fluidCarbon;
 		this.itemOutput = itemOutput;
 		this.itemInput = null;
+		this.energy = energy;
 
 		timeAndEnergy(100, energy);
 		this.fluidInputList = Lists.newArrayList(fluidWater, fluidNitrogen, fluidCarbon);

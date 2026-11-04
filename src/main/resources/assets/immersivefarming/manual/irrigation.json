@@ -6,5 +6,9 @@
   "sprinkler_extended": {
     "type": "crafting",
     "recipe": "immersivefarming:crafting/sprinkler_extended"
+  },
+  "watering_can": {
+    "type": "crafting",
+    "recipe": "immersivefarming:crafting/watering_can"
   }
 }

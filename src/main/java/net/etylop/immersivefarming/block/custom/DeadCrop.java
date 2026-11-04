@@ -14,6 +14,6 @@ public class DeadCrop extends BushBlock {
     }
 
     protected boolean mayPlaceOn(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        return pState.is(Blocks.FARMLAND);
+        return pState.is(Blocks.FARMLAND) || pState.getBlock() instanceof Soil;
     }
 }

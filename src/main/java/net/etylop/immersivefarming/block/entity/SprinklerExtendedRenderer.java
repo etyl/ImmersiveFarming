@@ -10,15 +10,12 @@ package net.etylop.immersivefarming.block.entity;
 
 import blusunrize.immersiveengineering.client.render.tile.IEBlockEntityRenderer;
 import blusunrize.immersiveengineering.client.utils.RenderUtils;
-import blusunrize.immersiveengineering.common.util.Utils;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.etylop.immersivefarming.block.utils.IFDynamicModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 import java.util.List;
 
@@ -41,7 +38,7 @@ public class SprinklerExtendedRenderer extends IEBlockEntityRenderer<SprinklerEx
 		matrixStack.translate(.5, 1.5, .5);
 
 		matrixStack.pushPose();
-		matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), angle, true));
+		matrixStack.mulPose(Axis.YP.rotationDegrees(angle));
 		renderBarrel(SPRINKLER_TOP, matrixStack, bufferIn, combinedLightIn	, combinedOverlayIn);
 		matrixStack.popPose();
 		matrixStack.popPose();
@@ -51,7 +48,7 @@ public class SprinklerExtendedRenderer extends IEBlockEntityRenderer<SprinklerEx
 	{
 		matrix.pushPose();
 		matrix.translate(-.5, -.5, -.5);
-		List<BakedQuad> quads = sprinklerModel.get().getQuads(null, null, Utils.RAND, EmptyModelData.INSTANCE);
+		List<BakedQuad> quads = sprinklerModel.getNullQuads();
 		RenderUtils.renderModelTESRFast(quads, buffer.getBuffer(RenderType.translucentMovingBlock()), matrix, light, overlay);
 		matrix.popPose();
 	}

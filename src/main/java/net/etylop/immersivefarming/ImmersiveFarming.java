@@ -3,6 +3,7 @@ package net.etylop.immersivefarming;
 import net.etylop.immersivefarming.api.crafting.IFRecipeTypes;
 import net.etylop.immersivefarming.block.IFBlockEntities;
 import net.etylop.immersivefarming.block.IFBlocks;
+import net.etylop.immersivefarming.block.IFMultiblockLogic;
 import net.etylop.immersivefarming.block.IFMultiblocks;
 import net.etylop.immersivefarming.client.ClientInitializer;
 import net.etylop.immersivefarming.client.IFSounds;
@@ -10,6 +11,7 @@ import net.etylop.immersivefarming.crafting.IFRecipeSerializer;
 import net.etylop.immersivefarming.entity.IFEntities;
 import net.etylop.immersivefarming.fluid.IFFluids;
 import net.etylop.immersivefarming.gui.IFMenuTypes;
+import net.etylop.immersivefarming.item.IFCreativeTab;
 import net.etylop.immersivefarming.item.IFItems;
 import net.etylop.immersivefarming.network.NetBuilder;
 import net.etylop.immersivefarming.network.clientbound.UpdateDrawnMessage;
@@ -52,9 +54,11 @@ public class ImmersiveFarming {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         final Initializer.Context ctx = new InitContext();
-        DistExecutor.runForDist(() -> ClientInitializer::new, () -> null).init(ctx);
+        DistExecutor.<Initializer>runForDist(() -> ClientInitializer::new, () -> CommonInitializer::new).init(ctx);
 
+        IFMultiblockLogic.init();
         IFItems.register(eventBus);
+        IFCreativeTab.register(eventBus);
         IFBlocks.register(eventBus);
         IFBlockEntities.register(eventBus);
         IFParticles.register(eventBus);

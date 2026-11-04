@@ -9,7 +9,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public final class SowerContainer extends CartContainer {
     public SowerContainer(final int id, final Inventory playerInv, final FriendlyByteBuf buf) {
-        this(id, playerInv, (AbstractDrawnInventoryEntity) playerInv.player.level.getEntity(buf.readInt()));
+        this(id, playerInv, (AbstractDrawnInventoryEntity) playerInv.player.level().getEntity(buf.readInt()));
     }
 
     public SowerContainer(final int id, final Inventory playerInv, final AbstractDrawnInventoryEntity cart) {

@@ -6,24 +6,31 @@ import blusunrize.immersiveengineering.data.models.NongeneratedModels;
 import blusunrize.immersiveengineering.data.models.SplitModelBuilder;
 import com.google.common.base.Preconditions;
 import net.etylop.immersivefarming.ImmersiveFarming;
-import net.etylop.immersivefarming.block.IFBlocks;
+import net.etylop.immersivefarming.block.IFMultiblockLogic;
 import net.etylop.immersivefarming.block.IFMultiblocks;
-import net.etylop.immersivefarming.block.multiblocks.composter.ComposterMultiblock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.PackOutput;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.client.model.generators.*;
-import net.minecraftforge.client.model.generators.loaders.OBJLoaderBuilder;
+import net.minecraftforge.client.model.generators.loaders.ObjModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -34,12 +41,12 @@ public class IFBlockStateProvider extends BlockStateProvider {
     private final NongeneratedModels nongeneratedModels;
     final ExistingFileHelper exFileHelper;
     private final BlockModelProvider customModels;
-    public IFBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper)
+    public IFBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper)
     {
-        super(gen, ImmersiveFarming.MOD_ID, exFileHelper);
+        super(output, ImmersiveFarming.MOD_ID, exFileHelper);
         this.exFileHelper = exFileHelper;
-        this.nongeneratedModels = new NongeneratedModels(gen, exFileHelper);
-        this.customModels = new BlockModelProvider(gen, ImmersiveFarming.MOD_ID, exFileHelper) {
+        this.nongeneratedModels = new NongeneratedModels(output, exFileHelper);
+        this.customModels = new BlockModelProvider(output, ImmersiveFarming.MOD_ID, exFileHelper) {
 
             protected void registerModels() {
 
@@ -61,13 +68,14 @@ public class IFBlockStateProvider extends BlockStateProvider {
         ResourceLocation modelNormal = modLoc("models/block/multiblock/composter/composter.obj");
         ResourceLocation modelMirrored = modLoc("models/block/multiblock/composter/composter.obj");
 
-        BlockModelBuilder normal = multiblockModel(IFBlocks.COMPOSTER.get(), modelNormal, texture, "", ComposterMultiblock.INSTANCE, false);
-        BlockModelBuilder mirrored = multiblockModel(IFBlocks.COMPOSTER.get(), modelMirrored, texture, "_mirrored", ComposterMultiblock.INSTANCE, true);
+        BlockModelBuilder normal = multiblockModel(IFMultiblockLogic.COMPOSTER.block().get(), modelNormal, texture, "", IFMultiblocks.COMPOSTER, false);
+        BlockModelBuilder mirrored = multiblockModel(IFMultiblockLogic.COMPOSTER.block().get(), modelMirrored, texture, "_mirrored", IFMultiblocks.COMPOSTER, true);
 
         createMultiblock(IFMultiblocks.COMPOSTER.getBlock(), normal, mirrored, texture);
     }
 
     private BlockModelBuilder multiblockModel(Block block, ResourceLocation model, ResourceLocation texture, String add, TemplateMultiblock mb, boolean mirror){
+        loadTemplateFor(mb);
         UnaryOperator<BlockPos> transform = UnaryOperator.identity();
         if(mirror){
             Vec3i size = mb.getSize(null);
@@ -75,15 +83,14 @@ public class IFBlockStateProvider extends BlockStateProvider {
         }
         final Vec3i offset = mb.getMasterFromOriginOffset();
 
-        Stream<Vec3i> partsStream = mb.getStructure(null).stream()
-                .filter(info -> !info.state.isAir())
-                .map(info -> info.pos)
+        Stream<Vec3i> partsStream = mb.getTemplate(null).blocksWithoutAir().stream()
+                .map(info -> info.pos())
                 .map(transform)
                 .map(p -> p.subtract(offset));
 
         String name = getMultiblockPath(block) + add;
         NongeneratedModels.NongeneratedModel base = nongeneratedModels.withExistingParent(name, mcLoc("block"))
-                .customLoader(OBJLoaderBuilder::begin).modelLocation(model).detectCullableFaces(false).flipV(true).end()
+                .customLoader(ObjModelBuilder::begin).modelLocation(model).automaticCulling(false).flipV(true).end()
                 .texture("texture", texture)
                 .texture("particle", texture);
 
@@ -96,6 +103,28 @@ public class IFBlockStateProvider extends BlockStateProvider {
         return split;
     }
 
+
+    /** From {@link blusunrize.immersiveengineering.data.blockstates.MultiblockStates} */
+    private void loadTemplateFor(TemplateMultiblock multiblock){
+        final ResourceLocation name = multiblock.getUniqueName();
+        if(TemplateMultiblock.SYNCED_CLIENT_TEMPLATES.containsKey(name))
+            return;
+        final String filePath = "structures/" + name.getPath() + ".nbt";
+        int slash = filePath.indexOf('/');
+        String prefix = filePath.substring(0, slash);
+        ResourceLocation shortLoc = new ResourceLocation(name.getNamespace(), filePath.substring(slash + 1));
+        try{
+            final Resource resource = exFileHelper.getResource(shortLoc, PackType.SERVER_DATA, "", prefix);
+            try(final InputStream input = resource.open()){
+                final CompoundTag nbt = NbtIo.readCompressed(input);
+                final StructureTemplate template = new StructureTemplate();
+                template.load(BuiltInRegistries.BLOCK.asLookup(), nbt);
+                TemplateMultiblock.SYNCED_CLIENT_TEMPLATES.put(name, template);
+            }
+        }catch(IOException e){
+            throw new RuntimeException("Failed on " + name, e);
+        }
+    }
 
     /** From {@link blusunrize.immersiveengineering.data.blockstates.BlockStates} */
     private void createMultiblock(Block b, ModelFile masterModel, ModelFile mirroredModel, ResourceLocation particleTexture){

@@ -4,21 +4,17 @@ import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.block.IFBlocks;
 import net.etylop.immersivefarming.block.custom.Soil;
 import net.etylop.immersivefarming.config.IFConfig;
-import net.etylop.immersivefarming.utils.CropSavedData;
 import net.etylop.immersivefarming.utils.ModTags;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.HoeItem;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,40 +28,64 @@ public class IFEvents {
 
     @Mod.EventBusSubscriber(modid = ImmersiveFarming.MOD_ID)
     public static class ForgeEvents {
-        private static final double STEM_DEATH = IFConfig.get().cropConfig.stem_death.get();
 
         @SubscribeEvent
         public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-            Block target = event.getWorld().getBlockState(event.getPos()).getBlock();
-            if (Registry.BLOCK.getHolderOrThrow(Registry.BLOCK.getResourceKey(target).get()).is(ModTags.Blocks.TILLABLE_BLOCK) &&
-                !event.getWorld().isClientSide() &&
-                event.getPlayer().getMainHandItem().getItem() instanceof HoeItem) {
+            Block target = event.getLevel().getBlockState(event.getPos()).getBlock();
+            if (target.defaultBlockState().is(ModTags.Blocks.TILLABLE_BLOCK) &&
+                !event.getLevel().isClientSide() &&
+                event.getEntity().getMainHandItem().getItem() instanceof HoeItem) {
 
-                event.getWorld().setBlock(event.getPos(), IFBlocks.SOIL.get().defaultBlockState(), 3);
-                event.getPlayer().getMainHandItem().hurtAndBreak(1, event.getPlayer(), (val) -> val.broadcastBreakEvent(event.getPlayer().getUsedItemHand()));            }
+                event.getLevel().setBlock(event.getPos(), IFBlocks.SOIL.get().defaultBlockState(), 3);
+                event.getEntity().getMainHandItem().hurtAndBreak(1, event.getEntity(), (val) -> val.broadcastBreakEvent(event.getEntity().getUsedItemHand()));            }
         }
 
+        // Tilling by other mods gives soil
+        @SubscribeEvent
+        public static void onToolModification(BlockEvent.BlockToolModificationEvent event) {
+            if (event.getToolAction() == ToolActions.HOE_TILL &&
+                event.getFinalState() != null && event.getFinalState().is(Blocks.FARMLAND) &&
+                IFConfig.get().cropConfig.replace_farmland.get()) {
+                event.setFinalState(IFBlocks.SOIL.get().defaultBlockState());
+            }
+        }
+
+        // Crops on soil can't be bonemealed
         @SubscribeEvent
         public static void onBonemeal(BonemealEvent event) {
-            if (event.getBlock().getBlock() instanceof GrassBlock) {
-                return;
+            if (event.getLevel().getBlockState(event.getPos().below()).getBlock() instanceof Soil) {
+                event.setCanceled(true);
             }
-            event.setCanceled(true);
         }
 
         @SubscribeEvent
         public static void onTrampleFarmland(BlockEvent.FarmlandTrampleEvent event) {
-            event.setCanceled(true);
+            if (event.getState().getBlock() instanceof Soil) {
+                event.setCanceled(true);
+            }
         }
 
         @SubscribeEvent(priority = EventPriority.LOW)
         public static void onCropGrowth(BlockEvent.CropGrowEvent.Pre event) {
             if (event.getResult() == Event.Result.DENY) return;
 
-            LevelAccessor level = event.getWorld();
+            LevelAccessor level = event.getLevel();
             BlockState cropBlock =  level.getBlockState(event.getPos());
 
-            if (level.getBiome(event.getPos()).containsTag(Tags.Biomes.IS_COLD)) {
+            if (!(cropBlock.getBlock() instanceof CropBlock || cropBlock.getBlock() instanceof StemBlock)) {
+                return;
+            }
+
+            BlockState soilBlock = level.getBlockState(event.getPos().below());
+            if (soilBlock.is(Blocks.FARMLAND) && IFConfig.get().cropConfig.replace_farmland.get()) {
+                soilBlock = Soil.fromFarmland(soilBlock);
+                level.setBlock(event.getPos().below(), soilBlock, 2);
+            }
+            if (!(soilBlock.getBlock() instanceof Soil)) {
+                return;
+            }
+
+            if (level.getBiome(event.getPos()).is(Tags.Biomes.IS_COLD)) {
                 event.setResult(Event.Result.DENY);
                 if (Math.random()<.3) {
                     level.setBlock(event.getPos(),IFBlocks.DEAD_CROP.get().defaultBlockState(), 2);
@@ -73,28 +93,20 @@ public class IFEvents {
                 return;
             }
 
-            if (!(cropBlock.getBlock() instanceof CropBlock || cropBlock.getBlock() instanceof StemBlock)) {
+            int water = soilBlock.getValue(Soil.WATER);
+            if (water == 0 || (water == Soil.WATER_FLOODED && Math.random() >= IFConfig.get().cropConfig.flooded_growth.get())) {
+                event.setResult(Event.Result.DENY);
                 return;
             }
 
-            if (canCropGrow((Level) event.getWorld(), event.getPos())) {
-                BlockState soilBlock = event.getWorld().getBlockState(event.getPos().below());
+            if (level.canSeeSky(event.getPos())) {
                 int fertilization = soilBlock.getValue(Soil.FERTILITY);
 
-                if (fertilization>=1) {
+                if (fertilization>=1 || Math.random() < IFConfig.get().cropConfig.unfertilized_growth.get()) {
                     event.setResult(Event.Result.DEFAULT);
                 }
                 else {
-                    CropSavedData cropData = getCropSavedData((Level) event.getWorld());
-                    if (Math.random()<0.5 && cropData != null && cropData.testCrop((Level)level, event.getPos())) {
-                        event.setResult(Event.Result.DEFAULT);
-                    }
-                    else if (Math.random()<0.25) {
-                        event.setResult(Event.Result.DEFAULT);
-                    }
-                    else {
-                        event.setResult(Event.Result.DENY);
-                    }
+                    event.setResult(Event.Result.DENY);
                 }
             }
         }
@@ -102,11 +114,17 @@ public class IFEvents {
         @SubscribeEvent
         public static void onCropGrowthPost(BlockEvent.CropGrowEvent.Post event) {
             BlockState cropBlock = event.getState();
-            LevelAccessor level = event.getWorld();
-            BlockState soilBlock = event.getWorld().getBlockState(event.getPos().below());
+            LevelAccessor level = event.getLevel();
+            BlockState soilBlock = event.getLevel().getBlockState(event.getPos().below());
 
             if (!(soilBlock.getBlock() instanceof Soil)) {
                 return;
+            }
+
+            BlockState newSoil = soilBlock;
+            int water = soilBlock.getValue(Soil.WATER);
+            if (water > 0 && water < Soil.WATER_FLOODED) {
+                newSoil = newSoil.setValue(Soil.WATER, water - 1);
             }
 
             if (cropBlock.getBlock() instanceof CropBlock || cropBlock.getBlock() instanceof StemBlock) {
@@ -123,50 +141,22 @@ public class IFEvents {
                 int age = ageOptional.orElse(0);
                 int maxAge = maxAgeOptional.orElse(10);
 
-                if (age == maxAge) {
-                    CropSavedData cropData = getCropSavedData((Level) event.getWorld());
-                    if (cropData != null) {
-                        cropData.insertCrop((Level) level, event.getPos());
-                        cropData.setDirty();
-                    }
-                    level.setBlock(event.getPos().below(), soilBlock.setValue(Soil.FERTILITY, 0), 2);
+                // Mature stems also fire this event when they fail to place a fruit
+                if (age == maxAge && event.getOriginalState() != cropBlock) {
+                    newSoil = newSoil.setValue(Soil.FERTILITY, 0);
                     event.setResult(Event.Result.ALLOW);
                 }
             }
 
+            if (newSoil != soilBlock) {
+                level.setBlock(event.getPos().below(), newSoil, 2);
+            }
+
             if (cropBlock.getBlock() instanceof AttachedStemBlock) {
-                if (Math.random() < STEM_DEATH) {
+                if (Math.random() < IFConfig.get().cropConfig.stem_death.get()) {
                     level.setBlock(event.getPos(), Blocks.AIR.defaultBlockState(), 2);
                 }
             }
         }
-
-        private static boolean canCropGrow(Level level, BlockPos pos) {
-            BlockState soil = level.getBlockState(pos.below());
-            return (soil.getBlock() instanceof Soil) && soil.getBlock().isFertile(soil, level, pos) && level.canSeeSky(pos);
-        }
-
-
-        @SubscribeEvent
-        public static void onHarvestCrop(BlockEvent.BreakEvent event) {
-            BlockState block = event.getState();
-            if (!(block.getBlock() instanceof CropBlock))
-                return;
-
-            BlockState soil = event.getWorld().getBlockState(event.getPos().below());
-            if (!(soil.getBlock() instanceof Soil))
-                return;
-
-            soil.setValue(Soil.FERTILITY,0);
-        }
-
-        public static CropSavedData getCropSavedData(Level w)
-        {
-            if (w.isClientSide() || !(w instanceof ServerLevel world))
-                return null;
-
-            return world.getChunkSource().getDataStorage().computeIfAbsent(CropSavedData::load, CropSavedData::create, CropSavedData.DATA_IDENTIFIER);
-        }
-
     }
 }

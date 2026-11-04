@@ -1,7 +1,6 @@
 package net.etylop.immersivefarming.utils;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.HoeItem;
@@ -13,7 +12,7 @@ import net.minecraftforge.common.Tags;
 public final class IFFunctions {
 
     public static boolean isBlockTillable(Level level, BlockPos pos) {
-        return Registry.BLOCK.getHolderOrThrow(Registry.BLOCK.getResourceKey(level.getBlockState(pos).getBlock()).get()).is(ModTags.Blocks.TILLABLE_BLOCK) && !level.isClientSide();
+        return level.getBlockState(pos).is(ModTags.Blocks.TILLABLE_BLOCK) && !level.isClientSide();
     }
 
     public static final int getHoeSpeed(Item item) {

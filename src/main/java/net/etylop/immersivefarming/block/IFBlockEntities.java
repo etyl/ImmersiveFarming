@@ -7,7 +7,6 @@ import com.google.common.collect.ImmutableSet;
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.block.entity.SprinklerBlockEntity;
 import net.etylop.immersivefarming.block.entity.SprinklerExtendedBlockEntity;
-import net.etylop.immersivefarming.block.multiblocks.composter.ComposterBlockEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 public class IFBlockEntities {
 
     public static final DeferredRegister<BlockEntityType<?>> REGISTER = DeferredRegister.create(
-            ForgeRegistries.BLOCK_ENTITIES, ImmersiveFarming.MOD_ID);
+            ForgeRegistries.BLOCK_ENTITY_TYPES, ImmersiveFarming.MOD_ID);
 
     public static void register(IEventBus eventBus) {
         REGISTER.register(eventBus);
@@ -36,9 +35,6 @@ public class IFBlockEntities {
             "sprinkler_extended", SprinklerExtendedBlockEntity::new, IFBlocks.SPRINKLER_EXTENDED
     );
 
-    public static final MultiblockBEType<ComposterBlockEntity> COMPOSTER = makeMultiblock(
-            "composter", ComposterBlockEntity::new, IFBlocks.COMPOSTER
-    );
 
 
 

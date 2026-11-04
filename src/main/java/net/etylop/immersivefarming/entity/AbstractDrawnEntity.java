@@ -9,9 +9,11 @@ import net.etylop.immersivefarming.utils.cart.CartWheel;
 import net.etylop.immersivefarming.world.IFWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -22,7 +24,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -77,7 +79,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
 
     public AbstractDrawnEntity(final EntityType<? extends Entity> entityTypeIn, final Level worldIn) {
         super(entityTypeIn, worldIn);
-        this.maxUpStep = 1.2F;
+        this.setMaxUpStep(1.2F);
         this.blocksBuilding = true;
         this.initWheels();
     }
@@ -106,7 +108,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.attemptReattach();
         }
-        for (final Entity entity : this.level.getEntities(this, this.getBoundingBox(), EntitySelector.pushableBy(this))) {
+        for (final Entity entity : this.level().getEntities(this, this.getBoundingBox(), EntitySelector.pushableBy(this))) {
             this.push(entity);
         }
     }
@@ -129,7 +131,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
         while (this.getYRot() - this.yRotO >= 180.0F) {
             this.yRotO += 360.0F;
         }
-        if (this.pulling.isOnGround()) {
+        if (this.pulling.onGround()) {
             targetVec = new Vec3(targetVec.x, 0.0D, targetVec.z);
         }
         final double targetVecLength = targetVec.length();
@@ -142,7 +144,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
         } else {
             move = this.getDeltaMovement().add(targetVec.subtract(targetVec.normalize().scale(relativeSpacing + r * Math.signum(diff))));
         }
-        this.onGround = true;
+        this.setOnGround(true);
         final double startX = this.getX();
         final double startY = this.getY();
         final double startZ = this.getZ();
@@ -150,7 +152,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
         if (!this.isAlive()) {
             return;
         }
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             for (final CartWheel wheel : this.wheels) {
                 wheel.tick();
             }
@@ -177,7 +179,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
         if (this.horizontalCollision) {
             final Vec3 start = new Vec3(this.getX(), this.getY() + this.getBbHeight(), this.getZ());
             final Vec3 end = new Vec3(this.pulling.getX(), this.pulling.getY() + this.pulling.getBbHeight() / 2, this.pulling.getZ());
-            final BlockHitResult result = this.level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            final BlockHitResult result = this.level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
             return result.getType() == HitResult.Type.BLOCK;
         }
         return false;
@@ -200,7 +202,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
      * @param entityIn new pulling entity
      */
     public void setPulling(final Entity entityIn) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (this.canBePulledBy(entityIn)) {
                 if (entityIn == null) {
                     if (this.pulling instanceof LivingEntity) {
@@ -242,7 +244,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
                     ((AbstractDrawnEntity) entityIn).drawn = this;
                 }
                 this.pulling = entityIn;
-                IFWorld.get(this.level).ifPresent(w -> w.addPulling(this));
+                IFWorld.get(this.level()).ifPresent(w -> w.addPulling(this));
 
             }
         } else {
@@ -261,7 +263,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
                 }
             }
             this.pulling = entityIn;
-            IFWorld.get(this.level).ifPresent(w -> w.addPulling(this));
+            IFWorld.get(this.level()).ifPresent(w -> w.addPulling(this));
         }
     }
 
@@ -277,16 +279,16 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
      * Attempts to reattach the cart to the last pulling entity.
      */
     private void attemptReattach() {
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             if (this.pullingId != -1) {
-                final Entity entity = this.level.getEntity(this.pullingId);
+                final Entity entity = this.level().getEntity(this.pullingId);
                 if (entity != null && entity.isAlive()) {
                     this.setPulling(entity);
                 }
             }
         } else {
             if (this.pullingUUID != null) {
-                final Entity entity = ((ServerLevel) this.level).getEntity(this.pullingUUID);
+                final Entity entity = ((ServerLevel) this.level()).getEntity(this.pullingUUID);
                 if (entity != null && entity.isAlive()) {
                     this.setPulling(entity);
                 }
@@ -302,7 +304,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
                 this.pulling = null;
             }
             return true;
-        } else if (!this.level.isClientSide && this.shouldRemovePulling()) {
+        } else if (!this.level().isClientSide && this.shouldRemovePulling()) {
             this.setPulling(null);
             return true;
         }
@@ -368,7 +370,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
      * @param entityIn
      */
     protected boolean canBePulledBy(final Entity entityIn) {
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             return true;
         }
         if (entityIn == null) {
@@ -393,11 +395,11 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
     public boolean hurt(final DamageSource source, final float amount) {
         if (this.isInvulnerableTo(source)) {
             return false;
-        } else if (!this.level.isClientSide && this.isAlive()) {
-            if (source == DamageSource.CACTUS) {
+        } else if (!this.level().isClientSide && this.isAlive()) {
+            if (source.is(DamageTypes.CACTUS)) {
                 return false;
             }
-            if (source instanceof IndirectEntityDamageSource && source.getEntity() != null && this.hasPassenger(source.getEntity())) {
+            if (source.isIndirect() && source.getEntity() != null && this.hasPassenger(source.getEntity())) {
                 return false;
             }
             this.setForwardDirection(-this.getForwardDirection());
@@ -418,7 +420,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
         ItemStack stack = player.getItemInHand(hand);
         if (stack.is(ItemTags.BANNERS)) {
             ItemStack oldBanner = this.getBanner();
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 ItemStack banner = stack.split(1);
                 if (!oldBanner.isEmpty()) {
                     if (stack.isEmpty()) {
@@ -430,7 +432,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
                 this.playSound(SoundEvents.WOOD_PLACE, 1.0F, 0.8F);
                 this.setBanner(banner);
             }
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
         return InteractionResult.PASS;
     }
@@ -443,7 +445,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
      * @param byCreativePlayer
      */
     public void onDestroyed(final DamageSource source, final boolean byCreativePlayer) {
-        if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+        if (this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
             if (!byCreativePlayer) {
                 this.spawnAtLocation(this.getCartItem());
                 this.spawnAtLocation(this.getBanner());
@@ -469,7 +471,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
             this.setYRot((float) (this.getYRot() + Mth.wrapDegrees(this.lerpYaw - this.getYRot()) / this.lerpSteps));
             this.setXRot((float) (this.getXRot() + (this.lerpPitch - this.getXRot()) / this.lerpSteps));
             this.lerpSteps--;
-            this.onGround = true;
+            this.setOnGround(true);
             this.move(MoverType.SELF, new Vec3(dx, dy, dz));
             this.setRot(this.getYRot(), this.getXRot());
         }
@@ -542,11 +544,11 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
         for (final Pose pose : rider.getDismountPoses()) {
             blockPos.set(x, y, z);
             while (blockPos.getY() < limit) {
-                final double ground = this.level.getBlockFloorHeight(blockPos);
+                final double ground = this.level().getBlockFloorHeight(blockPos);
                 if (blockPos.getY() + ground > limit) break;
                 if (DismountHelper.isBlockFloorValid(ground)) {
                     final Vec3 pos = new Vec3(x, blockPos.getY() + ground, z);
-                    if (DismountHelper.canDismountTo(this.level, rider, rider.getLocalBoundsForPose(pose).move(pos))) {
+                    if (DismountHelper.canDismountTo(this.level(), rider, rider.getLocalBoundsForPose(pose).move(pos))) {
                         rider.setPose(pose);
                         return pos;
                     }
@@ -589,7 +591,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
         return this.entityData.get(BANNER);
     }
 
-    public List<Pair<BannerPattern, DyeColor>> getBannerPattern() {
+    public List<Pair<Holder<BannerPattern>, DyeColor>> getBannerPattern() {
         final ItemStack banner = this.getBanner();
         if (banner.getItem() instanceof BannerItem item) {
             return BannerBlockEntity.createPatterns(item.getColor(), BannerBlockEntity.getItemPatterns(banner));
@@ -647,7 +649,7 @@ public abstract class AbstractDrawnEntity extends Entity implements IEntityAddit
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

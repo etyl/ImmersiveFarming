@@ -1,6 +1,6 @@
 {
 	"loader": "forge:obj",
 	"model": "immersivefarming:models/block/sprinkler_normal_base.obj",
-	"flip-v": true,
-	"detectCullableFaces": false
+	"flip_v": true,
+	"automatic_culling": false
 }

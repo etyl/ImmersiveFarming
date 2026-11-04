@@ -8,7 +8,6 @@ import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public final class IFConfig {
 
         static String referencePullAnimals() {
             return "[\n" +
-                StreamSupport.stream(ForgeRegistries.ENTITIES.spliterator(), false)
+                StreamSupport.stream(ForgeRegistries.ENTITY_TYPES.spliterator(), false)
                     .filter(type -> {
                         final Class<?> entityClass = TypeResolver.resolveRawArgument(EntityType.EntityFactory.class, Objects.requireNonNull(
                             ObfuscationReflectionHelper.getPrivateValue(EntityType.class, type, "f_20535_"),
@@ -60,7 +59,7 @@ public final class IFConfig {
                             !ItemSteerable.class.isAssignableFrom(entityClass) &&
                             !Llama.class.isAssignableFrom(entityClass); // no horse-llamas
                     })
-                    .map(ForgeRegistryEntry::getRegistryName)
+                    .map(ForgeRegistries.ENTITY_TYPES::getKey)
                     .filter(Objects::nonNull)
                     .map(type -> "    \"" + type.toString() + "\"")
                     .collect(Collectors.joining(",\n")) +
@@ -90,12 +89,21 @@ public final class IFConfig {
     }
 
     public static class CropConfig {
+        public final ForgeConfigSpec.BooleanValue spread_contamination;
         public final ForgeConfigSpec.DoubleValue start_contamination;
         public final ForgeConfigSpec.DoubleValue proximity_contamination;
         public final ForgeConfigSpec.DoubleValue lethality_contamination;
         public final ForgeConfigSpec.DoubleValue stem_death;
+        public final ForgeConfigSpec.DoubleValue evaporation;
+        public final ForgeConfigSpec.DoubleValue flooded_growth;
+        public final ForgeConfigSpec.DoubleValue unfertilized_growth;
+        public final ForgeConfigSpec.BooleanValue replace_farmland;
 
         CropConfig(final ForgeConfigSpec.Builder builder) {
+            this.replace_farmland = builder.comment("Whether vanilla farmland is replaced by soil when tilled by other mods or when a crop grows on it")
+                    .define("replace_farmland", true);
+            this.spread_contamination = builder.comment("Whether sick crops can contaminate neighbouring crops")
+                    .define("spread_contamination", false);
             this.start_contamination = builder.comment("Probability for a crop to become sick during a random tick")
                     .defineInRange("start_contamination", 0.0001D, 0D, 1.0D);
             this.proximity_contamination = builder.comment("Probability for a crop to be contaminated by a neighbouring sick crop during a random tick")
@@ -104,6 +112,12 @@ public final class IFConfig {
                     .defineInRange("lethality_contamination", 0.02D, 0D, 1.0D);
             this.stem_death = builder.comment("Probability for a steam to die after giving a fruit")
                     .defineInRange("stem_death", 0.5D, 0D, 1.0D);
+            this.evaporation = builder.comment("Probability for soil that is not being watered to lose one water level during a random tick")
+                    .defineInRange("evaporation", 0.05D, 0D, 1.0D);
+            this.flooded_growth = builder.comment("Probability for a crop on flooded soil (next to a water block) to grow when it would normally grow")
+                    .defineInRange("flooded_growth", 0.25D, 0D, 1.0D);
+            this.unfertilized_growth = builder.comment("Probability for a crop on unfertilized soil to grow when it would normally grow")
+                    .defineInRange("unfertilized_growth", 0.2D, 0D, 1.0D);
         }
     }
 }

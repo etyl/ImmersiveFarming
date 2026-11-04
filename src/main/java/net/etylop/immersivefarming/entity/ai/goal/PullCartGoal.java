@@ -17,6 +17,6 @@ public final class PullCartGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return IFWorld.get(this.mob.level).map(w -> w.isPulling(this.mob)).orElse(false);
+        return IFWorld.get(this.mob.level()).map(w -> w.isPulling(this.mob)).orElse(false);
     }
 }

@@ -44,10 +44,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +60,7 @@ import java.util.Map;
 public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerTickableBE, IFluidPipe,
         IEClientTickableBE, IBlockBounds, IHasDummyBlocks, IConfigurableSides, IBlockOverlayText {
 
-    public FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME);
+    public FluidTank tank = new FluidTank(FluidType.BUCKET_VOLUME);
     public Map<Direction, IEEnums.IOSideConfig> sideConfig = new EnumMap<>(Direction.class);
     {
         for(Direction d : DirectionUtils.VALUES)
@@ -78,7 +78,7 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
     public static final BooleanProperty USING_PESTICIDE = BooleanProperty.create("using_pesticide");
 
     private final Map<Direction, CapabilityReference<IFluidHandler>> neighborFluids = CapabilityReference.forAllNeighbors(
-            this, CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY
+            this, ForgeCapabilities.FLUID_HANDLER
     );
     protected int WATER_CONSUMPTION = 1;
 
@@ -272,7 +272,7 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @javax.annotation.Nullable Direction facing)
     {
-        if(capability==CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && facing!=null && !isDummy())
+        if(capability==ForgeCapabilities.FLUID_HANDLER && facing!=null && !isDummy())
         {
             if(!sidedFluidHandler.containsKey(facing))
                 sidedFluidHandler.put(facing, registerCapability(new SprinklerBlockEntity.SidedFluidHandler(this, facing)));

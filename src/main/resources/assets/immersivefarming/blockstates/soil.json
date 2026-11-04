@@ -24,29 +24,68 @@
     "till=7,moisture=0": {
       "model": "immersivefarming:block/soil"
     },
-    "till=7,moisture=1": {
-      "model": "immersivefarming:block/soil"
-    },
-    "till=7,moisture=2": {
-      "model": "immersivefarming:block/soil"
-    },
-    "till=7,moisture=3": {
-      "model": "immersivefarming:block/soil"
-    },
-    "till=7,moisture=4": {
-      "model": "immersivefarming:block/soil"
-    },
-    "till=7,moisture=5": {
-      "model": "immersivefarming:block/soil"
-    },
-    "till=7,moisture=6": {
-      "model": "immersivefarming:block/soil"
-    },
-    "till=7,moisture=7,fertility=0": {
+    "till=7,moisture=1,fertility=0": {
       "model": "immersivefarming:block/soil_moist"
     },
-    "till=7,moisture=7,fertility=1": {
+    "till=7,moisture=1,fertility=1": {
       "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=1,fertility=2": {
+      "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=2,fertility=0": {
+      "model": "immersivefarming:block/soil_moist"
+    },
+    "till=7,moisture=2,fertility=1": {
+      "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=2,fertility=2": {
+      "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=3,fertility=0": {
+      "model": "immersivefarming:block/soil_moist"
+    },
+    "till=7,moisture=3,fertility=1": {
+      "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=3,fertility=2": {
+      "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=4,fertility=0": {
+      "model": "immersivefarming:block/soil_moist"
+    },
+    "till=7,moisture=4,fertility=1": {
+      "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=4,fertility=2": {
+      "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=5,fertility=0": {
+      "model": "immersivefarming:block/soil_moist"
+    },
+    "till=7,moisture=5,fertility=1": {
+      "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=5,fertility=2": {
+      "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=6,fertility=0": {
+      "model": "immersivefarming:block/soil_moist"
+    },
+    "till=7,moisture=6,fertility=1": {
+      "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=6,fertility=2": {
+      "model": "immersivefarming:block/soil_moist_f"
+    },
+    "till=7,moisture=7,fertility=0": {
+      "model": "immersivefarming:block/soil_flooded"
+    },
+    "till=7,moisture=7,fertility=1": {
+      "model": "immersivefarming:block/soil_flooded"
+    },
+    "till=7,moisture=7,fertility=2": {
+      "model": "immersivefarming:block/soil_flooded"
     }
   }
 }

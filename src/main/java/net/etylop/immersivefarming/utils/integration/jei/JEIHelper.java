@@ -14,7 +14,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.api.crafting.ComposterRecipe;
 import net.etylop.immersivefarming.api.crafting.IFCachedRecipeList;
-import net.etylop.immersivefarming.block.IFBlocks;
+import net.etylop.immersivefarming.block.IFMultiblockLogic;
 import net.etylop.immersivefarming.gui.screen.ComposterScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -67,7 +67,7 @@ public class JEIHelper implements IModPlugin{
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration){
-		registration.addRecipeCatalyst(new ItemStack(IFBlocks.COMPOSTER.get()), this.composter_type);
+		registration.addRecipeCatalyst(new ItemStack(IFMultiblockLogic.COMPOSTER.block().get()), this.composter_type);
 	}
 
 	@Override
