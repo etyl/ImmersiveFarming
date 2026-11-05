@@ -1,3 +1,9 @@
+##### Version 1.20.1-0.4.1
+
+* Fixed the wrong particles when breaking or walking on the top part of sprinklers
+* Soil can no longer be trampled
+
+
 ##### Version 1.20.1-0.4
 
 * Ported to Minecraft 1.20.1 (Forge 47, Immersive Engineering 10)
