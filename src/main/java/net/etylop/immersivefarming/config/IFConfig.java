@@ -95,7 +95,6 @@ public final class IFConfig {
         public final ForgeConfigSpec.DoubleValue proximity_contamination;
         public final ForgeConfigSpec.DoubleValue lethality_contamination;
         public final ForgeConfigSpec.DoubleValue stem_death;
-        public final ForgeConfigSpec.IntValue water_capacity;
         public final ForgeConfigSpec.DoubleValue evaporation;
         public final ForgeConfigSpec.DoubleValue flooded_growth;
         public final ForgeConfigSpec.DoubleValue unfertilized_growth;
@@ -121,10 +120,8 @@ public final class IFConfig {
                     .defineInRange("lethality_contamination", 0.02D, 0D, 1.0D);
             this.stem_death = builder.comment("Probability for a steam to die after giving a fruit")
                     .defineInRange("stem_death", 0.5D, 0D, 1.0D);
-            this.water_capacity = builder.comment("Max water level of soil when watered (by rain, sprinklers or the watering can). Each crop growth stage consumes one level")
-                    .defineInRange("water_capacity", 3, 1, 6);
             this.evaporation = builder.comment("Probability for soil that is not being watered to lose one water level during a random tick")
-                    .defineInRange("evaporation", 0.02D, 0D, 1.0D);
+                    .defineInRange("evaporation", 0.01D, 0D, 1.0D);
             this.flooded_growth = builder.comment("Probability for a crop on flooded soil (next to a water block) to grow when it would normally grow")
                     .defineInRange("flooded_growth", 0.25D, 0D, 1.0D);
             this.unfertilized_growth = builder.comment("Probability for a crop on unfertilized soil to grow when it would normally grow")

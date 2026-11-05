@@ -32,6 +32,7 @@ import net.etylop.immersivefarming.api.crafting.ComposterRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -69,7 +70,7 @@ public class ComposterLogic implements IMultiblockLogic<ComposterLogic.State>, I
     public static final int NUM_SLOTS = 1;
     public static final int INPUT_SLOT = 0;
     public static final int ENERGY_CAPACITY = 16000;
-    public static final int TANK_VOLUME = 8*FluidType.BUCKET_VOLUME;
+    public static final int TANK_VOLUME = 4*FluidType.BUCKET_VOLUME;
 
     @Override
     public void tickServer(IMultiblockContext<State> context)
@@ -181,9 +182,9 @@ public class ComposterLogic implements IMultiblockLogic<ComposterLogic.State>, I
     {
         public final AveragingEnergyStorage energy = new AveragingEnergyStorage(ENERGY_CAPACITY);
         public final FluidTank[] tanks = new FluidTank[]{
-                new FluidTank(TANK_VOLUME), // water tank
-                new FluidTank(TANK_VOLUME), // nitrogen tank
-                new FluidTank(TANK_VOLUME)  // carbon tank
+                new FluidTank(TANK_VOLUME, f -> f.getFluid().is(FluidTags.WATER)), // water tank
+                new FluidTank(TANK_VOLUME), // wet matter tank
+                new FluidTank(TANK_VOLUME)  // dry matter tank
         };
         public final SlotwiseItemHandler inventory;
         public final InMachineProcessor<ComposterRecipe> processor;
@@ -233,8 +234,8 @@ public class ComposterLogic implements IMultiblockLogic<ComposterLogic.State>, I
         public void writeSaveNBT(CompoundTag nbt)
         {
             nbt.put("tankWater", tanks[0].writeToNBT(new CompoundTag()));
-            nbt.put("tankNitrogen", tanks[1].writeToNBT(new CompoundTag()));
-            nbt.put("tankCarbon", tanks[2].writeToNBT(new CompoundTag()));
+            nbt.put("tankWetMatter", tanks[1].writeToNBT(new CompoundTag()));
+            nbt.put("tankDryMatter", tanks[2].writeToNBT(new CompoundTag()));
             nbt.put("inventory", inventory.serializeNBT());
             nbt.put("energy", energy.serializeNBT());
             nbt.put("processor", processor.toNBT());
@@ -244,8 +245,8 @@ public class ComposterLogic implements IMultiblockLogic<ComposterLogic.State>, I
         public void readSaveNBT(CompoundTag nbt)
         {
             tanks[0].readFromNBT(nbt.getCompound("tankWater"));
-            tanks[1].readFromNBT(nbt.getCompound("tankNitrogen"));
-            tanks[2].readFromNBT(nbt.getCompound("tankCarbon"));
+            tanks[1].readFromNBT(nbt.getCompound("tankWetMatter"));
+            tanks[2].readFromNBT(nbt.getCompound("tankDryMatter"));
             inventory.deserializeNBT(nbt.getCompound("inventory"));
             if(nbt.contains("energy"))
                 energy.deserializeNBT(nbt.get("energy"));
@@ -321,9 +322,22 @@ public class ComposterLogic implements IMultiblockLogic<ComposterLogic.State>, I
                 return true;
             if(!(context instanceof State composter))
                 return false;
-            // we don't need to check filling since after draining 1 mB of input fluid there will be space for 1 mB of output fluid
-            return composter.energy.extractEnergy(levelData.energyPerTick(), true)==levelData.energyPerTick()&&
-                    !composter.tanks[0].drain(1, FluidAction.SIMULATE).isEmpty(); // TODO remove
+            if(composter.energy.extractEnergy(levelData.energyPerTick(), true)!=levelData.energyPerTick())
+                return false;
+            ComposterRecipe recipe = levelData.recipe();
+            if(recipe.fluidProduct)
+            {
+                // organic item -> wet/dry matter: the produced fluids must fit in their tanks
+                FluidStack[] outputs = recipe.getFluidOutput();
+                return canFill(composter.tanks[1], outputs[0])&&canFill(composter.tanks[2], outputs[1]);
+            }
+            // water + wet + dry matter -> compost: all three fluids must still be available
+            return recipe.matches(composter.getTankFluids());
+        }
+
+        private static boolean canFill(FluidTank tank, FluidStack fluid)
+        {
+            return fluid==null||fluid.isEmpty()||tank.fill(fluid, FluidAction.SIMULATE)==fluid.getAmount();
         }
 
         @Override

@@ -59,7 +59,7 @@ public class TrowelItem extends Item {
         else if (water == Soil.WATER_FLOODED)
             waterInfo = Component.translatable(key + "flooded").withStyle(ChatFormatting.RED);
         else
-            waterInfo = Component.translatable(key + "water", water, Soil.waterSaturated()).withStyle(ChatFormatting.AQUA);
+            waterInfo = Component.translatable(key + "water", water, Soil.WATER_SATURATED).withStyle(ChatFormatting.AQUA);
 
         MutableComponent info = waterInfo.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY));
         if (soil.getValue(Soil.FERTILITY) > 0)

@@ -12,13 +12,24 @@
   * Right click soil or a crop to inspect its tilling, water level, fertility and health
 * Soil can be turned back into dirt with a shovel
 * Unfertilized soil now grows crops much slower
+* Crops need sunlight: they must see the sky to grow, glass is fine (configurable)
+* Soil rules apply to all plants, including tall plants (pitcher plants, hemp, tomatoes)
 * Removed crop rotation growth boost
 * Sick crops no longer contaminate adjacent crops by default
+* Fixed the Industrial Composter's fluid pipes not showing in the engineer's manual
+* Plow and sowing machine
+  * Plow accepts any tool able to till, and finishes partially tilled soil
+  * Sowing machine accepts all seeds (#forge:seeds, #immersivefarming:sower_seeds and modded crops)
+  * Fixed seeds and compost being consumed twice
+  * Respect claim and spawn protection
 * Compatibility
-  * Farmland tilled by other mods, or that a crop grows on, is turned into soil
-  * Bone meal and trampling are only blocked on soil, vanilla farmland behaves normally
+  * Dirt tilled by any tool or machine (Create, Tinkers', Mekanism...) becomes soil
+  * Farmland that a crop grows on is turned into soil
+  * Bone meal is blocked on crops on soil, even when used by machines (Create: Slice & Dice...)
+* Engineer's manual reflects the config
 * Config file
-  * Toggle farmland replacement and disease spreading
+  * Toggle farmland replacement, sunlight requirement and disease spreading
+  * Choose which blocks are turned into soil
   * Change evaporation, flooded growth and unfertilized growth
 
 

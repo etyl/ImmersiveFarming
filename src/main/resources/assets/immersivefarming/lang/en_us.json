@@ -21,8 +21,8 @@
   "item.immersivefarming.trowel.contaminated": "Contaminated",
 
   "fluid.immersivefarming.treated_water_fluid": "Treated Water",
-  "fluid.immersivefarming.wet_matter_fluid": "Green Material",
-  "fluid.immersivefarming.dry_matter_fluid": "Brown Material",
+  "fluid.immersivefarming.wet_matter_fluid": "Wet Matter",
+  "fluid.immersivefarming.dry_matter_fluid": "Dry Matter",
   
   "block.immersivefarming.composter": "Industrial Composter",
   "manual.immersivefarming.farming": "Farming",
@@ -36,5 +36,7 @@
   "key.immersivefarming.desc": "Action Key",
   "subtitles.immersivefarming.cart.attached": "Cart attaches",
   "subtitles.immersivefarming.cart.detached": "Cart detaches",
-  "subtitles.immersivefarming.cart.placed": "Cart placed"
+  "subtitles.immersivefarming.cart.placed": "Cart placed",
+  "jei.immersivefarming.energy": "%s RF",
+  "jei.immersivefarming.time": "%ss"
 }

@@ -29,40 +29,40 @@ public class ComposterRecipe extends IFMultiblockRecipe
 	public final IngredientWithSize itemOutput;
 	public final int energy; // value from the recipe json, needed to sync the recipe to clients
 
-	public ComposterRecipe(ResourceLocation id, FluidStack fluidNitrogen, FluidStack fluidCarbon, TagKey<Item> itemInput, int energy)
+	public ComposterRecipe(ResourceLocation id, FluidStack fluidWetMatter, FluidStack fluidDryMatter, TagKey<Item> itemInput, int energy)
 	{
-		this(id, fluidNitrogen, fluidCarbon, new IngredientWithSize(itemInput, 1), energy);
+		this(id, fluidWetMatter, fluidDryMatter, new IngredientWithSize(itemInput, 1), energy);
 	}
 
-	public ComposterRecipe(ResourceLocation id, FluidStack fluidNitrogen, FluidStack fluidCarbon, IngredientWithSize itemInput, int energy)
+	public ComposterRecipe(ResourceLocation id, FluidStack fluidWetMatter, FluidStack fluidDryMatter, IngredientWithSize itemInput, int energy)
 	{
 		super(ItemStack.EMPTY, IFRecipeTypes.COMPOSTER, id);
 		this.fluidProduct = true;
 
-		this.fluidOutputs[0] = fluidNitrogen;
-		this.fluidOutputs[1] = fluidCarbon;
+		this.fluidOutputs[0] = fluidWetMatter;
+		this.fluidOutputs[1] = fluidDryMatter;
 		this.itemInput = itemInput;
 		this.itemOutput = null;
 		this.energy = energy;
 
 		timeAndEnergy(energy, energy);
-		this.fluidOutputList = Lists.newArrayList(fluidNitrogen, fluidCarbon);
+		this.fluidOutputList = Lists.newArrayList(fluidWetMatter, fluidDryMatter);
 		setInputListWithSizes(Lists.newArrayList(this.itemInput));
 	}
 
-	public ComposterRecipe(ResourceLocation id, FluidTagInput fluidWater, FluidTagInput fluidNitrogen, FluidTagInput fluidCarbon, IngredientWithSize itemOutput, int energy) {
+	public ComposterRecipe(ResourceLocation id, FluidTagInput fluidWater, FluidTagInput fluidWetMatter, FluidTagInput fluidDryMatter, IngredientWithSize itemOutput, int energy) {
 		super(ItemStack.EMPTY, IFRecipeTypes.COMPOSTER, id);
 		this.fluidProduct = false;
 
 		this.fluidInputs[0] = fluidWater;
-		this.fluidInputs[1] = fluidNitrogen;
-		this.fluidInputs[2] = fluidCarbon;
+		this.fluidInputs[1] = fluidWetMatter;
+		this.fluidInputs[2] = fluidDryMatter;
 		this.itemOutput = itemOutput;
 		this.itemInput = null;
 		this.energy = energy;
 
 		timeAndEnergy(100, energy);
-		this.fluidInputList = Lists.newArrayList(fluidWater, fluidNitrogen, fluidCarbon);
+		this.fluidInputList = Lists.newArrayList(fluidWater, fluidWetMatter, fluidDryMatter);
 	}
 
 	@Override
@@ -104,8 +104,9 @@ public class ComposterRecipe extends IFMultiblockRecipe
 	public boolean matches(FluidStack[] fluids) {
 		if (this.fluidProduct)
 			return false;
+		// checks both the fluid type (tag) and the amount
 		for (int i=0; i<3; i++) {
-			if (fluids[i].getAmount() < this.fluidInputs[i].getAmount())
+			if (!this.fluidInputs[i].test(fluids[i]))
 				return false;
 		}
 		return true;

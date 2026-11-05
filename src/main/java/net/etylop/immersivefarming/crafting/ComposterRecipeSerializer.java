@@ -68,16 +68,16 @@ public class ComposterRecipeSerializer extends IERecipeSerializer<ComposterRecip
 		boolean fluidProduct = buffer.readBoolean();
 		int energy = buffer.readInt();
 		if (fluidProduct) {
-			FluidStack nitrogen = buffer.readFluidStack();
-			FluidStack carbon = buffer.readFluidStack();
+			FluidStack wetMatter = buffer.readFluidStack();
+			FluidStack dryMatter = buffer.readFluidStack();
 			IngredientWithSize input = IngredientWithSize.read(buffer);
-			return new ComposterRecipe(recipeId, nitrogen, carbon, input, energy);
+			return new ComposterRecipe(recipeId, wetMatter, dryMatter, input, energy);
 		}
 		FluidTagInput water = FluidTagInput.read(buffer);
-		FluidTagInput nitrogen = FluidTagInput.read(buffer);
-		FluidTagInput carbon = FluidTagInput.read(buffer);
+		FluidTagInput wetMatter = FluidTagInput.read(buffer);
+		FluidTagInput dryMatter = FluidTagInput.read(buffer);
 		IngredientWithSize output = IngredientWithSize.read(buffer);
-		return new ComposterRecipe(recipeId, water, nitrogen, carbon, output, energy);
+		return new ComposterRecipe(recipeId, water, wetMatter, dryMatter, output, energy);
 	}
 
 	@Override

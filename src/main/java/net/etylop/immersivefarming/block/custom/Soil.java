@@ -40,12 +40,10 @@ public class Soil extends FarmBlock {
     public static final IntegerProperty WATER = MOISTURE;
     // Next to a water block
     public static final int WATER_FLOODED = MAX_MOISTURE;
-    private static final IFConfig.CropConfig cropConfig = IFConfig.get().cropConfig;
+    // Max level reached by watering
+    public static final int WATER_SATURATED = WATER_FLOODED - 1;
 
-    // Max level reached by watering (configurable, always below WATER_FLOODED)
-    public static int waterSaturated() {
-        return Math.min(cropConfig.water_capacity.get(), WATER_FLOODED - 1);
-    }
+    private static final IFConfig.CropConfig cropConfig = IFConfig.get().cropConfig;
 
     public static final BooleanProperty CONTAMINATED = BooleanProperty.create("contaminated");
 
@@ -63,7 +61,7 @@ public class Soil extends FarmBlock {
     public static BlockState fromFarmland(BlockState farmland) {
         return IFBlocks.SOIL.get().defaultBlockState()
                 .setValue(TILL, TILL_MAX)
-                .setValue(WATER, Math.min(farmland.getOptionalValue(MOISTURE).orElse(0), waterSaturated()));
+                .setValue(WATER, Math.min(farmland.getOptionalValue(MOISTURE).orElse(0), WATER_SATURATED));
     }
 
     @Override
@@ -113,13 +111,10 @@ public class Soil extends FarmBlock {
             water = WATER_FLOODED;
         }
         else if (water == WATER_FLOODED) {
-            water = waterSaturated();
+            water = WATER_SATURATED;
         }
         else if (sprinkler > 0 || pLevel.isRainingAt(pPos.above())) {
-            water = Math.min(waterSaturated(), water + 1);
-        }
-        else if (water > waterSaturated()) {
-            water = waterSaturated(); // capacity was lowered in the config
+            water = Math.min(WATER_SATURATED, water + 1);
         }
         else if (water > 0 && pRandom.nextDouble() < cropConfig.evaporation.get()) {
             water--;

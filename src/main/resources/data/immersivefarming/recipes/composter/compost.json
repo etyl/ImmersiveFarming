@@ -2,8 +2,10 @@
   "type": "immersivefarming:composter",
   "fluidProduct": false,
   "result": {
-    "item": "immersivefarming:compost",
-    "amount": 1
+    "base_ingredient": {
+      "item": "immersivefarming:compost"
+    },
+    "count": 3
   },
   "input0": {
     "tag": "minecraft:water",
