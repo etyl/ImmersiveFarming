@@ -17,6 +17,8 @@
 * Removed crop rotation growth boost
 * Sick crops no longer contaminate adjacent crops by default
 * Fixed the Industrial Composter's fluid pipes not showing in the engineer's manual
+* Composting Bin: a low-tech 2x2 composter
+  * Fill it with wet and dry matter, turn it with a shovel when it opens, and collect compost
 * Plow and sowing machine
   * Plow accepts any tool able to till, and finishes partially tilled soil
   * Sowing machine accepts all seeds (#forge:seeds, #immersivefarming:sower_seeds and modded crops)

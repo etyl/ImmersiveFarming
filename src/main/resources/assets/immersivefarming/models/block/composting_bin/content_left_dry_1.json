@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "#content",
+    "content": "minecraft:block/rooted_dirt"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        2,
+        2
+      ],
+      "to": [
+        14,
+        3.5,
+        14
+      ],
+      "faces": {
+        "up": {
+          "texture": "#content"
+        },
+        "west": {
+          "texture": "#content",
+          "uv": [
+            2,
+            12.5,
+            14,
+            14
+          ]
+        }
+      }
+    }
+  ]
+}

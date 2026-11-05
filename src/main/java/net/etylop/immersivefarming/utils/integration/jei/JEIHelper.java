@@ -47,7 +47,7 @@ public class JEIHelper implements IModPlugin{
 
 		this.composter_type = composter.getRecipeType();
 
-		registration.addRecipeCategories(composter);
+		registration.addRecipeCategories(composter, new CompostingBinRecipeCategory(guiHelper));
 
 		slotDrawable = guiHelper.getSlotDrawable();
 		ResourceLocation background = new ResourceLocation(ImmersiveFarming.MOD_ID, "textures/gui/composter.png");
@@ -58,6 +58,7 @@ public class JEIHelper implements IModPlugin{
 	@Override
 	public void registerRecipes(IRecipeRegistration registration){
 		registration.addRecipes(this.composter_type, getRecipes(ComposterRecipe.RECIPES));
+		CompostingBinRecipeCategory.registerInfo(registration);
 	}
 
 	private <T extends Recipe<?>> List<T> getRecipes(IFCachedRecipeList<T> cachedList)
@@ -68,6 +69,7 @@ public class JEIHelper implements IModPlugin{
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration){
 		registration.addRecipeCatalyst(new ItemStack(IFMultiblockLogic.COMPOSTER.block().get()), this.composter_type);
+		registration.addRecipeCatalyst(CompostingBinRecipeCategory.catalyst(), CompostingBinRecipeCategory.TYPE);
 	}
 
 	@Override

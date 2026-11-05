@@ -1,0 +1,92 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "#lid",
+    "lid": "immersiveengineering:block/wooden_decoration/treated_wood_horizontal"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lid"
+        },
+        "south": {
+          "texture": "#lid"
+        },
+        "east": {
+          "texture": "#lid"
+        },
+        "west": {
+          "texture": "#lid"
+        },
+        "up": {
+          "texture": "#lid"
+        },
+        "down": {
+          "texture": "#lid"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        15,
+        1
+      ],
+      "to": [
+        16,
+        16,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lid",
+          "uv": [
+            14,
+            0,
+            16,
+            1
+          ]
+        },
+        "south": {
+          "texture": "#lid",
+          "uv": [
+            14,
+            0,
+            16,
+            1
+          ]
+        },
+        "west": {
+          "texture": "#lid",
+          "uv": [
+            1,
+            0,
+            3,
+            1
+          ]
+        },
+        "up": {
+          "texture": "#lid",
+          "uv": [
+            14,
+            1,
+            16,
+            3
+          ]
+        }
+      }
+    }
+  ]
+}

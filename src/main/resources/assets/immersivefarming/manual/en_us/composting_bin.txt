@@ -1,0 +1,13 @@
+Composting Bin
+Compost the old fashioned way
+
+<&composting_bin>
+The Composting Bin is a simple wooden bin that turns organic matter into compost without any power. It is slower and less efficient than the Industrial Composter, but needs nothing more than some planks and a shovel.
+
+Right click the bin with organic items to fill it, or sneak to insert a whole stack. Each item gives the same amount of Wet Matter or Dry Matter as in the Industrial Composter: crops and fruits give Wet Matter, logs, saplings and leaves give Dry Matter.
+
+The left side of the bin fills up with Dry Matter and the right side with Wet Matter. Once it holds 70 mB of Wet Matter and 70 mB of Dry Matter, the bin closes and starts composting.
+
+While composting, the bin opens 3 times: the compost must then be turned by right clicking the bin with a shovel, to continue composting.
+
+After some time the compost is ready, right click the bin to collect 16 compost.

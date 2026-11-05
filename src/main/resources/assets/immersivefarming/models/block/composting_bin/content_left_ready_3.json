@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "#content",
+    "content": "minecraft:block/composter_ready"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        2,
+        2
+      ],
+      "to": [
+        14,
+        6.5,
+        14
+      ],
+      "faces": {
+        "up": {
+          "texture": "#content",
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ]
+        },
+        "west": {
+          "texture": "#content",
+          "uv": [
+            2,
+            9.5,
+            14,
+            14
+          ]
+        }
+      }
+    }
+  ]
+}

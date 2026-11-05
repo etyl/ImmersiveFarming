@@ -1,0 +1,6 @@
+{
+  "composting_bin": {
+    "type": "crafting",
+    "recipe": "immersivefarming:crafting/composting_bin"
+  }
+}

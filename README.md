@@ -25,6 +25,7 @@ Features are explained in the engineer's manual, but here is an overview:
   * Sowing machine: to sow seeds and fertilize faster
 * Fertilization
   * Compost can be made from the Industrial Composter multiblock
+  * Composting Bin: a simple wooden composter, filled with wet and dry matter and turned with a shovel while it composts
   * Using compost on soil boosts crop growth
 * Farmland
   * Farmland can no longer be trampled by jumping on it

@@ -1,0 +1,146 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "#lid",
+    "lid": "immersiveengineering:block/wooden_decoration/treated_wood_horizontal"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        -2,
+        15
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lid",
+          "uv": [
+            2,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#lid",
+          "uv": [
+            2,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#lid",
+          "uv": [
+            0,
+            0,
+            1,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#lid",
+          "uv": [
+            15,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#lid",
+          "uv": [
+            2,
+            0,
+            16,
+            1
+          ]
+        },
+        "down": {
+          "texture": "#lid",
+          "uv": [
+            2,
+            15,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          -2,
+          15
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        14,
+        11,
+        16
+      ],
+      "to": [
+        16,
+        13,
+        17
+      ],
+      "faces": {
+        "south": {
+          "texture": "#lid",
+          "uv": [
+            14,
+            1,
+            16,
+            3
+          ]
+        },
+        "west": {
+          "texture": "#lid",
+          "uv": [
+            15,
+            1,
+            16,
+            3
+          ]
+        },
+        "up": {
+          "texture": "#lid",
+          "uv": [
+            14,
+            0,
+            16,
+            1
+          ]
+        },
+        "down": {
+          "texture": "#lid",
+          "uv": [
+            14,
+            15,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          -2,
+          15
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    }
+  ]
+}

@@ -25,6 +25,14 @@
   "fluid.immersivefarming.dry_matter_fluid": "Dry Matter",
   
   "block.immersivefarming.composter": "Industrial Composter",
+  "block.immersivefarming.composting_bin": "Composting Bin",
+  "block.immersivefarming.composting_bin.not_compostable": "This cannot be composted",
+  "block.immersivefarming.composting_bin.wet_full": "The bin has enough wet matter, it needs dry matter",
+  "block.immersivefarming.composting_bin.dry_full": "The bin has enough dry matter, it needs wet matter",
+  "block.immersivefarming.composting_bin.composting": "The matter is decomposing",
+  "block.immersivefarming.composting_bin.needs_turning": "The compost needs to be turned with a shovel",
+  "jei.immersivefarming.composting_bin.turns": "%s shovel turns",
+  "jei.immersivefarming.composting_bin.info": "Fill the Composting Bin with %1$s mB of wet matter and %1$s mB of dry matter (values shown in the composter recipes) by right clicking it, sneak to insert a whole stack. It then closes and composts, and opens %3$s times so the compost can be turned with a shovel. When the compost is ready, right click to collect %2$s compost.",
   "manual.immersivefarming.farming": "Farming",
 
   "item.immersivefarming.plow": "Plow",

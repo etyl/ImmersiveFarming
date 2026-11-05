@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
 import blusunrize.immersiveengineering.common.blocks.MultiblockBEType;
 import com.google.common.collect.ImmutableSet;
 import net.etylop.immersivefarming.ImmersiveFarming;
+import net.etylop.immersivefarming.block.entity.CompostingBinBlockEntity;
 import net.etylop.immersivefarming.block.entity.SprinklerBlockEntity;
 import net.etylop.immersivefarming.block.entity.SprinklerExtendedBlockEntity;
 import net.minecraft.world.level.block.Block;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Collection;
 import java.util.function.Supplier;
@@ -35,10 +37,9 @@ public class IFBlockEntities {
             "sprinkler_extended", SprinklerExtendedBlockEntity::new, IFBlocks.SPRINKLER_EXTENDED
     );
 
-
-
-
-
+    public static final RegistryObject<BlockEntityType<CompostingBinBlockEntity>> COMPOSTING_BIN = REGISTER.register(
+            "composting_bin", makeType(CompostingBinBlockEntity::new, IFBlocks.COMPOSTING_BIN)
+    );
 
     public static <T extends BlockEntity> Supplier<BlockEntityType<T>> makeType(BlockEntityType.BlockEntitySupplier<T> create, Supplier<? extends Block> valid)
     {

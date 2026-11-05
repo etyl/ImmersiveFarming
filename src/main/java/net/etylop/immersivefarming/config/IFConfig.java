@@ -131,4 +131,5 @@ public final class IFConfig {
                     .define("require_sunlight", true);
         }
     }
+
 }

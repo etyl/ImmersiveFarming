@@ -2,11 +2,13 @@ package net.etylop.immersivefarming.block;
 
 import blusunrize.immersiveengineering.common.blocks.BlockItemIE;
 import net.etylop.immersivefarming.ImmersiveFarming;
+import net.etylop.immersivefarming.block.custom.CompostingBinBlock;
 import net.etylop.immersivefarming.block.custom.DeadCrop;
 import net.etylop.immersivefarming.block.custom.Soil;
 import net.etylop.immersivefarming.block.custom.SprinklerBlock;
 import net.etylop.immersivefarming.block.custom.SprinklerExtendedBlock;
 import net.etylop.immersivefarming.item.IFItems;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -53,6 +55,19 @@ public class IFBlocks {
             "dead_crop",
             () -> new DeadCrop(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).pushReaction(PushReaction.DESTROY).noCollission().instabreak().sound(SoundType.CROP))
     );
+
+
+    public static final RegistryObject<CompostingBinBlock> COMPOSTING_BIN = BLOCKS.register(
+            "composting_bin",
+            () -> new CompostingBinBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.WOOD)
+                    .sound(SoundType.WOOD)
+                    .strength(2)
+                    .noOcclusion()
+                    .ignitedByLava())
+    );
+    public static final RegistryObject<Item> COMPOSTING_BIN_ITEM = IFItems.ITEMS.register("composting_bin",
+            () -> new BlockItem(COMPOSTING_BIN.get(), new Item.Properties()));
 
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {

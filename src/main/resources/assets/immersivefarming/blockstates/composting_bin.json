@@ -1,0 +1,2812 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lower_left"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "upper"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/upper_left"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_1"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_2"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_3"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_4"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_5"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_6"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_7"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_8"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_1"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_2"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_3"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_4"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_5"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_6"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_7"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_8"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_1"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_2"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_3"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_4"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_5"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_6"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_7"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_8"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "lower",
+        "stage": "composting"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_closed_left"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "left",
+        "half": "upper",
+        "stage": "filling|turning|ready"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_open_left"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lower_right"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "upper"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/upper_right"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_1"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_2"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_3"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_4"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_5"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_6"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_7"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_8"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_1"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_2"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_3"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_4"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_5"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_6"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_7"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_8"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_1"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_2"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_3"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_4"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_5"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_6"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_7"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_8"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "lower",
+        "stage": "composting"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_closed_right"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "part": "right",
+        "half": "upper",
+        "stage": "filling|turning|ready"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_open_right"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lower_left",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "upper"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/upper_left",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_4",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_5",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_6",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_7",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_8",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_4",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_5",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_6",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_7",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_8",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_4",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_5",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_6",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_7",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_8",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "lower",
+        "stage": "composting"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_closed_left",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "left",
+        "half": "upper",
+        "stage": "filling|turning|ready"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_open_left",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lower_right",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "upper"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/upper_right",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_4",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_5",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_6",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_7",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_8",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_4",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_5",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_6",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_7",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_8",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_1",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_2",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_3",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_4",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_5",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_6",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_7",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_8",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "lower",
+        "stage": "composting"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_closed_right",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "part": "right",
+        "half": "upper",
+        "stage": "filling|turning|ready"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_open_right",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lower_left",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "upper"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/upper_left",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_4",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_5",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_6",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_7",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_8",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_4",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_5",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_6",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_7",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_8",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_4",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_5",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_6",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_7",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_8",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "lower",
+        "stage": "composting"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_closed_left",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "left",
+        "half": "upper",
+        "stage": "filling|turning|ready"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_open_left",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lower_right",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "upper"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/upper_right",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_4",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_5",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_6",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_7",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_8",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_4",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_5",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_6",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_7",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_8",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_1",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_2",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_3",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_4",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_5",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_6",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_7",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_8",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "lower",
+        "stage": "composting"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_closed_right",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "part": "right",
+        "half": "upper",
+        "stage": "filling|turning|ready"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_open_right",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lower_left",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "upper"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/upper_left",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_4",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_5",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_6",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_7",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "filling",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_dry_8",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_4",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_5",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_6",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_7",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "turning",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_compost_8",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_4",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_5",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_6",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_7",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "ready",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_left_ready_8",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "lower",
+        "stage": "composting"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_closed_left",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "left",
+        "half": "upper",
+        "stage": "filling|turning|ready"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_open_left",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lower_right",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "upper"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/upper_right",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_4",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_5",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_6",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_7",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "filling",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_wet_8",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_4",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_5",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_6",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_7",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "turning",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_compost_8",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "1"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_1",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "2"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_2",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "3"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_3",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "4"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_4",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "5"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_5",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "6"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_6",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "7"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_7",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "ready",
+        "level": "8"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/content_right_ready_8",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "lower",
+        "stage": "composting"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_closed_right",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "part": "right",
+        "half": "upper",
+        "stage": "filling|turning|ready"
+      },
+      "apply": {
+        "model": "immersivefarming:block/composting_bin/lid_open_right",
+        "y": 270
+      }
+    }
+  ]
+}

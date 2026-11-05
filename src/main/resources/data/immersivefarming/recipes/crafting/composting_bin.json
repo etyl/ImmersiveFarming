@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "sss",
+    "c c",
+    "sss"
+  ],
+  "key": {
+    "s": {
+      "tag": "forge:treated_wood_slab"
+    },
+    "c": {
+      "item": "minecraft:composter"
+    }
+  },
+  "result": {
+    "item": "immersivefarming:composting_bin"
+  }
+}
