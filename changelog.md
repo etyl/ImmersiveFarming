@@ -16,6 +16,7 @@
 * Soil rules apply to all plants, including tall plants (pitcher plants, hemp, tomatoes)
 * Removed crop rotation growth boost
 * Sick crops no longer contaminate adjacent crops by default
+* Treated water is now made in the Mixer from water, copper dust and sulfur dust (no more herbicide and Refinery)
 * Fixed the Industrial Composter's fluid pipes not showing in the engineer's manual
 * Composting Bin: a low-tech 2x2 composter
   * Fill it with wet and dry matter, turn it with a shovel when it opens, and collect compost

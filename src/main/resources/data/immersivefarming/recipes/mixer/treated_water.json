@@ -1,0 +1,20 @@
+{
+  "type": "immersiveengineering:mixer",
+  "fluid": {
+    "tag": "minecraft:water",
+    "amount": 1000
+  },
+  "inputs": [
+    {
+      "tag": "forge:dusts/copper"
+    },
+    {
+      "tag": "forge:dusts/sulfur"
+    }
+  ],
+  "result": {
+    "fluid": "immersivefarming:treated_water_fluid",
+    "amount": 1000
+  },
+  "energy": 1600
+}

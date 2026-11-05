@@ -3,6 +3,7 @@ package net.etylop.immersivefarming.utils.integration.jei;
 import blusunrize.immersiveengineering.common.util.compat.jei.IEFluidTooltipCallback;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -16,7 +17,9 @@ import net.etylop.immersivefarming.api.crafting.ComposterRecipe;
 import net.etylop.immersivefarming.api.crafting.IFCachedRecipeList;
 import net.etylop.immersivefarming.block.IFMultiblockLogic;
 import net.etylop.immersivefarming.gui.screen.ComposterScreen;
+import net.etylop.immersivefarming.item.IFItems;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -59,6 +62,8 @@ public class JEIHelper implements IModPlugin{
 	public void registerRecipes(IRecipeRegistration registration){
 		registration.addRecipes(this.composter_type, getRecipes(ComposterRecipe.RECIPES));
 		CompostingBinRecipeCategory.registerInfo(registration);
+		registration.addIngredientInfo(new ItemStack(IFItems.TREATED_WATER_BUCKET.get()), VanillaTypes.ITEM_STACK,
+				Component.translatable("jei.immersivefarming.treated_water.info"));
 	}
 
 	private <T extends Recipe<?>> List<T> getRecipes(IFCachedRecipeList<T> cachedList)

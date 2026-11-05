@@ -5,4 +5,5 @@ When growing, crops have a chance of becoming sick.
 <config;b;immersivefarming.spread_contamination;Sick crops can contaminate adjacent crops.;A sick crop does not spread the disease to adjacent crops.>
 Contaminated crops will have small flies around them (small black particles). After some time, contaminated crops will eventually die, giving no yield.
 
-In order to prevent and treat crops, you can use treated water instead of water with your sprinklers.
+<&treated_water>In order to prevent and treat diseases, you can fill your <link;immersivefarming:irrigation;sprinklers> with treated water instead of water. Crops in range of a sprinkler using treated water are cured and protected.
+<&mixing>To make treated water, mix a bucket of water with §2Copper Dust§r and §2Sulfur Dust§r in the <link;mixer;Mixer>.

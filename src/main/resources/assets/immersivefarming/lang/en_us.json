@@ -45,6 +45,7 @@
   "subtitles.immersivefarming.cart.attached": "Cart attaches",
   "subtitles.immersivefarming.cart.detached": "Cart detaches",
   "subtitles.immersivefarming.cart.placed": "Cart placed",
+  "jei.immersivefarming.treated_water.info": "Fill a sprinkler with treated water instead of water to cure and prevent crop diseases in its range.",
   "jei.immersivefarming.energy": "%s RF",
   "jei.immersivefarming.time": "%ss"
 }

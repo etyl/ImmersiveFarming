@@ -37,6 +37,7 @@ Features are explained in the engineer's manual, but here is an overview:
   * Crops can become sick and eventually die
   * Sick crops can contaminate adjacent crops (disabled by default, configurable)
   * Using treated water in the sprinklers will prevent and cure diseases
+  * Treated water is made in the Mixer from water, copper dust and sulfur dust
 
 
 # More information
