@@ -2,5 +2,8 @@
 	"loader": "forge:obj",
 	"model": "immersivefarming:models/block/sprinkler_normal_base.obj",
 	"flip_v": true,
-	"automatic_culling": false
+	"automatic_culling": false,
+	"textures": {
+		"particle": "immersivefarming:block/sprinkler_new"
+	}
 }
