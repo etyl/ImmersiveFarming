@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -80,6 +81,12 @@ public class Soil extends FarmBlock {
             return farmlandState.canSustainPlant(level, pos, facing, plantable);
         }
         return false;
+    }
+
+    // Soil can't be trampled: only apply the regular fall damage (skips FarmBlock#fallOn)
+    @Override
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
+        entity.causeFallDamage(fallDistance, 1.0F, entity.damageSources().fall());
     }
 
     @Nullable

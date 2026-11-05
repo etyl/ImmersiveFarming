@@ -53,13 +53,6 @@ public class IFEvents {
             }
         }
 
-        @SubscribeEvent
-        public static void onTrampleFarmland(BlockEvent.FarmlandTrampleEvent event) {
-            if (event.getState().getBlock() instanceof Soil) {
-                event.setCanceled(true);
-            }
-        }
-
         @SubscribeEvent(priority = EventPriority.LOW)
         public static void onCropGrowth(BlockEvent.CropGrowEvent.Pre event) {
             if (event.getResult() == Event.Result.DENY) return;
