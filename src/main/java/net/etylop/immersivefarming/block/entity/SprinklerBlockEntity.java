@@ -13,7 +13,7 @@ import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockBou
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IBlockOverlayText;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IConfigurableSides;
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IHasDummyBlocks;
-import blusunrize.immersiveengineering.common.blocks.metal.FluidPipeBlockEntity;
+import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces.IPlacementInteraction;
 import blusunrize.immersiveengineering.common.blocks.ticking.IEClientTickableBE;
 import blusunrize.immersiveengineering.common.blocks.ticking.IEServerTickableBE;
 import blusunrize.immersiveengineering.common.config.IEClientConfig;
@@ -54,11 +54,10 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerTickableBE, IFluidPipe,
-        IEClientTickableBE, IBlockBounds, IHasDummyBlocks, IConfigurableSides, IBlockOverlayText {
+        IEClientTickableBE, IBlockBounds, IHasDummyBlocks, IConfigurableSides, IBlockOverlayText, IPlacementInteraction {
 
     // Only water and treated water can enter the tank, whatever pipe or mod fills it
     public FluidTank tank = new FluidTank(FluidType.BUCKET_VOLUME, stack -> isAllowedFluid(stack.getFluid()));
@@ -97,7 +96,11 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
     {
         int[] sideConfigArray = nbt.getIntArray("sideConfig");
         for(Direction d : DirectionUtils.VALUES)
-            sideConfig.put(d, IEEnums.IOSideConfig.VALUES[sideConfigArray[d.ordinal()]]);
+        {
+            IEEnums.IOSideConfig cfg = IEEnums.IOSideConfig.VALUES[sideConfigArray[d.ordinal()]];
+            // Sprinklers can no longer output fluids; old output sides become disabled
+            sideConfig.put(d, cfg==IEEnums.IOSideConfig.OUTPUT ? IEEnums.IOSideConfig.NONE : cfg);
+        }
         tank.readFromNBT(nbt.getCompound("tank"));
         // Remove fluids that were piped in before the fluid check existed
         if (!tank.isEmpty() && !isAllowedFluid(tank.getFluid().getFluid()))
@@ -141,12 +144,6 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
         }
 
 
-        if (this.tank.getFluidAmount() > 0)
-        {
-            int i = outputFluid(tank.getFluid(), IFluidHandler.FluidAction.EXECUTE);
-            tank.drain(i, IFluidHandler.FluidAction.EXECUTE);
-        }
-
         inputFluid(IFluidHandler.FluidAction.EXECUTE);
     }
 
@@ -171,58 +168,6 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
                 }
             }
         }
-    }
-
-    public int outputFluid(FluidStack fs, IFluidHandler.FluidAction action)
-    {
-        if(fs.isEmpty())
-            return 0;
-
-        int canAccept = fs.getAmount();
-        if(canAccept <= 0)
-            return 0;
-
-        final int fluidForSort = canAccept;
-        int maxFluidOutput = 0;
-        HashMap<FluidPipeBlockEntity.DirectionalFluidOutput, Integer> sorting = new HashMap<>();
-        for(Direction f : Direction.values()) {
-            if(sideConfig.get(f) != IEEnums.IOSideConfig.OUTPUT)
-                continue;
-
-            IFluidHandler handler = neighborFluids.get(f).getNullable();
-            if(handler == null)
-                continue;
-
-            BlockEntity tile = getLevelNonnull().getBlockEntity(worldPosition.relative(f));
-            FluidStack insertResource = Utils.copyFluidStackWithAmount(fs, fs.getAmount(), true);
-            int possiblePipeFluid = handler.fill(insertResource, IFluidHandler.FluidAction.SIMULATE);
-            if(possiblePipeFluid > 0)
-            {
-                sorting.put(new FluidPipeBlockEntity.DirectionalFluidOutput(handler, f, tile), possiblePipeFluid);
-                maxFluidOutput += possiblePipeFluid;
-            }
-        }
-        if(maxFluidOutput > 0)
-        {
-            int f = 0;
-            int i = 0;
-            for(FluidPipeBlockEntity.DirectionalFluidOutput output : sorting.keySet())
-            {
-                float prio = sorting.get(output)/(float)maxFluidOutput;
-                int amount = (int)(fluidForSort*prio);
-                if(i++==sorting.size()-1)
-                    amount = canAccept;
-                FluidStack insertResource = Utils.copyFluidStackWithAmount(fs, amount, true);
-                insertResource.getOrCreateTag().putBoolean(IFluidPipe.NBT_PRESSURIZED, true);
-                int r = output.output().fill(insertResource, action);
-                f += r;
-                canAccept -= r;
-                if(canAccept <= 0)
-                    break;
-            }
-            return f;
-        }
-        return 0;
     }
 
     public void inputFluid(IFluidHandler.FluidAction action) {
@@ -282,6 +227,9 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
     {
         if(capability==ForgeCapabilities.FLUID_HANDLER && facing!=null && !isDummy())
         {
+            // Only input sides expose a fluid handler, so pipes don't connect to disabled sides
+            if(sideConfig.get(facing)!=IEEnums.IOSideConfig.INPUT)
+                return LazyOptional.empty();
             if(!sidedFluidHandler.containsKey(facing))
                 sidedFluidHandler.put(facing, registerCapability(new SprinklerBlockEntity.SidedFluidHandler(this, facing)));
             return sidedFluidHandler.get(facing).cast();
@@ -395,9 +343,8 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
         @Override
         public FluidStack drain(int maxDrain, FluidAction action)
         {
-            if(sprinkler.sideConfig.get(facing)!= IEEnums.IOSideConfig.OUTPUT)
-                return FluidStack.EMPTY;
-            return sprinkler.tank.drain(maxDrain, action);
+            // Sprinklers never give fluid back
+            return FluidStack.EMPTY;
         }
     }
 
@@ -414,13 +361,40 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
     {
         if(side!=Direction.UP&&!isDummy())
         {
-            sideConfig.put(side, IEEnums.IOSideConfig.next(sideConfig.get(side)));
-            this.setChanged();
-            this.markContainingBlockForUpdate(null);
+            // Only toggle between input and disabled, sprinklers have no output
+            IEEnums.IOSideConfig current = sideConfig.get(side);
+            sideConfig.put(side, current==IEEnums.IOSideConfig.INPUT ? IEEnums.IOSideConfig.NONE : IEEnums.IOSideConfig.INPUT);
+            onSideConfigChanged();
             getLevelNonnull().blockEvent(getBlockPos(), this.getBlockState().getBlock(), 0, 0);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onBEPlaced(BlockPlaceContext ctx)
+    {
+        // Default inputs: the bottom (for pipes underneath) and the side facing the player (so it is visible)
+        Direction facingPlayer = ctx.getHorizontalDirection().getOpposite();
+        for(Direction d : DirectionUtils.VALUES)
+        {
+            boolean input = d==Direction.DOWN || d==facingPlayer;
+            sideConfig.put(d, input ? IEEnums.IOSideConfig.INPUT : IEEnums.IOSideConfig.NONE);
+        }
+        onSideConfigChanged();
+    }
+
+    /**
+     * Refresh the fluid capabilities so pipes only connect to input sides, then sync and notify neighbors.
+     */
+    private void onSideConfigChanged()
+    {
+        for(ResettableCapability<IFluidHandler> cap : sidedFluidHandler.values())
+            cap.reset();
+        sidedFluidHandler.clear();
+        setChanged();
+        markContainingBlockForUpdate(null);
+        getLevelNonnull().updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
     }
 
     protected void spawnParticles() {
