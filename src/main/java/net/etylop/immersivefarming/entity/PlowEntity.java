@@ -8,6 +8,7 @@ import net.etylop.immersivefarming.gui.container.PlowContainer;
 import net.etylop.immersivefarming.item.IFItems;
 import net.etylop.immersivefarming.utils.cart.CartItemStackHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -21,10 +22,13 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
 
@@ -98,29 +102,53 @@ public final class PlowEntity extends AbstractDrawnInventoryEntity {
 
 
     private void plow(final Player player) {
+        final Level level = this.level();
         for (int i = 0; i < TOOL_COUNT; i++) {
-            final ItemStack stack = this.getStackInSlot(i);
-            if (!(stack.getItem() instanceof HoeItem))
-                return;
+            final ItemStack stack = this.inventory.getStackInSlot(i);
+            // Any tool able to till works (vanilla and modded hoes, Tinkers' mattocks, Meka-Tool...)
+            if (stack.isEmpty() || !stack.canPerformAction(ToolActions.HOE_TILL))
+                continue;
 
             final float offset = 38.0F - i * 38.0F;
             final double blockPosX = this.getX() + Mth.sin((float) Math.toRadians(this.getYRot() - offset)) * BLADEOFFSET;
             final double blockPosZ = this.getZ() - Mth.cos((float) Math.toRadians(this.getYRot() - offset)) * BLADEOFFSET;
             final BlockPos blockPos = BlockPos.containing(blockPosX, this.getY() - 0.5D, blockPosZ);
-            final boolean damageable = stack.isDamageableItem();
-            final int count = stack.getCount();
-            if (isBlockTillable(level(), blockPos)) {
-                level().setBlock(blockPos, IFBlocks.SOIL.get().defaultBlockState().setValue(Soil.TILL, Soil.TILL_MAX), 3);
-                int hoeSpeed = getHoeSpeed(stack.getItem());
-                if (damageable) {
-                    stack.hurtAndBreak(Soil.TILL_MAX/hoeSpeed,player, (val) -> {
-                        val.broadcastBreakEvent(player.getUsedItemHand());
-                    });
-                }
+
+            // Tillable blocks become fully tilled soil, partially tilled soil is finished
+            final BlockState state = level.getBlockState(blockPos);
+            final int tillsNeeded;
+            final BlockState newState;
+            if (isBlockTillable(level, blockPos)) {
+                tillsNeeded = Soil.TILL_MAX;
+                newState = IFBlocks.SOIL.get().defaultBlockState().setValue(Soil.TILL, Soil.TILL_MAX);
             }
-            if (damageable && stack.getCount() < count) {
-                this.playSound(SoundEvents.ITEM_BREAK, 0.8F, 0.8F + this.level().random.nextFloat() * 0.4F);
-                this.updateSlot(i);
+            else if (state.getBlock() instanceof Soil && state.getValue(Soil.TILL) < Soil.TILL_MAX) {
+                tillsNeeded = Soil.TILL_MAX - state.getValue(Soil.TILL);
+                newState = state.setValue(Soil.TILL, Soil.TILL_MAX);
+            }
+            else {
+                continue;
+            }
+
+            // Respect spawn protection and claim mods (FTB Chunks, Open Parties and Claims...)
+            if (!level.mayInteract(player, blockPos) || !player.mayUseItemAt(blockPos, Direction.UP, stack))
+                continue;
+            final BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, blockPos);
+            level.setBlock(blockPos, newState, 3);
+            if (ForgeEventFactory.onBlockPlace(player, snapshot, Direction.UP)) {
+                snapshot.restore(true, false);
+                continue;
+            }
+
+            if (stack.isDamageableItem()) {
+                final ItemStack used = stack.copy();
+                final int damage = Math.max(1, Mth.ceil(tillsNeeded / (float) getHoeSpeed(used)));
+                used.hurtAndBreak(damage, player, (val) -> {});
+                if (used.isEmpty()) {
+                    this.playSound(SoundEvents.ITEM_BREAK, 0.8F, 0.8F + level.random.nextFloat() * 0.4F);
+                }
+                // Replacing the stack syncs it to the client
+                this.inventory.setStackInSlot(i, used.isEmpty() ? ItemStack.EMPTY : used);
             }
         }
     }

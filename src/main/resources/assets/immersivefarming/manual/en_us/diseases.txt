@@ -2,7 +2,7 @@ Crop Diseases
 Keep 'em healthy !
 
 When growing, crops have a chance of becoming sick.
-By default a sick crop does not spread the disease, but contamination of adjacent crops can be enabled in the mod configuration.
+<config;b;immersivefarming.spread_contamination;Sick crops can contaminate adjacent crops.;A sick crop does not spread the disease to adjacent crops.>
 Contaminated crops will have small flies around them (small black particles). After some time, contaminated crops will eventually die, giving no yield.
 
 In order to prevent and treat crops, you can use treated water instead of water with your sprinklers.

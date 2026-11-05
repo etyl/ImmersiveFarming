@@ -1,12 +1,14 @@
 Soil Fertility
 A nice soil
 
-Having soil with low fertility will slow down crop growth.
+Crops on unfertilized soil only grow <config;i;immersivefarming.unfertilized_growth_percent>% as fast as on fertilized soil.
 
 You can boost the fertility of a soil tile by right clicking it with compost.
 Once a crop is fully grown on a fertilized tile, it will consume the fertilization, and the tile will need to be fertilized again.
 
-Soil can be turned back into dirt by right clicking it with a shovel. Farmland tilled by other mods, or that a crop grows on, is turned into soil (this can be disabled in the mod configuration).
+<config;b;immersivefarming.require_sunlight;Crops also need sunlight: a crop that cannot see the sky will not grow. Glass lets sunlight through, so greenhouses work, but torches and lamps are not enough.;Crops do not need sunlight: any light source is enough, as in vanilla.>
+
+Soil can be turned back into dirt by right clicking it with a shovel.
 
 <&trowel>
 The trowel lets you inspect soil. Right click soil or a crop to see how far it is tilled, its water level, its fertility and whether it is contaminated.

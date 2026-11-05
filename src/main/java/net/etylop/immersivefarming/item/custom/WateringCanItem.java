@@ -1,6 +1,7 @@
 package net.etylop.immersivefarming.item.custom;
 
 import net.etylop.immersivefarming.block.custom.Soil;
+import net.etylop.immersivefarming.utils.IFFunctions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -69,17 +70,15 @@ public class WateringCanItem extends Item {
         if (getWater(stack) <= 0 && !creative)
             return InteractionResult.PASS;
 
-        // Clicking a plant waters the soil below it
-        BlockPos pos = pContext.getClickedPos();
-        if (!(level.getBlockState(pos).getBlock() instanceof Soil))
-            pos = pos.below();
+        // Clicking a plant waters the soil below it (any block of a tall plant works)
+        BlockPos pos = IFFunctions.getSoilPos(level, pContext.getClickedPos());
         BlockState soil = level.getBlockState(pos);
-        if (!(soil.getBlock() instanceof Soil) || soil.getValue(Soil.WATER) >= Soil.WATER_SATURATED)
+        if (!(soil.getBlock() instanceof Soil) || soil.getValue(Soil.WATER) >= Soil.waterSaturated())
             return InteractionResult.PASS;
 
         level.playSound(player, pos, SoundEvents.GENERIC_SPLASH, SoundSource.PLAYERS, 0.5F, 1.2F);
         if (!level.isClientSide()) {
-            level.setBlock(pos, soil.setValue(Soil.WATER, Soil.WATER_SATURATED), 2);
+            level.setBlock(pos, soil.setValue(Soil.WATER, Soil.waterSaturated()), 2);
             ((ServerLevel) level).sendParticles(ParticleTypes.SPLASH,
                     pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D,
                     8, 0.3D, 0.1D, 0.3D, 0.0D);

@@ -4,8 +4,10 @@ import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.block.IFBlocks;
 import net.etylop.immersivefarming.block.custom.Soil;
 import net.etylop.immersivefarming.config.IFConfig;
+import net.etylop.immersivefarming.utils.IFFunctions;
 import net.etylop.immersivefarming.utils.ModTags;
-import net.minecraft.world.item.HoeItem;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,7 +15,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.entity.player.BonemealEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -29,31 +30,25 @@ public class IFEvents {
     @Mod.EventBusSubscriber(modid = ImmersiveFarming.MOD_ID)
     public static class ForgeEvents {
 
-        @SubscribeEvent
-        public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-            Block target = event.getLevel().getBlockState(event.getPos()).getBlock();
-            if (target.defaultBlockState().is(ModTags.Blocks.TILLABLE_BLOCK) &&
-                !event.getLevel().isClientSide() &&
-                event.getEntity().getMainHandItem().getItem() instanceof HoeItem) {
-
-                event.getLevel().setBlock(event.getPos(), IFBlocks.SOIL.get().defaultBlockState(), 3);
-                event.getEntity().getMainHandItem().hurtAndBreak(1, event.getEntity(), (val) -> val.broadcastBreakEvent(event.getEntity().getUsedItemHand()));            }
-        }
-
-        // Tilling by other mods gives soil
+        // Tilling a tillable block (by hand, or by any tool of any mod that can till) gives soil.
+        // Further tilling of the soil is handled by Soil#getToolModifiedState.
         @SubscribeEvent
         public static void onToolModification(BlockEvent.BlockToolModificationEvent event) {
-            if (event.getToolAction() == ToolActions.HOE_TILL &&
-                event.getFinalState() != null && event.getFinalState().is(Blocks.FARMLAND) &&
-                IFConfig.get().cropConfig.replace_farmland.get()) {
-                event.setFinalState(IFBlocks.SOIL.get().defaultBlockState());
+            if (event.getToolAction() != ToolActions.HOE_TILL || !event.getState().is(ModTags.Blocks.TILLABLE_BLOCK)) {
+                return;
             }
+            // Same rule as vanilla tilling: from above, with air above the block
+            if (event.getContext().getClickedFace() == Direction.DOWN ||
+                !event.getLevel().getBlockState(event.getPos().above()).isAir()) {
+                return;
+            }
+            event.setFinalState(IFBlocks.SOIL.get().defaultBlockState());
         }
 
-        // Crops on soil can't be bonemealed
+        // Crops on soil can't be bonemealed (direct calls to performBonemeal are blocked by the mixins)
         @SubscribeEvent
         public static void onBonemeal(BonemealEvent event) {
-            if (event.getLevel().getBlockState(event.getPos().below()).getBlock() instanceof Soil) {
+            if (IFFunctions.isBonemealBlocked(event.getLevel(), event.getPos())) {
                 event.setCanceled(true);
             }
         }
@@ -68,27 +63,27 @@ public class IFEvents {
         @SubscribeEvent(priority = EventPriority.LOW)
         public static void onCropGrowth(BlockEvent.CropGrowEvent.Pre event) {
             if (event.getResult() == Event.Result.DENY) return;
+            // Some plants (cave/weeping vines) fire the event at the empty block they grow into
+            if (event.getState().isAir()) return;
 
             LevelAccessor level = event.getLevel();
-            BlockState cropBlock =  level.getBlockState(event.getPos());
+            // Any plant growing on soil is affected; tall plants are checked from their lowest block
+            BlockPos plantPos = IFFunctions.getPlantBase(level, event.getPos());
+            BlockPos soilPos = plantPos.below();
 
-            if (!(cropBlock.getBlock() instanceof CropBlock || cropBlock.getBlock() instanceof StemBlock)) {
-                return;
-            }
-
-            BlockState soilBlock = level.getBlockState(event.getPos().below());
-            if (soilBlock.is(Blocks.FARMLAND) && IFConfig.get().cropConfig.replace_farmland.get()) {
+            BlockState soilBlock = level.getBlockState(soilPos);
+            if (IFConfig.get().cropConfig.replace_farmland.get() && IFFunctions.isConvertibleFarmland(soilBlock)) {
                 soilBlock = Soil.fromFarmland(soilBlock);
-                level.setBlock(event.getPos().below(), soilBlock, 2);
+                level.setBlock(soilPos, soilBlock, 2);
             }
             if (!(soilBlock.getBlock() instanceof Soil)) {
                 return;
             }
 
-            if (level.getBiome(event.getPos()).is(Tags.Biomes.IS_COLD)) {
+            if (level.getBiome(plantPos).is(Tags.Biomes.IS_COLD)) {
                 event.setResult(Event.Result.DENY);
                 if (Math.random()<.3) {
-                    level.setBlock(event.getPos(),IFBlocks.DEAD_CROP.get().defaultBlockState(), 2);
+                    IFFunctions.killPlant(level, plantPos, 2);
                 }
                 return;
             }
@@ -99,15 +94,18 @@ public class IFEvents {
                 return;
             }
 
-            if (level.canSeeSky(event.getPos())) {
-                int fertilization = soilBlock.getValue(Soil.FERTILITY);
+            // Plants need sunlight (checked at their highest block, for tall plants)
+            if (IFConfig.get().cropConfig.require_sunlight.get() && !level.canSeeSky(IFFunctions.getPlantTop(level, plantPos))) {
+                event.setResult(Event.Result.DENY);
+                return;
+            }
 
-                if (fertilization>=1 || Math.random() < IFConfig.get().cropConfig.unfertilized_growth.get()) {
-                    event.setResult(Event.Result.DEFAULT);
-                }
-                else {
-                    event.setResult(Event.Result.DENY);
-                }
+            int fertilization = soilBlock.getValue(Soil.FERTILITY);
+            if (fertilization>=1 || Math.random() < IFConfig.get().cropConfig.unfertilized_growth.get()) {
+                event.setResult(Event.Result.DEFAULT);
+            }
+            else {
+                event.setResult(Event.Result.DENY);
             }
         }
 
@@ -115,7 +113,8 @@ public class IFEvents {
         public static void onCropGrowthPost(BlockEvent.CropGrowEvent.Post event) {
             BlockState cropBlock = event.getState();
             LevelAccessor level = event.getLevel();
-            BlockState soilBlock = event.getLevel().getBlockState(event.getPos().below());
+            BlockPos soilPos = IFFunctions.getPlantBase(level, event.getPos()).below();
+            BlockState soilBlock = level.getBlockState(soilPos);
 
             if (!(soilBlock.getBlock() instanceof Soil)) {
                 return;
@@ -127,19 +126,15 @@ public class IFEvents {
                 newSoil = newSoil.setValue(Soil.WATER, water - 1);
             }
 
-            if (cropBlock.getBlock() instanceof CropBlock || cropBlock.getBlock() instanceof StemBlock) {
-                Optional<Integer> ageOptional = cropBlock.getValues().entrySet().stream()
-                        .filter(entry -> "age".equals(entry.getKey().getName()) && entry.getValue() instanceof Integer)
-                        .map(entry -> (Integer) entry.getValue())
-                        .findFirst();
+            // Fertility is consumed when a plant reaches maturity (any plant with an "age" property)
+            Optional<IntegerProperty> ageProperty = cropBlock.getProperties().stream()
+                    .filter(property -> "age".equals(property.getName()) && property instanceof IntegerProperty)
+                    .map(property -> (IntegerProperty) property)
+                    .findFirst();
 
-                Optional<Integer> maxAgeOptional = cropBlock.getValues().entrySet().stream()
-                        .filter(entry -> "age".equals(entry.getKey().getName()) && entry.getKey() instanceof IntegerProperty)
-                        .map(entry -> Collections.max(((IntegerProperty) entry.getKey()).getPossibleValues()))
-                        .findFirst();
-
-                int age = ageOptional.orElse(0);
-                int maxAge = maxAgeOptional.orElse(10);
+            if (ageProperty.isPresent()) {
+                int age = cropBlock.getValue(ageProperty.get());
+                int maxAge = Collections.max(ageProperty.get().getPossibleValues());
 
                 // Mature stems also fire this event when they fail to place a fruit
                 if (age == maxAge && event.getOriginalState() != cropBlock) {
@@ -149,7 +144,7 @@ public class IFEvents {
             }
 
             if (newSoil != soilBlock) {
-                level.setBlock(event.getPos().below(), newSoil, 2);
+                level.setBlock(soilPos, newSoil, 2);
             }
 
             if (cropBlock.getBlock() instanceof AttachedStemBlock) {

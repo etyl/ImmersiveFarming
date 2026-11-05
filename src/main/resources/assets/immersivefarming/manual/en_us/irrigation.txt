@@ -4,7 +4,7 @@ Hydration is key
 Soil has a water level, and crops will not grow on dry soil (they won't die, but will wait for water). Moist soil looks darker than dry soil, and flooded soil has puddles of water.
 Every time a crop grows, it consumes some of the water of its soil. Soil that is not watered also slowly dries out over time.
 
-Rain and sprinklers raise the water level of the soil. Soil next to a water block is flooded: crops growing on it are drowned and grow much slower.
+Rain and sprinklers raise the water level of the soil. Soil next to a water block is flooded: crops growing on it are drowned and only grow <config;i;immersivefarming.flooded_growth_percent>% as fast.
 
 <&watering_can>
 The watering can lets you water soil by hand. Right click a soil block or a plant to fully water that soil, and right click a water source to refill it.

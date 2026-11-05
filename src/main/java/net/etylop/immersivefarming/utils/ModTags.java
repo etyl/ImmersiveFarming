@@ -23,6 +23,10 @@ public class ModTags {
     }
 
     public static class Items {
+        // Extra items accepted as seeds by the sower (in addition to #forge:seeds and items placing crops)
+        public static final TagKey<Item> SOWER_SEEDS =
+                tag("sower_seeds");
+
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(new ResourceLocation(ImmersiveFarming.MOD_ID, name));
         }

@@ -4,17 +4,12 @@ import net.etylop.immersivefarming.block.IFBlocks;
 import net.etylop.immersivefarming.block.entity.SprinklerBlockEntity;
 import net.etylop.immersivefarming.config.IFConfig;
 import net.etylop.immersivefarming.particle.IFParticles;
+import net.etylop.immersivefarming.utils.IFFunctions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -27,7 +22,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
@@ -46,10 +40,12 @@ public class Soil extends FarmBlock {
     public static final IntegerProperty WATER = MOISTURE;
     // Next to a water block
     public static final int WATER_FLOODED = MAX_MOISTURE;
-    // Max level reached by watering
-    public static final int WATER_SATURATED = WATER_FLOODED - 1;
-
     private static final IFConfig.CropConfig cropConfig = IFConfig.get().cropConfig;
+
+    // Max level reached by watering (configurable, always below WATER_FLOODED)
+    public static int waterSaturated() {
+        return Math.min(cropConfig.water_capacity.get(), WATER_FLOODED - 1);
+    }
 
     public static final BooleanProperty CONTAMINATED = BooleanProperty.create("contaminated");
 
@@ -67,7 +63,7 @@ public class Soil extends FarmBlock {
     public static BlockState fromFarmland(BlockState farmland) {
         return IFBlocks.SOIL.get().defaultBlockState()
                 .setValue(TILL, TILL_MAX)
-                .setValue(WATER, Math.min(farmland.getValue(MOISTURE), WATER_SATURATED));
+                .setValue(WATER, Math.min(farmland.getOptionalValue(MOISTURE).orElse(0), waterSaturated()));
     }
 
     @Override
@@ -88,31 +84,20 @@ public class Soil extends FarmBlock {
         return false;
     }
 
-    @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pHand == InteractionHand.MAIN_HAND &&
-                pPlayer.getMainHandItem().getItem() instanceof HoeItem &&
-                pLevel.isEmptyBlock(pPos.above()) &&
-                pState.getValue(TILL) < TILL_MAX) {
-            pLevel.playSound(pPlayer, pPos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-            if (!pLevel.isClientSide()) {
-                int speed = getHoeSpeed(pPlayer.getMainHandItem().getItem());
-                int newTill = Math.min(TILL_MAX,pState.getValue(TILL)+speed);
-                pLevel.setBlock(pPos, pState.setValue(TILL, newTill), 3);
-                pPlayer.getMainHandItem().hurtAndBreak(1, pPlayer, (val) -> {
-                    val.broadcastBreakEvent(pPlayer.getUsedItemHand());
-                });
-            }
-            return InteractionResult.SUCCESS;
-        }
-        return InteractionResult.FAIL;
-    }
-
     @Nullable
     @Override
     public BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
         if (toolAction == ToolActions.SHOVEL_FLATTEN) {
             return Blocks.DIRT.defaultBlockState();
+        }
+        // Called by hoes, and by any modded tool or machine able to till (Create plough, Tinkers', Mekanism...)
+        if (toolAction == ToolActions.HOE_TILL) {
+            int till = state.getValue(TILL);
+            if (till >= TILL_MAX || context.getClickedFace() == Direction.DOWN ||
+                !context.getLevel().getBlockState(context.getClickedPos().above()).isAir()) {
+                return null;
+            }
+            return state.setValue(TILL, Math.min(TILL_MAX, till + getHoeSpeed(context.getItemInHand())));
         }
         return super.getToolModifiedState(state, context, toolAction, simulate);
     }
@@ -128,10 +113,13 @@ public class Soil extends FarmBlock {
             water = WATER_FLOODED;
         }
         else if (water == WATER_FLOODED) {
-            water = WATER_SATURATED;
+            water = waterSaturated();
         }
         else if (sprinkler > 0 || pLevel.isRainingAt(pPos.above())) {
-            water = Math.min(WATER_SATURATED, water + 1);
+            water = Math.min(waterSaturated(), water + 1);
+        }
+        else if (water > waterSaturated()) {
+            water = waterSaturated(); // capacity was lowered in the config
         }
         else if (water > 0 && pRandom.nextDouble() < cropConfig.evaporation.get()) {
             water--;
@@ -148,7 +136,7 @@ public class Soil extends FarmBlock {
             newState = newState.setValue(CONTAMINATED, true);
         }
         else if (contaminated && Math.random()<cropConfig.lethality_contamination.get()) {
-            pLevel.setBlock(pPos.above(), IFBlocks.DEAD_CROP.get().defaultBlockState(), 3);
+            IFFunctions.killPlant(pLevel, pPos.above(), 3);
             pLevel.setBlock(pPos, Blocks.DIRT.defaultBlockState(), 2);
             return;
         }

@@ -60,7 +60,8 @@ import java.util.Map;
 public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerTickableBE, IFluidPipe,
         IEClientTickableBE, IBlockBounds, IHasDummyBlocks, IConfigurableSides, IBlockOverlayText {
 
-    public FluidTank tank = new FluidTank(FluidType.BUCKET_VOLUME);
+    // Only water and treated water can enter the tank, whatever pipe or mod fills it
+    public FluidTank tank = new FluidTank(FluidType.BUCKET_VOLUME, stack -> isAllowedFluid(stack.getFluid()));
     public Map<Direction, IEEnums.IOSideConfig> sideConfig = new EnumMap<>(Direction.class);
     {
         for(Direction d : DirectionUtils.VALUES)
@@ -98,6 +99,9 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
         for(Direction d : DirectionUtils.VALUES)
             sideConfig.put(d, IEEnums.IOSideConfig.VALUES[sideConfigArray[d.ordinal()]]);
         tank.readFromNBT(nbt.getCompound("tank"));
+        // Remove fluids that were piped in before the fluid check existed
+        if (!tank.isEmpty() && !isAllowedFluid(tank.getFluid().getFluid()))
+            tank.setFluid(FluidStack.EMPTY);
         if(descPacket)
             this.markContainingBlockForUpdate(null);
     }
@@ -245,9 +249,13 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
         }
     }
 
+    public static boolean isAllowedFluid(Fluid fluid) {
+        return fluid.isSame(Fluids.WATER) || fluid.isSame(IFFluids.TREATED_WATER_FLUID.get());
+    }
+
     private boolean isFluidValid(Fluid fluid) {
         if (tank.getFluidAmount()<this.WATER_CONSUMPTION) {
-            return fluid == Fluids.WATER || fluid == IFFluids.TREATED_WATER_FLUID.get();
+            return isAllowedFluid(fluid);
         }
         else return fluid == tank.getFluid().getFluid();
     }

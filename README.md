@@ -17,8 +17,9 @@ Features are explained in the engineer's manual, but here is an overview:
 * Crop growth
   * Bone meal can no longer be used on crops
   * Crops only grow at vanilla speed on watered and fertilized soil
-  * Unfertilized soil reduces growth speed to a fifth, and flooded soil to a quarter (configurable)
+  * Unfertilized and flooded soil both reduce growth speed to a quarter (configurable)
   * Crops don't grow in cold biomes and may die
+  * Crops need sunlight to grow: they must see the sky, glass is fine (configurable)
 * Carts
   * Plow: to till land faster
   * Sowing machine: to sow seeds and fertilize faster
@@ -30,7 +31,7 @@ Features are explained in the engineer's manual, but here is an overview:
   * Tilling dirt now requires several clicks (but better hoes speed up this process)
   * Soil can be turned back into dirt with a shovel
   * Trowel: right click soil or a crop to inspect its tilling, water level, fertility and health
-  * Farmland tilled by other mods, or that a crop grows on, is turned into soil (configurable)
+  * Dirt tilled by other mods' tools and machines also becomes soil, and farmland that a crop grows on is turned into soil (configurable)
 * Crop disease
   * Crops can become sick and eventually die
   * Sick crops can contaminate adjacent crops (disabled by default, configurable)

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:pitcher_pod",
+    { "id": "immersiveengineering:seed", "required": false },
+    { "id": "farmersdelight:tomato_seeds", "required": false },
+    { "id": "farmersdelight:cabbage_seeds", "required": false }
+  ]
+}

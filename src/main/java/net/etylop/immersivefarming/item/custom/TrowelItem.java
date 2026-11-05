@@ -1,6 +1,7 @@
 package net.etylop.immersivefarming.item.custom;
 
 import net.etylop.immersivefarming.block.custom.Soil;
+import net.etylop.immersivefarming.utils.IFFunctions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -31,9 +32,8 @@ public class TrowelItem extends Item {
         if (player == null)
             return InteractionResult.PASS;
 
-        // Clicking a crop inspects the soil below it
-        if (!(level.getBlockState(pos).getBlock() instanceof Soil))
-            pos = pos.below();
+        // Clicking a crop inspects the soil below it (any block of a tall plant works)
+        pos = IFFunctions.getSoilPos(level, pos);
         BlockState soil = level.getBlockState(pos);
         if (!(soil.getBlock() instanceof Soil))
             return InteractionResult.PASS;
@@ -59,7 +59,7 @@ public class TrowelItem extends Item {
         else if (water == Soil.WATER_FLOODED)
             waterInfo = Component.translatable(key + "flooded").withStyle(ChatFormatting.RED);
         else
-            waterInfo = Component.translatable(key + "water", water, Soil.WATER_SATURATED).withStyle(ChatFormatting.AQUA);
+            waterInfo = Component.translatable(key + "water", water, Soil.waterSaturated()).withStyle(ChatFormatting.AQUA);
 
         MutableComponent info = waterInfo.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY));
         if (soil.getValue(Soil.FERTILITY) > 0)

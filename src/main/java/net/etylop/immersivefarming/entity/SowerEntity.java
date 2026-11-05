@@ -5,6 +5,7 @@ import net.etylop.immersivefarming.config.IFConfig;
 import net.etylop.immersivefarming.gui.container.SowerContainer;
 import net.etylop.immersivefarming.item.IFItems;
 import net.etylop.immersivefarming.item.custom.CompostItem;
+import net.etylop.immersivefarming.utils.ModTags;
 import net.etylop.immersivefarming.utils.cart.CartItemStackHandler;
 import net.etylop.immersivefarming.utils.cart.ProxyItemUseContext;
 import net.minecraft.core.BlockPos;
@@ -22,10 +23,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.StemBlock;
+import net.minecraftforge.common.Tags;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemStackHandler;
@@ -101,24 +104,43 @@ public final class SowerEntity extends AbstractDrawnInventoryEntity {
         }
     }
 
-    private ItemStack getSeeds() {
-        for (int i=0; i<SEED_COUNT; i++) {
-            final ItemStack stack = this.getStackInSlot(i);
-            if (stack.getItem() instanceof ItemNameBlockItem blockItem && blockItem.getBlock() instanceof CropBlock) {
-                return stack;
-            }
-        }
-        return null;
+    /**
+     * Items accepted as seeds: the #forge:seeds and #immersivefarming:sower_seeds tags,
+     * and any item that places a crop or a stem (potatoes, carrots, most modded crops).
+     */
+    public static boolean isSeed(ItemStack stack) {
+        if (stack.isEmpty()) return false;
+        if (stack.is(Tags.Items.SEEDS) || stack.is(ModTags.Items.SOWER_SEEDS)) return true;
+        return stack.getItem() instanceof BlockItem blockItem &&
+               (blockItem.getBlock() instanceof CropBlock || blockItem.getBlock() instanceof StemBlock);
     }
 
-    private ItemStack getFertilizer() {
+    private int getFertilizerSlot() {
         for (int i=0; i<FERTILIZER_COUNT; i++) {
-            final ItemStack stack = this.getStackInSlot(SEED_COUNT+i);
-            if (stack.getItem() instanceof CompostItem) {
-                return stack;
+            if (this.inventory.getStackInSlot(SEED_COUNT+i).getItem() instanceof CompostItem) {
+                return SEED_COUNT+i;
             }
         }
-        return null;
+        return -1;
+    }
+
+    /**
+     * Uses the item of a slot on the top face of a block, as the player would.
+     * ItemStack#useOn fires the Forge place events (claim protection) and consumes the item itself.
+     */
+    private boolean useSlotOn(final int slot, final Player player, final BlockPos blockPos) {
+        final ItemStack stack = this.inventory.getStackInSlot(slot).copy();
+        // One extra item so the stack never empties inside Forge's placement hook, which would fire
+        // PlayerDestroyItemEvent for the player's (untouched) main hand
+        stack.grow(1);
+        final BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(blockPos).add(0.0D, 0.5D, 0.0D), Direction.UP, blockPos, false);
+        final boolean used = stack.useOn(new ProxyItemUseContext(player, stack, hit)).consumesAction();
+        stack.shrink(1);
+        if (used) {
+            // Replacing the stack syncs it to the client
+            this.inventory.setStackInSlot(slot, stack.isEmpty() ? ItemStack.EMPTY : stack);
+        }
+        return used;
     }
 
     private void plow(final Player player) {
@@ -129,20 +151,19 @@ public final class SowerEntity extends AbstractDrawnInventoryEntity {
             final double blockPosZ = this.getZ() - Mth.cos((float) Math.toRadians(this.getYRot() - offset)) * BLADEOFFSET;
             final BlockPos blockPos = BlockPos.containing(blockPosX, this.getY() - 0.5D, blockPosZ);
 
-            ItemStack seeds = getSeeds();
-            if (seeds != null) {
-                InteractionResult result = seeds.getItem().useOn(new ProxyItemUseContext(player, seeds, new BlockHitResult(Vec3.ZERO, Direction.UP, blockPos, false)));
-                if (result == InteractionResult.CONSUME) {
-                    seeds.setCount(seeds.getCount()-1);
+            if (!this.level().mayInteract(player, blockPos))
+                continue;
+
+            // Seeds that can't be planted here don't prevent the other seed slots from being used
+            for (int slot = 0; slot < SEED_COUNT; slot++) {
+                if (isSeed(this.inventory.getStackInSlot(slot)) && useSlotOn(slot, player, blockPos)) {
+                    break;
                 }
             }
 
-            ItemStack fertilizer = getFertilizer();
-            if (fertilizer!=null) {
-                InteractionResult result = fertilizer.getItem().useOn(new ProxyItemUseContext(player, seeds, new BlockHitResult(Vec3.ZERO, Direction.UP, blockPos, false)));
-                if (result == InteractionResult.CONSUME) {
-                    fertilizer.setCount(fertilizer.getCount()-1);
-                }
+            final int fertilizerSlot = getFertilizerSlot();
+            if (fertilizerSlot >= 0) {
+                useSlotOn(fertilizerSlot, player, blockPos);
             }
         }
     }

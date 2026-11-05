@@ -11,6 +11,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -94,14 +95,22 @@ public final class IFConfig {
         public final ForgeConfigSpec.DoubleValue proximity_contamination;
         public final ForgeConfigSpec.DoubleValue lethality_contamination;
         public final ForgeConfigSpec.DoubleValue stem_death;
+        public final ForgeConfigSpec.IntValue water_capacity;
         public final ForgeConfigSpec.DoubleValue evaporation;
         public final ForgeConfigSpec.DoubleValue flooded_growth;
         public final ForgeConfigSpec.DoubleValue unfertilized_growth;
+        public final ForgeConfigSpec.BooleanValue require_sunlight;
         public final ForgeConfigSpec.BooleanValue replace_farmland;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> convertible_farmland;
 
         CropConfig(final ForgeConfigSpec.Builder builder) {
-            this.replace_farmland = builder.comment("Whether vanilla farmland is replaced by soil when tilled by other mods or when a crop grows on it")
+            this.replace_farmland = builder.comment("Whether the blocks listed in convertible_farmland are replaced by soil when a plant grows on them",
+                            "(Tilling dirt always gives soil, with any tool able to till)")
                     .define("replace_farmland", true);
+            this.convertible_farmland = builder.comment("Blocks converted to soil when a plant grows on them (if replace_farmland is true)",
+                            "Block ids such as \"minecraft:farmland\", or block tags starting with #, such as \"#forge:farmland\"",
+                            "Converted blocks lose their own behaviour (e.g. the growth boost of Farmer's Delight rich soil)")
+                    .defineList("convertible_farmland", List.of("minecraft:farmland"), o -> o instanceof String);
             this.spread_contamination = builder.comment("Whether sick crops can contaminate neighbouring crops")
                     .define("spread_contamination", false);
             this.start_contamination = builder.comment("Probability for a crop to become sick during a random tick")
@@ -112,12 +121,17 @@ public final class IFConfig {
                     .defineInRange("lethality_contamination", 0.02D, 0D, 1.0D);
             this.stem_death = builder.comment("Probability for a steam to die after giving a fruit")
                     .defineInRange("stem_death", 0.5D, 0D, 1.0D);
+            this.water_capacity = builder.comment("Max water level of soil when watered (by rain, sprinklers or the watering can). Each crop growth stage consumes one level")
+                    .defineInRange("water_capacity", 3, 1, 6);
             this.evaporation = builder.comment("Probability for soil that is not being watered to lose one water level during a random tick")
-                    .defineInRange("evaporation", 0.05D, 0D, 1.0D);
+                    .defineInRange("evaporation", 0.02D, 0D, 1.0D);
             this.flooded_growth = builder.comment("Probability for a crop on flooded soil (next to a water block) to grow when it would normally grow")
                     .defineInRange("flooded_growth", 0.25D, 0D, 1.0D);
             this.unfertilized_growth = builder.comment("Probability for a crop on unfertilized soil to grow when it would normally grow")
-                    .defineInRange("unfertilized_growth", 0.2D, 0D, 1.0D);
+                    .defineInRange("unfertilized_growth", 0.25D, 0D, 1.0D);
+            this.require_sunlight = builder.comment("Whether plants on soil need to see the sky to grow (blocks letting sunlight through, such as glass, are fine)",
+                            "If false, artificial light is enough, as in vanilla")
+                    .define("require_sunlight", true);
         }
     }
 }

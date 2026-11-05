@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.etylop.immersivefarming.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "immersivefarming.refmap.json",
+  "mixins": [
+    "CropBlockMixin",
+    "PitcherCropBlockMixin",
+    "StemBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

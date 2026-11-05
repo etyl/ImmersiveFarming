@@ -6,6 +6,7 @@ import net.etylop.immersivefarming.block.IFBlocks;
 import net.etylop.immersivefarming.block.IFMultiblockLogic;
 import net.etylop.immersivefarming.block.IFMultiblocks;
 import net.etylop.immersivefarming.client.ClientInitializer;
+import net.etylop.immersivefarming.client.IFManual;
 import net.etylop.immersivefarming.client.IFSounds;
 import net.etylop.immersivefarming.crafting.IFRecipeSerializer;
 import net.etylop.immersivefarming.entity.IFEntities;
@@ -84,6 +85,8 @@ public class ImmersiveFarming {
         ItemBlockRenderTypes.setRenderLayer(IFFluids.TREATED_WATER_FLUID.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(IFFluids.TREATED_WATER_FLOWING.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(IFBlocks.DEAD_CROP.get(), RenderType.cutout());
+        // Runs after IE's client setup, which creates the manual
+        event.enqueueWork(IFManual::registerConfigGetters);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
