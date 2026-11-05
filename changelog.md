@@ -4,14 +4,14 @@
 * Soil water levels
   * Crops don't grow on dry soil, and each growth stage consumes some water
   * Rain and sprinklers water the soil, and unwatered soil slowly dries out
-  * Soil next to a water block is flooded (new texture), and crops on it grow slower
+  * Soil next to a water block is flooded (new texture), and crops on it grow slower (20% speed by default, configurable)
 * Watering can
   * Right click soil or a plant to fully water it, right click a water source to refill it
   * Crafted with copper ingots and a bucket
 * Trowel
   * Right click soil or a crop to inspect its tilling, water level, fertility and health
 * Soil can be turned back into dirt with a shovel
-* Unfertilized soil now grows crops much slower
+* Unfertilized soil now grows crops much slower (20% speed by default, configurable)
 * Crops need sunlight: they must see the sky to grow, glass is fine (configurable)
 * Soil rules apply to all plants, including tall plants (pitcher plants, hemp, tomatoes)
 * Removed crop rotation growth boost

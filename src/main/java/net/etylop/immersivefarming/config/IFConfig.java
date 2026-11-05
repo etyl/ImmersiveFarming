@@ -123,9 +123,9 @@ public final class IFConfig {
             this.evaporation = builder.comment("Probability for soil that is not being watered to lose one water level during a random tick")
                     .defineInRange("evaporation", 0.01D, 0D, 1.0D);
             this.flooded_growth = builder.comment("Probability for a crop on flooded soil (next to a water block) to grow when it would normally grow")
-                    .defineInRange("flooded_growth", 0.25D, 0D, 1.0D);
+                    .defineInRange("flooded_growth", 0.2D, 0D, 1.0D);
             this.unfertilized_growth = builder.comment("Probability for a crop on unfertilized soil to grow when it would normally grow")
-                    .defineInRange("unfertilized_growth", 0.25D, 0D, 1.0D);
+                    .defineInRange("unfertilized_growth", 0.2D, 0D, 1.0D);
             this.require_sunlight = builder.comment("Whether plants on soil need to see the sky to grow (blocks letting sunlight through, such as glass, are fine)",
                             "If false, artificial light is enough, as in vanilla")
                     .define("require_sunlight", true);

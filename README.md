@@ -17,27 +17,28 @@ Features are explained in the engineer's manual, but here is an overview:
 * Crop growth
   * Bone meal can no longer be used on crops
   * Crops only grow at vanilla speed on watered and fertilized soil
-  * Unfertilized and flooded soil both reduce growth speed to a quarter (configurable)
-  * Crops don't grow in cold biomes and may die
+  * Unfertilized and flooded soil both reduce growth speed to 20% (configurable)
+  * Crops don't grow in cold biomes
   * Crops need sunlight to grow: they must see the sky, glass is fine (configurable)
 * Carts
   * Plow: to till land faster
   * Sowing machine: to sow seeds and fertilize faster
 * Fertilization
-  * Compost can be made from the Industrial Composter multiblock
-  * Composting Bin: a simple wooden composter, filled with wet and dry matter and turned with a shovel while it composts
+  * Compost can be made from the Industrial Composter multiblock or the composting bin
   * Using compost on soil boosts crop growth
 * Farmland
   * Farmland can no longer be trampled by jumping on it
   * Tilling dirt now requires several clicks (but better hoes speed up this process)
-  * Soil can be turned back into dirt with a shovel
+  * Farmland can be turned back into dirt with a shovel
   * Trowel: right click soil or a crop to inspect its tilling, water level, fertility and health
-  * Dirt tilled by other mods' tools and machines also becomes soil, and farmland that a crop grows on is turned into soil (configurable)
 * Crop disease
   * Crops can become sick and eventually die
   * Sick crops can contaminate adjacent crops (disabled by default, configurable)
   * Using treated water in the sprinklers will prevent and cure diseases
   * Treated water is made in the Mixer from water, copper dust and sulfur dust
+* Configuration
+  * Growth speeds, evaporation, sunlight requirement, disease spreading and farmland replacement can be changed in the config file
+  * The engineer's manual reflects the config values
 
 
 # More information
