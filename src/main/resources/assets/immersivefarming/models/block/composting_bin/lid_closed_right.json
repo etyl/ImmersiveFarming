@@ -3,7 +3,8 @@
   "ambientocclusion": false,
   "textures": {
     "particle": "#lid",
-    "lid": "immersiveengineering:block/wooden_decoration/treated_wood_horizontal"
+    "lid": "immersiveengineering:block/wooden_decoration/treated_wood_horizontal",
+    "handle": "immersiveengineering:block/metal/sheetmetal_steel"
   },
   "elements": [
     {
@@ -40,50 +41,109 @@
     },
     {
       "from": [
-        14,
+        13,
         15,
         1
       ],
       "to": [
-        16,
-        16,
-        3
+        14,
+        17,
+        2
       ],
       "faces": {
         "north": {
-          "texture": "#lid",
+          "texture": "#handle",
           "uv": [
-            14,
-            0,
-            16,
-            1
+            5,
+            6,
+            6,
+            8
           ]
         },
         "south": {
-          "texture": "#lid",
+          "texture": "#handle",
           "uv": [
-            14,
-            0,
-            16,
-            1
+            5,
+            6,
+            6,
+            8
+          ]
+        },
+        "east": {
+          "texture": "#handle",
+          "uv": [
+            5,
+            6,
+            6,
+            8
           ]
         },
         "west": {
-          "texture": "#lid",
+          "texture": "#handle",
           "uv": [
-            1,
-            0,
-            3,
-            1
+            5,
+            6,
+            6,
+            8
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        17,
+        1
+      ],
+      "to": [
+        16,
+        18,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#handle",
+          "uv": [
+            5,
+            6,
+            8,
+            7
+          ]
+        },
+        "south": {
+          "texture": "#handle",
+          "uv": [
+            5,
+            6,
+            8,
+            7
           ]
         },
         "up": {
-          "texture": "#lid",
+          "texture": "#handle",
           "uv": [
-            14,
-            1,
-            16,
-            3
+            5,
+            6,
+            8,
+            7
+          ]
+        },
+        "down": {
+          "texture": "#handle",
+          "uv": [
+            5,
+            6,
+            8,
+            7
+          ]
+        },
+        "west": {
+          "texture": "#handle",
+          "uv": [
+            5,
+            6,
+            6,
+            7
           ]
         }
       }

@@ -52,8 +52,6 @@ public class CompostingBinBlock extends BaseEntityBlock
     public static final int MAX_LEVEL = 8;
     public static final IntegerProperty LEVEL = IntegerProperty.create("level", 0, MAX_LEVEL);
 
-    private static final VoxelShape OPEN_SHAPE = Shapes.box(0, 0, 0, 1, 14/16f, 1);
-    private static final VoxelShape CLOSED_SHAPE = Shapes.block();
     // Depth of the upper half shape from the back: the posts and beam, plus the lid when it is open
     private static final double UPPER_DEPTH_OPEN = 7/16d;
     private static final double UPPER_DEPTH_CLOSED = 2/16d;
@@ -216,10 +214,10 @@ public class CompostingBinBlock extends BaseEntityBlock
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx)
     {
+        if(state.getValue(HALF)==DoubleBlockHalf.LOWER)
+            return Shapes.block();
         boolean closed = state.getValue(STAGE)==Stage.COMPOSTING;
-        if(state.getValue(HALF)==DoubleBlockHalf.UPPER)
-            return backStrip(state.getValue(FACING), closed?UPPER_DEPTH_CLOSED: UPPER_DEPTH_OPEN);
-        return closed?CLOSED_SHAPE: OPEN_SHAPE;
+        return backStrip(state.getValue(FACING), closed?UPPER_DEPTH_CLOSED: UPPER_DEPTH_OPEN);
     }
 
     /**
@@ -244,18 +242,11 @@ public class CompostingBinBlock extends BaseEntityBlock
         Stage stage = state.getValue(STAGE);
         double x = pos.getX()+0.1+0.8*random.nextDouble();
         double z = pos.getZ()+0.1+0.8*random.nextDouble();
-        if(stage==Stage.COMPOSTING)
-        {
-            // Steam escaping from the lid
-            if(random.nextInt(3)==0)
-                level.addParticle(ParticleTypes.SMOKE, x, pos.getY()+1.0, z, 0, 0.02, 0);
-            if(random.nextInt(6)==0)
-                level.addParticle(ParticleTypes.COMPOSTER, x, pos.getY()+1.0, z, 0, 0, 0);
-        }
+        // Steam escaping from the lid
+        if(stage==Stage.COMPOSTING&&random.nextInt(3)==0)
+            level.addParticle(ParticleTypes.SMOKE, x, pos.getY()+1.0, z, 0, 0.02, 0);
         else if(stage==Stage.TURNING&&random.nextInt(4)==0)
             level.addParticle(ParticleTypes.MYCELIUM, x, pos.getY()+0.9, z, 0, 0, 0);
-        else if(stage==Stage.READY&&random.nextInt(5)==0)
-            level.addParticle(ParticleTypes.HAPPY_VILLAGER, x, pos.getY()+0.9, z, 0, 0, 0);
     }
 
     @SuppressWarnings("deprecation")
