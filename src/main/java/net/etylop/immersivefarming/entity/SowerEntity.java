@@ -76,6 +76,12 @@ public final class SowerEntity extends AbstractDrawnInventoryEntity {
             protected void onContentsChanged(final int slot) {
                 this.cart.updateSlot(slot);
             }
+
+            // Top row takes seeds, bottom row takes compost (also routes shift-clicked items to the right row)
+            @Override
+            public boolean isItemValid(final int slot, final ItemStack stack) {
+                return slot < SEED_COUNT ? isSeed(stack) : stack.getItem() instanceof CompostItem;
+            }
         };
     }
 

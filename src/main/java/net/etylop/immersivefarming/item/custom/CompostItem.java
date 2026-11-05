@@ -29,6 +29,6 @@ public class CompostItem extends Item {
         Player player = pContext.getPlayer();
         if (player == null || !player.getAbilities().instabuild)
             pContext.getItemInHand().shrink(1);
-        return InteractionResult.CONSUME;
+        return InteractionResult.sidedSuccess(pContext.getLevel().isClientSide());
     }
 }

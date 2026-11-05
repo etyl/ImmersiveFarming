@@ -2,6 +2,9 @@
 
 * Fixed the wrong particles when breaking or walking on the top part of sprinklers
 * Soil can no longer be trampled
+* Fixed a gap in the Composting Bin's hitbox when it is open
+* Fixed compost interaction
+* Only seeds and compost can be added into the sower
 
 
 ##### Version 1.20.1-0.4
