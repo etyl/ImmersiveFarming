@@ -1,8 +1,6 @@
 # Description
 
-Immersive Farming is an addon for Immersive Engineering focusing on extending the farming experience. Players will be able to craft sprinklers, to better irrigate their crops and make pesticides to prevent their crops from getting sick and dying. Immersive Farming also introduces several new mechanics that change vanilla farming.
-
-Thanks to Peter for creating the assets !
+Immersive Farming is an addon for Immersive Engineering focusing on extending the farming experience. Players will be able to craft sprinklers or a watering can, to better irrigate their crops and make pesticides to prevent their crops from getting sick and dying. It also adds 2 multiblocks, the composting bin and industrial composter to make compost and speed up crop growth. Immersive Farming also introduces several new mechanics that change vanilla farming.
 
 # Features
 
@@ -52,5 +50,7 @@ No permissions are needed to use the mod, feel free to use it in your modpack !
 
 
 ## Credits
+
+Thanks to Peter for creating the assets !
 
 In order to make the carts, I used chunks of code from AstikorCarts, and adapted it to Immersive Farming.
