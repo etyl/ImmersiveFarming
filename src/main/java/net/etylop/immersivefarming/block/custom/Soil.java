@@ -139,7 +139,8 @@ public class Soil extends FarmBlock {
         }
         else if (contaminated && Math.random()<cropConfig.lethality_contamination.get()) {
             IFFunctions.killPlant(pLevel, pPos.above(), 3);
-            pLevel.setBlock(pPos, Blocks.DIRT.defaultBlockState(), 2);
+            // Keep the soil (water, fertility, tilling) but clear the contamination with the crop gone
+            pLevel.setBlock(pPos, newState.setValue(CONTAMINATED, false), 2);
             return;
         }
         else if (contaminated && cropConfig.spread_contamination.get()) {
@@ -217,6 +218,7 @@ public class Soil extends FarmBlock {
 
     private static boolean isUnderCrops(BlockGetter pLevel, BlockPos pPos) {
         BlockState plant = pLevel.getBlockState(pPos.above());
+        if (plant.getBlock() instanceof DeadCrop) return false;
         BlockState state = pLevel.getBlockState(pPos);
         return plant.getBlock() instanceof net.minecraftforge.common.IPlantable && state.canSustainPlant(pLevel, pPos, Direction.UP, (net.minecraftforge.common.IPlantable)plant.getBlock());
     }
