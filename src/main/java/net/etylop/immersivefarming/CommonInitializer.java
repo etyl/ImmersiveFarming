@@ -1,5 +1,6 @@
 package net.etylop.immersivefarming;
 
+import net.etylop.immersivefarming.config.ConfigSync;
 import net.etylop.immersivefarming.config.IFConfig;
 import net.etylop.immersivefarming.entity.ai.goal.PullCartGoal;
 import net.etylop.immersivefarming.utils.cart.GoalAdder;
@@ -33,6 +34,7 @@ public class CommonInitializer implements Initializer {
                 }
             }
         });
+        ConfigSync.register(mod.bus(), mod.modBus());
         mod.bus().<AttachCapabilitiesEvent<Level>, Level>addGenericListener(Level.class, e ->
             e.addCapability(new ResourceLocation(ImmersiveFarming.MOD_ID, "carts"), IFWorld.createProvider(SimpleIFWorld::new))
         );

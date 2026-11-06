@@ -111,13 +111,9 @@ public final class IFFunctions {
 
     private static volatile ConvertibleBlocks convertibleCache = null;
 
-    private static boolean configLoaded() {
-        return IFConfig.spec().isLoaded();
-    }
-
     /** Whether the block is listed in the convertible_farmland config (ignores replace_farmland). */
     public static boolean isConvertibleFarmland(BlockState state) {
-        if (!configLoaded() || state.getBlock() instanceof Soil) return false;
+        if (!IFConfig.isLoaded() || state.getBlock() instanceof Soil) return false;
         List<? extends String> list = IFConfig.get().cropConfig.convertible_farmland.get();
         ConvertibleBlocks cache = convertibleCache;
         if (cache == null || cache.source() != list) {
@@ -147,7 +143,7 @@ public final class IFFunctions {
     /** Whether a block is (or will be converted to) soil managed by this mod. */
     public static boolean isManagedSoil(BlockState state) {
         if (state.getBlock() instanceof Soil) return true;
-        return configLoaded() && IFConfig.get().cropConfig.replace_farmland.get() && isConvertibleFarmland(state);
+        return IFConfig.isLoaded() && IFConfig.get().cropConfig.replace_farmland.get() && isConvertibleFarmland(state);
     }
 
     /**

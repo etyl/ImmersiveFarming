@@ -1,0 +1,10 @@
+Garden Cloche
+Farming in a bottle
+<&recipe>The Garden Cloche, or Belljar, is a sealed greenhouse. Under its glass dome, plants grow under any condition: underground, in cold biomes, without sunlight, and they never catch diseases.
+There is no soil to till, irrigate or fertilize with compost: the cloche takes care of everything, as long as it is supplied.<np>
+The cloche accepts power, water and items through its ports.
+Its grow lights are power hungry: it uses <config;i;immersivefarming.cloche_energy> Flux per tick while growing.
+<config;b;immersivefarming.cloche_require_fertilizer;Plants also need Industrial Fertilizer, placed in the slot on the left. Each dose of fertilizer is mixed with water to fill the gauge, and when the gauge is empty and no fertilizer is left, the cloche stops growing.;Industrial Fertilizer can be placed in the slot on the left.>
+A dose lasts <config;i;immersivefarming.cloche_dose_seconds> seconds.<np>
+Soil and seeds are placed in the middle: each seed requires the correct soil to grow on, with dirt being automatically tilled into farmland.
+The harvest is stored in the slots on the right, and is automatically output through the hatch at the front of the glass dome.

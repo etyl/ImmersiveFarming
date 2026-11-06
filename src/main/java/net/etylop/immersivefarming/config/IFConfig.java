@@ -1,5 +1,6 @@
 package net.etylop.immersivefarming.config;
 
+import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import net.jodah.typetools.TypeResolver;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ItemSteerable;
@@ -11,11 +12,19 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+/**
+ * Common config (config/immersivefarming-common.toml), shared by all the worlds of a game instance.
+ * Gameplay code runs on the server and reads the values directly. Code showing values on the client (engineer's manual, JEI)
+ * must use {@link #getSynced}: when playing on a dedicated server, the server sends its values when the player joins
+ * ({@link net.etylop.immersivefarming.network.clientbound.SyncConfigMessage}), and they replace the client's own values.
+ */
 public final class IFConfig {
     public static Common get() {
         return Holder.COMMON;
@@ -23,6 +32,48 @@ public final class IFConfig {
 
     public static ForgeConfigSpec spec() {
         return Holder.COMMON_SPEC;
+    }
+
+    public static boolean isLoaded() {
+        return Holder.COMMON_SPEC.isLoaded();
+    }
+
+    /* Values received from the server, by config path ("cloche.energy_multiplier"), empty when not connected to a server */
+    private static volatile Map<String, Object> synced = Map.of();
+
+    /** The value to show on the client: the server's value if it sent one, else the local value (or its default if not loaded yet) */
+    @SuppressWarnings("unchecked")
+    public static <T> T getSynced(ForgeConfigSpec.ConfigValue<T> value) {
+        Object syncedValue = synced.get(String.join(".", value.getPath()));
+        if (syncedValue != null) {
+            try {
+                return (T) syncedValue;
+            } catch (ClassCastException ignored) {
+            }
+        }
+        return isLoaded() ? value.get() : value.getDefault();
+    }
+
+    public static void setSynced(Map<String, Object> values) {
+        synced = Map.copyOf(values);
+    }
+
+    public static void clearSynced() {
+        synced = Map.of();
+    }
+
+    /** All the config values, by path, to be sent to the clients */
+    public static Map<String, Object> snapshot() {
+        Map<String, Object> values = new LinkedHashMap<>();
+        collect(spec().getValues(), values);
+        return values;
+    }
+
+    private static void collect(UnmodifiableConfig config, Map<String, Object> values) {
+        for (Object entry : config.valueMap().values()) {
+            if (entry instanceof UnmodifiableConfig child) collect(child, values);
+            else if (entry instanceof ForgeConfigSpec.ConfigValue<?> value) values.put(String.join(".", value.getPath()), value.get());
+        }
     }
 
     private static final class Holder {
@@ -40,9 +91,11 @@ public final class IFConfig {
     public static class Common {
         public final CartConfig plow;
         public final CropConfig cropConfig;
+        public final ClocheConfig cloche;
 
         Common(final ForgeConfigSpec.Builder builder) {
             this.cropConfig = new CropConfig(builder);
+            this.cloche = new ClocheConfig(builder);
             builder.comment("Configuration for all carts and cart-like vehicles\n\nDefault pull_animals = " + referencePullAnimals()).push("carts");
             this.plow = new CartConfig(builder, "plow", "The Plow, an animal pulled machine for tilling soil");
             builder.pop();
@@ -85,6 +138,30 @@ public final class IFConfig {
                 .defineInRange("slow_speed", -0.0D, -1.0D, 0.0D);
             this.pullSpeed = builder.comment("Base speed modifier applied to animals (-0.5 = half normal speed)")
                 .defineInRange("pull_speed", -0.5D, -1.0D, 0.0D);
+            builder.pop();
+        }
+    }
+
+    public static class ClocheConfig {
+        public final ForgeConfigSpec.BooleanValue require_fertilizer;
+        public final ForgeConfigSpec.DoubleValue energy_multiplier;
+        public final ForgeConfigSpec.IntValue fertilizer_consumption;
+        public final ForgeConfigSpec.DoubleValue growth_time_multiplier;
+
+        ClocheConfig(final ForgeConfigSpec.Builder builder) {
+            builder.comment("Immersive Engineering garden cloche").push("cloche");
+            this.require_fertilizer = builder.comment("Whether the cloche needs a fertilizer to work (Industrial Fertilizer, see the immersiveengineering:fertilizer recipes)",
+                            "If false, the cloche runs on water alone and fertilizers only speed it up, as in Immersive Engineering")
+                    .define("require_fertilizer", true);
+            this.energy_multiplier = builder.comment("Multiplier applied to the cloche energy consumption (Immersive Engineering server config, 8 FE/t by default)",
+                            "The cloche can't receive more than 256 FE/t (or the IE consumption value if higher)")
+                    .defineInRange("energy_multiplier", 4.0D, 0.0D, 32.0D);
+            this.fertilizer_consumption = builder.comment("Multiplier applied to the speed at which the cloche uses up its fertilizer",
+                            "(2 = a dose lasts half the Immersive Engineering server config duration)")
+                    .defineInRange("fertilizer_consumption", 1, 1, 100);
+            this.growth_time_multiplier = builder.comment("Multiplier applied to the time a plant takes to grow in the cloche (Immersive Engineering recipe time)",
+                            "(4 = plants take four times as long to grow, the fertilizer consumption per minute is unchanged)")
+                    .defineInRange("growth_time_multiplier", 4.0D, 0.01D, 100.0D);
             builder.pop();
         }
     }

@@ -34,9 +34,12 @@ Features are explained in the engineer's manual, but here is an overview:
   * Sick crops can contaminate adjacent crops (disabled by default, configurable)
   * Using treated water in the sprinklers will prevent and cure diseases
   * Treated water is made in the Mixer from water, copper dust and sulfur dust
+* Garden Cloche
+  * The Immersive Engineering cloche is rebalanced so that it doesn't outclass field farming
+  * It needs Industrial Fertilizer to work, grows plants slower and uses more energy
 * Configuration
-  * Growth speeds, evaporation, sunlight requirement, disease spreading and farmland replacement can be changed in the config file
-  * The engineer's manual reflects the config values
+  * Growth speeds, evaporation, sunlight requirement, disease spreading, farmland replacement and cloche balance can be changed in the config file
+  * The engineer's manual reflects the config values (the server's values when playing on a server)
 
 
 # More information

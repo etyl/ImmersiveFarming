@@ -5,11 +5,16 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "immersivefarming.refmap.json",
   "mixins": [
+    "ClocheBlockEntityMixin",
     "CropBlockMixin",
     "PitcherCropBlockMixin",
     "StemBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "ClocheRecipeCategoryMixin",
+    "ManualInstanceMixin"
+  ]
 }

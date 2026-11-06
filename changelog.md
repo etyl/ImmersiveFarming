@@ -1,3 +1,15 @@
+##### Version 1.20.1-0.4.2
+
+* Garden Cloche rebalance (configurable)
+  * The cloche needs Industrial Fertilizer to work: it no longer runs on water alone, and stops once its current dose runs out
+  * Industrial Fertilizer is the only cloche fertilizer (bone meal, slag, saltpeter and sulfur are removed), and no longer speeds up growth
+  * Plants take 4 times as long to grow
+  * Uses 4 times more energy (32 FE/t)
+  * A dose (Industrial Fertilizer + 250 mB of water) lasts 5 minutes: a harvest uses about 0.5 Industrial Fertilizer
+  * The cloche's engineer's manual entry moved to the Immersive Farming section, rewritten to match these rules and the config values
+* On a server, the engineer's manual and JEI now show the server's config values instead of the player's
+
+
 ##### Version 1.20.1-0.4.1
 
 * Fixed the wrong particles when breaking or walking on the top part of sprinklers

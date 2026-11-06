@@ -15,6 +15,7 @@ import net.etylop.immersivefarming.gui.IFMenuTypes;
 import net.etylop.immersivefarming.item.IFCreativeTab;
 import net.etylop.immersivefarming.item.IFItems;
 import net.etylop.immersivefarming.network.NetBuilder;
+import net.etylop.immersivefarming.network.clientbound.SyncConfigMessage;
 import net.etylop.immersivefarming.network.clientbound.UpdateDrawnMessage;
 import net.etylop.immersivefarming.network.serverbound.ActionKeyMessage;
 import net.etylop.immersivefarming.network.serverbound.ToggleSlowMessage;
@@ -44,10 +45,11 @@ public class ImmersiveFarming {
     public static final Logger log = LogManager.getLogger(MOD_ID);
 
     public static final SimpleChannel CHANNEL = new NetBuilder(new ResourceLocation(MOD_ID, "main"))
-            .version(1).optionalServer().requiredClient()
+            .version(2).optionalServer().requiredClient()
             .serverbound(ActionKeyMessage::new).consumer(() -> ActionKeyMessage::handle)
             .serverbound(ToggleSlowMessage::new).consumer(() -> ToggleSlowMessage::handle)
             .clientbound(UpdateDrawnMessage::new).consumer(() -> new UpdateDrawnMessage.Handler())
+            .clientbound(SyncConfigMessage::new).consumer(() -> new SyncConfigMessage.Handler())
             .build();
 
 
