@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -85,14 +86,34 @@ public final class IFFunctions {
         return base;
     }
 
-    /** Whether a plant is fully grown, for plants with an "age" property (false for other plants). */
-    public static boolean isMaxAge(BlockState plant) {
+    /** The plant's "age" property, or null if it has none. */
+    @Nullable
+    private static IntegerProperty getAgeProperty(BlockState plant) {
         for (Property<?> property : plant.getProperties()) {
             if ("age".equals(property.getName()) && property instanceof IntegerProperty age) {
-                return plant.getValue(age) == age.getPossibleValues().stream().max(Integer::compare).orElse(0);
+                return age;
             }
         }
-        return false;
+        return null;
+    }
+
+    private static boolean isAtMaxAge(BlockState plant, IntegerProperty age) {
+        return plant.getValue(age) == age.getPossibleValues().stream().max(Integer::compare).orElse(0);
+    }
+
+    /** Whether a plant is fully grown, for plants with an "age" property (false for other plants). */
+    public static boolean isMaxAge(BlockState plant) {
+        IntegerProperty age = getAgeProperty(plant);
+        return age != null && isAtMaxAge(plant, age);
+    }
+
+    /**
+     * Whether a plant is still growing: it has an "age" property below its max.
+     * False for fully grown plants, including those whose grown form has no age (torchflower...).
+     */
+    public static boolean isGrowing(BlockState plant) {
+        IntegerProperty age = getAgeProperty(plant);
+        return age != null && !isAtMaxAge(plant, age);
     }
 
     /** Whether a plant's harvest gets the rich soil yield bonus: mature, and not a stem (its fruit is the yield). */

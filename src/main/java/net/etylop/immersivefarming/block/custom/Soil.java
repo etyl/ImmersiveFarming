@@ -253,9 +253,10 @@ public class Soil extends FarmBlock {
         return false;
     }
 
+    /** Whether the soil holds a crop that can be contaminated: one that is still growing (not dead, not fully grown). */
     private static boolean isUnderCrops(BlockGetter pLevel, BlockPos pPos) {
         BlockState plant = pLevel.getBlockState(pPos.above());
-        if (plant.getBlock() instanceof DeadCrop) return false;
+        if (plant.getBlock() instanceof DeadCrop || !IFFunctions.isGrowing(plant)) return false;
         BlockState state = pLevel.getBlockState(pPos);
         return plant.getBlock() instanceof net.minecraftforge.common.IPlantable && state.canSustainPlant(pLevel, pPos, Direction.UP, (net.minecraftforge.common.IPlantable)plant.getBlock());
     }
