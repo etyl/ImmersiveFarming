@@ -145,25 +145,8 @@ public class ComposterLogic implements IMultiblockLogic<ComposterLogic.State>, I
 
     private static VoxelShape getShape(BlockPos posInMultiblock)
     {
-        if(new BlockPos(2, 0, 2).equals(posInMultiblock))
-            return Shapes.or(
-                    Shapes.box(0, 0, 0, 1, .5f, 1),
-                    Shapes.box(0.125, .5f, 0.625, 0.25, 1, 0.875),
-                    Shapes.box(0.75, .5f, 0.625, 0.875, 1, 0.875)
-            );
-        else if(posInMultiblock.getY()==0&&posInMultiblock.getZ() < 2)
-        {
-            VoxelShape base = Shapes.box(0, 0, 0, 1, .5f, 1);
-            if(new BlockPos(0, 0, 0).equals(posInMultiblock))
-                return Shapes.or(base, Shapes.box(4*0.0625, 0.5, 3*0.0625, 8*0.0625, 1, 7*0.0625));
-            else if(new BlockPos(0, 0, 1).equals(posInMultiblock))
-                return Shapes.or(base, Shapes.box(4*0.0625, 0.5, 9*0.0625, 8*0.0625, 1, 13*0.0625));
-            else if(new BlockPos(2, 0, 0).equals(posInMultiblock))
-                return Shapes.or(base, Shapes.box(8*0.0625, 0.5, 3*0.0625, 12*0.0625, 1, 7*0.0625));
-            else if(new BlockPos(2, 0, 1).equals(posInMultiblock))
-                return Shapes.or(base, Shapes.box(8*0.0625, 0.5, 9*0.0625, 12*0.0625, 1, 13*0.0625));
-            return base;
-        }
+        if(posInMultiblock.getY()==0)
+            return Shapes.block();
         else if(new BlockPos(2, 1, 2).equals(posInMultiblock))
             return Shapes.box(0, 0, 0.5, 1, 1, 1);
         else if(new BlockPos(1, 1, 2).equals(posInMultiblock))
@@ -173,7 +156,7 @@ public class ComposterLogic implements IMultiblockLogic<ComposterLogic.State>, I
         else if(new BlockPos(1, 3, 2).equals(posInMultiblock))
             return Shapes.box(4*0.0625, 0, 0, 12*0.0625, 12*0.0625, 12*0.0625);
         else if(new BlockPos(1, 3, 1).equals(posInMultiblock))
-            return Shapes.box(4*0.0625, 0, 4*0.0625, 12*0.0625, 12*0.0625, 15*0.0625);
+            return Shapes.box(4*0.0625, 0, 3*0.0625, 12*0.0625, 12*0.0625, 1);
         else
             return Shapes.block();
     }
