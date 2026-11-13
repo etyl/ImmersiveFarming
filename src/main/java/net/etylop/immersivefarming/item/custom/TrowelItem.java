@@ -1,6 +1,7 @@
 package net.etylop.immersivefarming.item.custom;
 
 import net.etylop.immersivefarming.block.custom.Soil;
+import net.etylop.immersivefarming.config.IFConfig;
 import net.etylop.immersivefarming.utils.IFFunctions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -72,6 +73,15 @@ public class TrowelItem extends Item {
             info.append(Component.translatable(key + "contaminated").withStyle(ChatFormatting.DARK_PURPLE));
         else
             info.append(Component.translatable(key + "healthy").withStyle(ChatFormatting.GREEN));
+
+        int richness = soil.getValue(Soil.RICHNESS);
+        int needed = IFConfig.get().cropConfig.harvests_to_enrich.get();
+        if (richness == Soil.RICHNESS_MAX)
+            info.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
+                    .append(Component.translatable(key + "rich").withStyle(ChatFormatting.GOLD));
+        else if (richness > 0 && needed > 0)
+            info.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
+                    .append(Component.translatable(key + "richness", Math.min(richness, needed), needed).withStyle(ChatFormatting.YELLOW));
         return info;
     }
 

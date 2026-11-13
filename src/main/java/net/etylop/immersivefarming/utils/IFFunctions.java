@@ -14,10 +14,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.AttachedStemBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.PitcherCropBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -30,8 +33,22 @@ public final class IFFunctions {
     // Tallest plant (in blocks) that is searched when looking for the soil under a plant
     private static final int MAX_PLANT_HEIGHT = 8;
 
+    private static final ResourceLocation FD_RICH_SOIL = new ResourceLocation("farmersdelight", "rich_soil");
+
     public static boolean isBlockTillable(Level level, BlockPos pos) {
-        return level.getBlockState(pos).is(ModTags.Blocks.TILLABLE_BLOCK) && !level.isClientSide();
+        BlockState state = level.getBlockState(pos);
+        return (state.is(ModTags.Blocks.TILLABLE_BLOCK) || state.is(ModTags.Blocks.RICH_TILLABLE_BLOCK)) && !level.isClientSide();
+    }
+
+    /** Soil obtained by tilling a tillable block (rich for blocks in rich_tillable_block). */
+    public static BlockState getTilledSoil(BlockState tillable) {
+        BlockState soil = IFBlocks.SOIL.get().defaultBlockState();
+        return tillable.is(ModTags.Blocks.RICH_TILLABLE_BLOCK) ? soil.setValue(Soil.RICHNESS, Soil.RICHNESS_MAX) : soil;
+    }
+
+    /** Farmer's Delight rich soil, or null if that mod is not installed. */
+    public static Block getRichSoilBlock() {
+        return ForgeRegistries.BLOCKS.containsKey(FD_RICH_SOIL) ? ForgeRegistries.BLOCKS.getValue(FD_RICH_SOIL) : null;
     }
 
     /**
@@ -66,6 +83,21 @@ public final class IFFunctions {
             base = base.below();
         }
         return base;
+    }
+
+    /** Whether a plant is fully grown, for plants with an "age" property (false for other plants). */
+    public static boolean isMaxAge(BlockState plant) {
+        for (Property<?> property : plant.getProperties()) {
+            if ("age".equals(property.getName()) && property instanceof IntegerProperty age) {
+                return plant.getValue(age) == age.getPossibleValues().stream().max(Integer::compare).orElse(0);
+            }
+        }
+        return false;
+    }
+
+    /** Whether a plant's harvest gets the rich soil yield bonus: mature, and not a stem (its fruit is the yield). */
+    public static boolean isRichSoilHarvest(BlockState plant) {
+        return isMaxAge(plant) && !(plant.getBlock() instanceof StemBlock) && !(plant.getBlock() instanceof AttachedStemBlock);
     }
 
     /** Highest block of the plant at {@code pos}. */
@@ -114,6 +146,7 @@ public final class IFFunctions {
     /** Whether the block is listed in the convertible_farmland config (ignores replace_farmland). */
     public static boolean isConvertibleFarmland(BlockState state) {
         if (!IFConfig.isLoaded() || state.getBlock() instanceof Soil) return false;
+        if (state.is(ModTags.Blocks.RICH_FARMLAND)) return true;
         List<? extends String> list = IFConfig.get().cropConfig.convertible_farmland.get();
         ConvertibleBlocks cache = convertibleCache;
         if (cache == null || cache.source() != list) {

@@ -12,6 +12,12 @@ public class ModTags {
     public static class Blocks {
         public static final TagKey<Block> TILLABLE_BLOCK =
                 tag("tillable_block");
+        // Blocks that give rich soil when tilled (Farmer's Delight rich soil)
+        public static final TagKey<Block> RICH_TILLABLE_BLOCK =
+                tag("rich_tillable_block");
+        // Farmland converted to rich soil (Farmer's Delight rich soil farmland), always convertible
+        public static final TagKey<Block> RICH_FARMLAND =
+                tag("rich_farmland");
 
         private static TagKey<Block> tag(String name) {
             return BlockTags.create(new ResourceLocation(ImmersiveFarming.MOD_ID, name));

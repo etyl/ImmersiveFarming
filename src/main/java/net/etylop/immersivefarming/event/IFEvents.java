@@ -11,7 +11,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.entity.player.BonemealEvent;
@@ -21,8 +20,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.Collections;
-import java.util.Optional;
 
 
 public class IFEvents {
@@ -34,7 +31,8 @@ public class IFEvents {
         // Further tilling of the soil is handled by Soil#getToolModifiedState.
         @SubscribeEvent
         public static void onToolModification(BlockEvent.BlockToolModificationEvent event) {
-            if (event.getToolAction() != ToolActions.HOE_TILL || !event.getState().is(ModTags.Blocks.TILLABLE_BLOCK)) {
+            if (event.getToolAction() != ToolActions.HOE_TILL ||
+                !(event.getState().is(ModTags.Blocks.TILLABLE_BLOCK) || event.getState().is(ModTags.Blocks.RICH_TILLABLE_BLOCK))) {
                 return;
             }
             // Same rule as vanilla tilling: from above, with air above the block
@@ -42,7 +40,7 @@ public class IFEvents {
                 !event.getLevel().getBlockState(event.getPos().above()).isAir()) {
                 return;
             }
-            event.setFinalState(IFBlocks.SOIL.get().defaultBlockState());
+            event.setFinalState(IFFunctions.getTilledSoil(event.getState()));
         }
 
         // Crops on soil can't be bonemealed (direct calls to performBonemeal are blocked by the mixins)
@@ -119,21 +117,12 @@ public class IFEvents {
                 newSoil = newSoil.setValue(Soil.WATER, water - 1);
             }
 
-            // Fertility is consumed when a plant reaches maturity (any plant with an "age" property)
-            Optional<IntegerProperty> ageProperty = cropBlock.getProperties().stream()
-                    .filter(property -> "age".equals(property.getName()) && property instanceof IntegerProperty)
-                    .map(property -> (IntegerProperty) property)
-                    .findFirst();
-
-            if (ageProperty.isPresent()) {
-                int age = cropBlock.getValue(ageProperty.get());
-                int maxAge = Collections.max(ageProperty.get().getPossibleValues());
-
-                // Mature stems also fire this event when they fail to place a fruit
-                if (age == maxAge && event.getOriginalState() != cropBlock) {
-                    newSoil = newSoil.setValue(Soil.FERTILITY, 0);
-                    event.setResult(Event.Result.ALLOW);
-                }
+            // Fertility is consumed when a plant reaches maturity (any plant with an "age" property),
+            // and each crop grown to maturity makes the soil a bit richer.
+            // Mature stems also fire this event when they fail to place a fruit.
+            if (IFFunctions.isMaxAge(cropBlock) && event.getOriginalState() != cropBlock) {
+                newSoil = Soil.enrich(newSoil).setValue(Soil.FERTILITY, 0);
+                event.setResult(Event.Result.ALLOW);
             }
 
             if (newSoil != soilBlock) {

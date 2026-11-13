@@ -5,12 +5,15 @@ import net.etylop.immersivefarming.block.entity.SprinklerBlockEntity;
 import net.etylop.immersivefarming.config.IFConfig;
 import net.etylop.immersivefarming.particle.IFParticles;
 import net.etylop.immersivefarming.utils.IFFunctions;
+import net.etylop.immersivefarming.utils.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -23,11 +26,13 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Set;
 
 import static net.etylop.immersivefarming.utils.IFFunctions.getHoeSpeed;
@@ -48,6 +53,11 @@ public class Soil extends FarmBlock {
 
     public static final BooleanProperty CONTAMINATED = BooleanProperty.create("contaminated");
 
+    // Progress towards rich soil (one step per crop grown to maturity on it), RICHNESS_MAX = rich.
+    // Rich soil gives a yield bonus, see RichSoilYieldModifier.
+    public static final int RICHNESS_MAX = 10;
+    public static final IntegerProperty RICHNESS = IntegerProperty.create("richness", 0, RICHNESS_MAX);
+
 
     public Soil(Properties properties) {
         super(properties);
@@ -56,13 +66,27 @@ public class Soil extends FarmBlock {
                 .setValue(TILL, 0)
                 .setValue(FERTILITY, 0)
                 .setValue(CONTAMINATED, false)
+                .setValue(RICHNESS, 0)
         );
     }
 
     public static BlockState fromFarmland(BlockState farmland) {
         return IFBlocks.SOIL.get().defaultBlockState()
                 .setValue(TILL, TILL_MAX)
-                .setValue(WATER, Math.min(farmland.getOptionalValue(MOISTURE).orElse(0), WATER_SATURATED));
+                .setValue(WATER, Math.min(farmland.getOptionalValue(MOISTURE).orElse(0), WATER_SATURATED))
+                .setValue(RICHNESS, farmland.is(ModTags.Blocks.RICH_FARMLAND) ? RICHNESS_MAX : 0);
+    }
+
+    public static boolean isRich(BlockState state) {
+        return state.getBlock() instanceof Soil && state.getValue(RICHNESS) == RICHNESS_MAX;
+    }
+
+    /** Soil after a crop matured on it: one step closer to rich soil. */
+    public static BlockState enrich(BlockState state) {
+        int richness = state.getValue(RICHNESS);
+        int needed = cropConfig.harvests_to_enrich.get();
+        if (needed == 0 || richness == RICHNESS_MAX) return state;
+        return state.setValue(RICHNESS, richness + 1 >= needed ? RICHNESS_MAX : richness + 1);
     }
 
     @Override
@@ -71,6 +95,7 @@ public class Soil extends FarmBlock {
         pBuilder.add(TILL);
         pBuilder.add(FERTILITY);
         pBuilder.add(CONTAMINATED);
+        pBuilder.add(RICHNESS);
     }
 
 
@@ -93,7 +118,8 @@ public class Soil extends FarmBlock {
     @Override
     public BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
         if (toolAction == ToolActions.SHOVEL_FLATTEN) {
-            return Blocks.DIRT.defaultBlockState();
+            Block richSoil = isRich(state) ? IFFunctions.getRichSoilBlock() : null;
+            return richSoil != null ? richSoil.defaultBlockState() : Blocks.DIRT.defaultBlockState();
         }
         // Called by hoes, and by any modded tool or machine able to till (Create plough, Tinkers', Mekanism...)
         if (toolAction == ToolActions.HOE_TILL) {
@@ -105,6 +131,17 @@ public class Soil extends FarmBlock {
             return state.setValue(TILL, Math.min(TILL_MAX, till + getHoeSpeed(context.getItemInHand())));
         }
         return super.getToolModifiedState(state, context, toolAction, simulate);
+    }
+
+    // Rich soil drops Farmer's Delight rich soil instead of dirt, when that mod is installed
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
+        List<ItemStack> drops = super.getDrops(state, params);
+        Block richSoil = isRich(state) ? IFFunctions.getRichSoilBlock() : null;
+        if (richSoil == null) return drops;
+        return drops.stream()
+                .map(stack -> stack.is(Items.DIRT) ? new ItemStack(richSoil, stack.getCount()) : stack)
+                .toList();
     }
 
     @Override

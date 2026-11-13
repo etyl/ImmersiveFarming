@@ -1,6 +1,7 @@
 package net.etylop.immersivefarming.config;
 
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
+import net.etylop.immersivefarming.block.custom.Soil;
 import net.jodah.typetools.TypeResolver;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ItemSteerable;
@@ -178,6 +179,8 @@ public final class IFConfig {
         public final ForgeConfigSpec.BooleanValue require_sunlight;
         public final ForgeConfigSpec.BooleanValue replace_farmland;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> convertible_farmland;
+        public final ForgeConfigSpec.IntValue harvests_to_enrich;
+        public final ForgeConfigSpec.DoubleValue rich_yield_bonus;
 
         CropConfig(final ForgeConfigSpec.Builder builder) {
             this.replace_farmland = builder.comment("Whether the blocks listed in convertible_farmland are replaced by soil when a plant grows on them",
@@ -185,8 +188,15 @@ public final class IFConfig {
                     .define("replace_farmland", true);
             this.convertible_farmland = builder.comment("Blocks converted to soil when a plant grows on them (if replace_farmland is true)",
                             "Block ids such as \"minecraft:farmland\", or block tags starting with #, such as \"#forge:farmland\"",
-                            "Converted blocks lose their own behaviour (e.g. the growth boost of Farmer's Delight rich soil)")
+                            "Converted blocks lose their own behaviour",
+                            "(Blocks in the #immersivefarming:rich_farmland tag, such as Farmer's Delight rich soil farmland, are always converted, to rich soil)")
                     .defineList("convertible_farmland", List.of("minecraft:farmland"), o -> o instanceof String);
+            this.harvests_to_enrich = builder.comment("Number of crops grown to maturity on soil for it to become rich",
+                            "(0 = soil never becomes rich naturally, only by tilling Farmer's Delight rich soil)")
+                    .defineInRange("harvests_to_enrich", 8, 0, Soil.RICHNESS_MAX);
+            this.rich_yield_bonus = builder.comment("Extra loot from mature crops harvested on rich soil, as a fraction of the normal loot",
+                            "(0.3 = +30% items on average, seeds included)")
+                    .defineInRange("rich_yield_bonus", 0.3D, 0D, 1.0D);
             this.spread_contamination = builder.comment("Whether sick crops can contaminate neighbouring crops")
                     .define("spread_contamination", false);
             this.start_contamination = builder.comment("Probability for a crop to become sick during a random tick")

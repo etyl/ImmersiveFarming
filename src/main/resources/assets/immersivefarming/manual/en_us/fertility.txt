@@ -3,12 +3,14 @@ A nice soil
 
 Crops on unfertilized soil only grow <config;i;immersivefarming.unfertilized_growth_percent>% as fast as on fertilized soil.
 
-You can boost the fertility of a soil tile by right clicking it with compost.
+You can boost the fertility of a soil tile by right clicking it, or the crop growing on it, with compost.
 Once a crop is fully grown on a fertilized tile, it will consume the fertilization, and the tile will need to be fertilized again.
+
+Soil that keeps being farmed slowly becomes rich, and stays rich for good: it takes <config;i;immersivefarming.harvests_to_enrich> crops grown to maturity on a tile (never, if 0). <config;b;immersivefarming.farmersdelight_loaded;Tilling Farmer's Delight rich soil also gives rich soil directly. ;>Mature crops harvested from rich soil give <config;i;immersivefarming.rich_yield_bonus_percent>% more loot.
 
 <config;b;immersivefarming.require_sunlight;Crops also need sunlight: a crop that cannot see the sky will not grow. Glass lets sunlight through, so greenhouses work, but torches and lamps are not enough.;Crops do not need sunlight: any light source is enough, as in vanilla.>
 
 Soil can be turned back into dirt by right clicking it with a shovel.
 
 <&trowel>
-The trowel lets you inspect soil. Right click soil or a crop to see how far it is tilled, its water level, its fertility and whether it is contaminated.
+The trowel lets you inspect soil. Right click soil or a crop to see how far it is tilled, its water level, its fertility, whether it is contaminated, and how rich it is.

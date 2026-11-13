@@ -1,7 +1,7 @@
 package net.etylop.immersivefarming.entity;
 
 import com.google.common.collect.ImmutableList;
-import net.etylop.immersivefarming.block.IFBlocks;
+import net.etylop.immersivefarming.utils.IFFunctions;
 import net.etylop.immersivefarming.block.custom.Soil;
 import net.etylop.immersivefarming.config.IFConfig;
 import net.etylop.immersivefarming.gui.container.PlowContainer;
@@ -120,7 +120,7 @@ public final class PlowEntity extends AbstractDrawnInventoryEntity {
             final BlockState newState;
             if (isBlockTillable(level, blockPos)) {
                 tillsNeeded = Soil.TILL_MAX;
-                newState = IFBlocks.SOIL.get().defaultBlockState().setValue(Soil.TILL, Soil.TILL_MAX);
+                newState = IFFunctions.getTilledSoil(state).setValue(Soil.TILL, Soil.TILL_MAX);
             }
             else if (state.getBlock() instanceof Soil && state.getValue(Soil.TILL) < Soil.TILL_MAX) {
                 tillsNeeded = Soil.TILL_MAX - state.getValue(Soil.TILL);

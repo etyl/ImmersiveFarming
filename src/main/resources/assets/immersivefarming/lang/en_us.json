@@ -19,6 +19,8 @@
   "item.immersivefarming.trowel.unfertilized": "Unfertilized",
   "item.immersivefarming.trowel.healthy": "Healthy",
   "item.immersivefarming.trowel.contaminated": "Contaminated",
+  "item.immersivefarming.trowel.rich": "Rich",
+  "item.immersivefarming.trowel.richness": "Enriching: %s/%s",
 
   "fluid.immersivefarming.treated_water_fluid": "Treated Water",
   "fluid.immersivefarming.wet_matter_fluid": "Wet Matter",

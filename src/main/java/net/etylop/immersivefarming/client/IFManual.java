@@ -7,6 +7,7 @@ import net.etylop.immersivefarming.config.IFConfig;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModList;
 
 /**
  * Exposes config values to the engineer's manual, so that entries can use
@@ -45,6 +46,10 @@ public final class IFManual {
             case "replace_farmland" -> IFConfig.getSynced(config.replace_farmland);
             case "spread_contamination" -> IFConfig.getSynced(config.spread_contamination);
             case "unfertilized_growth_percent" -> (int) Math.round(IFConfig.getSynced(config.unfertilized_growth) * 100);
+            // Not a config value: mentions Farmer's Delight only when it is installed
+            case "farmersdelight_loaded" -> ModList.get().isLoaded("farmersdelight");
+            case "harvests_to_enrich" -> IFConfig.getSynced(config.harvests_to_enrich);
+            case "rich_yield_bonus_percent" -> (int) Math.round(IFConfig.getSynced(config.rich_yield_bonus) * 100);
             case "flooded_growth_percent" -> (int) Math.round(IFConfig.getSynced(config.flooded_growth) * 100);
             case "cloche_require_fertilizer" -> IFConfig.getSynced(cloche.require_fertilizer);
             // Actual values, combining IE's server config (synced to the client) with ours

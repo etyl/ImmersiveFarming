@@ -1,5 +1,10 @@
 ##### Version 1.20.1-0.4.2
 
+* Rich soil
+  * Soil becomes rich after 8 crops grown to maturity on it (configurable), and stays rich
+  * Mature crops on rich soil give 30% more loot (configurable)
+  * Farmer's Delight compatibility: tilling rich soil gives rich soil, rich soil farmland becomes rich soil, and breaking rich soil gives back Farmer's Delight rich soil
+* Compost can now be applied by right clicking a crop, to fertilize the soil below it
 * Garden Cloche rebalance (configurable)
   * The cloche needs Industrial Fertilizer to work: it no longer runs on water alone, and stops once its current dose runs out
   * Industrial Fertilizer is the only cloche fertilizer (bone meal, slag, saltpeter and sulfur are removed), and no longer speeds up growth

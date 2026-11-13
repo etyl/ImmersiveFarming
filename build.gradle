@@ -36,6 +36,14 @@ repositories {
         }
     }
 
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
+
     flatDir { dirs 'flatdir' }
 }
 
@@ -117,6 +125,9 @@ dependencies {
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${version_jei}"))
     // at runtime, use the full JEI jar for Forge
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${version_jei}"))
+
+    // Farmer's Delight at runtime only, to test compatibility (rich soil, crops) in the dev run
+    runtimeOnly(fg.deobf("maven.modrinth:farmers-delight:${version_farmersdelight}"))
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

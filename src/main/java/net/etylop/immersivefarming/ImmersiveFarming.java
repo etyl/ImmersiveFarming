@@ -14,6 +14,7 @@ import net.etylop.immersivefarming.fluid.IFFluids;
 import net.etylop.immersivefarming.gui.IFMenuTypes;
 import net.etylop.immersivefarming.item.IFCreativeTab;
 import net.etylop.immersivefarming.item.IFItems;
+import net.etylop.immersivefarming.loot.IFLootModifiers;
 import net.etylop.immersivefarming.network.NetBuilder;
 import net.etylop.immersivefarming.network.clientbound.SyncConfigMessage;
 import net.etylop.immersivefarming.network.clientbound.UpdateDrawnMessage;
@@ -71,6 +72,7 @@ public class ImmersiveFarming {
         IFRecipeSerializer.register(eventBus);
         IFEntities.register(eventBus);
         IFSounds.register(eventBus);
+        IFLootModifiers.register(eventBus);
 
         IFMultiblocks.init();
 
