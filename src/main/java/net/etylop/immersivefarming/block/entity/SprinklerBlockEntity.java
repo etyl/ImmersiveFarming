@@ -81,6 +81,8 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
             this, ForgeCapabilities.FLUID_HANDLER
     );
     protected int WATER_CONSUMPTION = 1;
+    /** Horizontal distance (in blocks, along x and z) up to which soil is watered */
+    public static final int RADIUS = 6;
 
     public float sprinklerRotation = 0;
     protected float ROTATION_SPEED = 18;
@@ -89,6 +91,46 @@ public class SprinklerBlockEntity extends IEBaseBlockEntity implements IEServerT
 
     public SprinklerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    public int getRadius() {
+        return RADIUS;
+    }
+
+    /** Whether this sprinkler is running and reaches the soil at this position */
+    public boolean isWatering(BlockPos soil) {
+        if (isRemoved() || isDummy() || !getBlockState().getValue(ACTIVE)) return false;
+        BlockPos pos = getBlockPos();
+        int depth = pos.getY() - soil.getY();
+        return depth >= 0 && depth <= SprinklerRegistry.MAX_DEPTH &&
+                Math.abs(soil.getX() - pos.getX()) <= getRadius() &&
+                Math.abs(soil.getZ() - pos.getZ()) <= getRadius();
+    }
+
+    public boolean isUsingTreatedWater() {
+        return getBlockState().getValue(USING_PESTICIDE);
+    }
+
+    // Registered on the server so soil can find the sprinklers around it, see SprinklerRegistry
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (level != null && !level.isClientSide())
+            SprinklerRegistry.add(this);
+    }
+
+    @Override
+    public void onChunkUnloaded() {
+        super.onChunkUnloaded();
+        if (level != null && !level.isClientSide())
+            SprinklerRegistry.remove(this);
+    }
+
+    @Override
+    public void setRemovedIE() {
+        super.setRemovedIE();
+        if (level != null && !level.isClientSide())
+            SprinklerRegistry.remove(this);
     }
 
     @Override

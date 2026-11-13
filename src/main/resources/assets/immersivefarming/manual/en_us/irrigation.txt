@@ -10,7 +10,7 @@ Rain and sprinklers raise the water level of the soil. Soil next to a water bloc
 The watering can lets you water soil by hand. Right click a soil block or a plant to fully water that soil, and right click a water source to refill it.
 
 <&sprinkler>
-Alternatively, you can craft a sprinkler, which has a range of 6 blocks. The sprinkler is made of two blocks, with the bottom block serving as an input or output of water (configurable using  a hammer).
+Alternatively, you can craft a sprinkler, which has a range of 6 blocks. It waters soil at the level of its bottom block or up to 6 blocks below, never above. The sprinkler is made of two blocks, with the bottom block serving as a water input (each side can be enabled or disabled using a hammer).
 
 <&sprinkler_extended>
 The high pressure sprinkler can be crafted, with a range of 12 blocks.

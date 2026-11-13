@@ -7,12 +7,18 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SprinklerExtendedBlockEntity extends SprinklerBlockEntity {
+    public static final int RADIUS = 12;
 
     public SprinklerExtendedBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         this.ROTATION_SPEED = 1f;
         this.REFERENCE_BLOCK = IFBlocks.SPRINKLER_EXTENDED.get();
         this.WATER_CONSUMPTION = 3;
+    }
+
+    @Override
+    public int getRadius() {
+        return RADIUS;
     }
 
     @Override

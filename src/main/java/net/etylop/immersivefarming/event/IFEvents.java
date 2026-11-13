@@ -3,6 +3,7 @@ package net.etylop.immersivefarming.event;
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.block.IFBlocks;
 import net.etylop.immersivefarming.block.custom.Soil;
+import net.etylop.immersivefarming.block.entity.SprinklerRegistry;
 import net.etylop.immersivefarming.config.IFConfig;
 import net.etylop.immersivefarming.utils.IFFunctions;
 import net.etylop.immersivefarming.utils.ModTags;
@@ -15,6 +16,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,6 +43,11 @@ public class IFEvents {
                 return;
             }
             event.setFinalState(IFFunctions.getTilledSoil(event.getState()));
+        }
+
+        @SubscribeEvent
+        public static void onLevelUnload(LevelEvent.Unload event) {
+            SprinklerRegistry.clear(event.getLevel());
         }
 
         // Crops on soil can't be bonemealed (direct calls to performBonemeal are blocked by the mixins)

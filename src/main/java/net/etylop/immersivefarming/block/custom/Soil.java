@@ -1,7 +1,7 @@
 package net.etylop.immersivefarming.block.custom;
 
 import net.etylop.immersivefarming.block.IFBlocks;
-import net.etylop.immersivefarming.block.entity.SprinklerBlockEntity;
+import net.etylop.immersivefarming.block.entity.SprinklerRegistry;
 import net.etylop.immersivefarming.config.IFConfig;
 import net.etylop.immersivefarming.particle.IFParticles;
 import net.etylop.immersivefarming.utils.IFFunctions;
@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.ToolAction;
@@ -33,7 +32,6 @@ import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Set;
 
 import static net.etylop.immersivefarming.utils.IFFunctions.getHoeSpeed;
 
@@ -150,14 +148,14 @@ public class Soil extends FarmBlock {
 
         // Update water level
         int water = pState.getValue(WATER);
-        int sprinkler = getSprinkler(pLevel, pPos);
+        int sprinkler = SprinklerRegistry.getWatering(pLevel, pPos);
         if (isNextToWater(pLevel, pPos)) {
             water = WATER_FLOODED;
         }
         else if (water == WATER_FLOODED) {
             water = WATER_SATURATED;
         }
-        else if (sprinkler > 0 || pLevel.isRainingAt(pPos.above())) {
+        else if (sprinkler != SprinklerRegistry.NONE || pLevel.isRainingAt(pPos.above())) {
             water = Math.min(WATER_SATURATED, water + 1);
         }
         else if (water > 0 && pRandom.nextDouble() < cropConfig.evaporation.get()) {
@@ -168,7 +166,7 @@ public class Soil extends FarmBlock {
         // Update contaminated level
         boolean contaminated = pState.getValue(CONTAMINATED);
         boolean isUnderCrops = isUnderCrops(pLevel, pPos);
-        if (sprinkler == 2 || !isUnderCrops) {
+        if (sprinkler == SprinklerRegistry.TREATED_WATER || !isUnderCrops) {
             newState = newState.setValue(CONTAMINATED, false);
         }
         else if (!contaminated && Math.random()<cropConfig.start_contamination.get()) {
@@ -211,39 +209,6 @@ public class Soil extends FarmBlock {
         }
     }
 
-    /**
-     * Checks nearby blocks for active sprinklers
-     * @return 0: no sprinkler found, 1: sprinkler found, 2: sprinkler using treated water found
-     */
-    private static int getSprinkler(LevelReader pLevel, BlockPos pPos) {
-        ChunkAccess chunk = pLevel.getChunk(pPos);
-        boolean found_sprinkler = false;
-        int chunkPosX = chunk.getPos().x;
-        int chunkPosZ = chunk.getPos().z;
-
-        for (int i=chunkPosX-1; i<chunkPosX+2; i++) {
-            for (int j=chunkPosZ-1; j<chunkPosZ+2; j++) {
-                Set<BlockPos> entitiesPos = pLevel.getChunk(i,j).getBlockEntitiesPos();
-                for (BlockPos pos : entitiesPos) {
-                    if (pLevel.getBlockState(pos).getBlock() instanceof SprinklerBlock && pLevel.getBlockState(pos).getValue(SprinklerBlockEntity.ACTIVE) && distanceWater(pPos, pos)<7) {
-                        found_sprinkler = true;
-                        if (pLevel.getBlockState(pos).getValue(SprinklerBlockEntity.USING_PESTICIDE)) {
-                            return 2;
-                        }
-                    }
-                    else if (pLevel.getBlockState(pos).getBlock() instanceof SprinklerExtendedBlock &&  pLevel.getBlockState(pos).getValue(SprinklerBlockEntity.ACTIVE) && distanceWater(pPos, pos)<13) {
-                        found_sprinkler = true;
-                        if (pLevel.getBlockState(pos).getValue(SprinklerBlockEntity.USING_PESTICIDE)) {
-                            return 2;
-                        }
-                    }
-                }
-            }
-        }
-
-        return found_sprinkler ? 1 : 0;
-    }
-
     private static boolean isNextToWater(LevelReader pLevel, BlockPos pPos) {
         for (BlockPos blockpos : BlockPos.betweenClosed(pPos.offset(-1, 0, -1), pPos.offset(1, 1, 1))) {
             if (pLevel.getFluidState(blockpos).is(FluidTags.WATER)) {
@@ -259,13 +224,6 @@ public class Soil extends FarmBlock {
         if (plant.getBlock() instanceof DeadCrop || !IFFunctions.isGrowing(plant)) return false;
         BlockState state = pLevel.getBlockState(pPos);
         return plant.getBlock() instanceof net.minecraftforge.common.IPlantable && state.canSustainPlant(pLevel, pPos, Direction.UP, (net.minecraftforge.common.IPlantable)plant.getBlock());
-    }
-
-    private static int distanceWater(BlockPos pos1, BlockPos pos2) {
-        if (Math.abs(pos1.getY()-pos2.getY())>3) return 1000000;
-        int res = Math.abs(pos1.getX()-pos2.getX());
-        res = Math.max(res,Math.abs(pos1.getZ()-pos2.getZ()));
-        return res;
     }
 
     @Override
