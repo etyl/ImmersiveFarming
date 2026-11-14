@@ -32,7 +32,7 @@ public class IFFluids {
             = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, ImmersiveFarming.MOD_ID);
 
 
-    public static final RegistryObject<FluidType> TREATED_WATER_TYPE = registerType("treated_water_fluid", 0xbf0f0f0f);
+    public static final RegistryObject<FluidType> TREATED_WATER_TYPE = registerType("treated_water_fluid", 0xccb4c95a);
     public static final RegistryObject<FluidType> DRY_MATTER_TYPE = registerType("dry_matter_fluid", 0xff7f1b00);
     public static final RegistryObject<FluidType> WET_MATTER_TYPE = registerType("wet_matter_fluid", 0xff007C0E);
 

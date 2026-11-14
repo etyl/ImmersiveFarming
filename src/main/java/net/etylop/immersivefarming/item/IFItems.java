@@ -2,6 +2,7 @@ package net.etylop.immersivefarming.item;
 
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.fluid.IFFluids;
+import net.etylop.immersivefarming.item.custom.BordeauxMixtureItem;
 import net.etylop.immersivefarming.item.custom.CompostItem;
 import net.etylop.immersivefarming.item.custom.WateringCanItem;
 import net.etylop.immersivefarming.item.custom.TrowelItem;
@@ -22,6 +23,9 @@ public class IFItems {
 
     public static final RegistryObject<CompostItem> COMPOST = ITEMS.register("compost",
             () -> new CompostItem(new Item.Properties()));
+
+    public static final RegistryObject<BordeauxMixtureItem> BORDEAUX_MIXTURE = ITEMS.register("bordeaux_mixture",
+            () -> new BordeauxMixtureItem(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<WateringCanItem> WATERING_CAN = ITEMS.register("watering_can",
             () -> new WateringCanItem(new Item.Properties().stacksTo(1)));

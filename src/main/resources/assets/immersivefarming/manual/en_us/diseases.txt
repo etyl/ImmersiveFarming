@@ -5,5 +5,7 @@ When growing, crops have a chance of becoming sick.
 <config;b;immersivefarming.spread_contamination;Sick crops can contaminate adjacent crops.;A sick crop does not spread the disease to adjacent crops.>
 Contaminated crops will have small flies around them (small black particles). After some time, contaminated crops will eventually die, giving no yield. Fully grown crops are safe: they cannot get sick, and a sick crop that reaches maturity is cured.
 
-<&treated_water>In order to prevent and treat diseases, you can fill your <link;immersivefarming:irrigation;sprinklers> with treated water instead of water. Crops in range of a sprinkler using treated water are cured and protected.
-<&mixing>To make treated water, mix a bucket of water with §2Copper Dust§r and §2Sulfur Dust§r in the <link;mixer;Mixer>.
+<&bordeaux_mixture>Small fields can be treated by hand with §2Bordeaux Mixture§r, made from §2Copper Dust§r, §2Gunpowder§r and a water bottle. Right click a growing crop to cure it and protect it until it is fully grown. A bottle can be used 8 times.
+
+<&treated_water>Larger fields can be protected automatically: fill your <link;immersivefarming:irrigation;sprinklers> with pesticide instead of water. Crops in range of a sprinkler using pesticide are cured and protected.
+To make pesticide, mix §22 mB of Plant Oil§r with §218 mB of Water§r in the <link;refinery;Refinery>. Plant oil is made from seeds in the <link;squeezer;Squeezer>.

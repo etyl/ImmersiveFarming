@@ -71,6 +71,8 @@ public class TrowelItem extends Item {
         info.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY));
         if (soil.getValue(Soil.CONTAMINATED))
             info.append(Component.translatable(key + "contaminated").withStyle(ChatFormatting.DARK_PURPLE));
+        else if (soil.getValue(Soil.PROTECTED))
+            info.append(Component.translatable(key + "protected").withStyle(ChatFormatting.AQUA));
         else
             info.append(Component.translatable(key + "healthy").withStyle(ChatFormatting.GREEN));
 

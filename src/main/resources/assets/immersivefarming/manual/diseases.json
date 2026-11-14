@@ -1,4 +1,8 @@
 {
+  "bordeaux_mixture": {
+    "type": "crafting",
+    "recipe": "immersivefarming:crafting/bordeaux_mixture"
+  },
   "treated_water": {
     "type": "item_display",
     "items": [
@@ -6,11 +10,5 @@
         "item": "immersivefarming:treated_water_bucket"
       }
     ]
-  },
-  "mixing": {
-    "type": "mixer",
-    "recipe": {
-      "fluid": "immersivefarming:treated_water_fluid"
-    }
   }
 }

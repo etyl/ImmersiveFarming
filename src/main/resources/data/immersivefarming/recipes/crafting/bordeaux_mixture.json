@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:dusts/copper"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    },
+    {
+      "type": "forge:partial_nbt",
+      "item": "minecraft:potion",
+      "nbt": {
+        "Potion": "minecraft:water"
+      }
+    }
+  ],
+  "result": {
+    "item": "immersivefarming:bordeaux_mixture"
+  }
+}

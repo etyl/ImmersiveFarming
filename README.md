@@ -32,8 +32,9 @@ Features are explained in the engineer's manual, but here is an overview:
 * Crop disease
   * Crops can become sick and eventually die
   * Sick crops can contaminate adjacent crops (disabled by default, configurable)
-  * Using treated water in the sprinklers will prevent and cure diseases
-  * Treated water is made in the Mixer from water, copper dust and sulfur dust
+  * Bordeaux mixture (copper dust, gunpowder and a water bottle) cures a crop by hand and protects it until it is fully grown, 8 uses per bottle
+  * Using pesticide in the sprinklers will prevent and cure diseases automatically
+  * Pesticide is made in the Refinery from plant oil and water
 * Garden Cloche
   * The Immersive Engineering cloche is rebalanced so that it doesn't outclass field farming
   * It needs Industrial Fertilizer to work, grows plants slower and uses more energy

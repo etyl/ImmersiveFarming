@@ -10,6 +10,8 @@ import net.etylop.immersivefarming.client.renderer.entity.model.PlowModel;
 import net.etylop.immersivefarming.client.renderer.entity.model.SowerModel;
 import net.etylop.immersivefarming.entity.IFEntities;
 import net.etylop.immersivefarming.gui.IFMenuTypes;
+import net.etylop.immersivefarming.item.IFItems;
+import net.etylop.immersivefarming.item.custom.BordeauxMixtureItem;
 import net.etylop.immersivefarming.gui.screen.PlowScreen;
 import net.etylop.immersivefarming.gui.screen.SowerScreen;
 import net.etylop.immersivefarming.network.serverbound.ActionKeyMessage;
@@ -25,7 +27,9 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.model.DynamicFluidContainerModel;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -74,6 +78,10 @@ public final class ClientInitializer extends CommonInitializer {
             MenuScreens.register(IFMenuTypes.SOWER_CART.get(), SowerScreen::new);
         });
         mod.modBus().<RegisterKeyMappingsEvent>addListener(e -> e.register(this.action));
+        mod.modBus().<RegisterColorHandlersEvent.Item>addListener(e -> {
+            e.register((stack, tintIndex) -> tintIndex == 0 ? BordeauxMixtureItem.COLOR : -1, IFItems.BORDEAUX_MIXTURE.get());
+            e.register(new DynamicFluidContainerModel.Colors(), IFItems.TREATED_WATER_BUCKET.get());
+        });
         mod.modBus().<EntityRenderersEvent.RegisterRenderers>addListener(e -> {
             e.registerEntityRenderer(IFEntities.PLOW.get(), PlowRenderer::new);
             e.registerEntityRenderer(IFEntities.SOWER.get(), SowerRenderer::new);

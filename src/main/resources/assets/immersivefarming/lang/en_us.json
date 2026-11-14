@@ -5,8 +5,10 @@
   "block.immersivefarming.dead_crop": "Dead Crop",
 
   "itemGroup.immersivefarmingtab": "Immersive Farming",
-  "item.immersivefarming.treated_water_bucket": "Treated Water Bucket",
+  "item.immersivefarming.treated_water_bucket": "Pesticide Bucket",
   "item.immersivefarming.compost": "Compost",
+  "item.immersivefarming.bordeaux_mixture": "Bordeaux Mixture",
+  "item.immersivefarming.bordeaux_mixture.uses": "Uses: %s/%s",
   "item.immersivefarming.watering_can": "Watering Can",
   "item.immersivefarming.watering_can.water": "Water: %s/%s",
   "item.immersivefarming.trowel": "Trowel",
@@ -19,10 +21,11 @@
   "item.immersivefarming.trowel.unfertilized": "Unfertilized",
   "item.immersivefarming.trowel.healthy": "Healthy",
   "item.immersivefarming.trowel.contaminated": "Contaminated",
+  "item.immersivefarming.trowel.protected": "Protected",
   "item.immersivefarming.trowel.rich": "Rich",
   "item.immersivefarming.trowel.richness": "Enriching: %s/%s",
 
-  "fluid.immersivefarming.treated_water_fluid": "Treated Water",
+  "fluid.immersivefarming.treated_water_fluid": "Pesticide",
   "fluid.immersivefarming.wet_matter_fluid": "Wet Matter",
   "fluid.immersivefarming.dry_matter_fluid": "Dry Matter",
   
@@ -47,7 +50,7 @@
   "subtitles.immersivefarming.cart.attached": "Cart attaches",
   "subtitles.immersivefarming.cart.detached": "Cart detaches",
   "subtitles.immersivefarming.cart.placed": "Cart placed",
-  "jei.immersivefarming.treated_water.info": "Fill a sprinkler with treated water instead of water to cure and prevent crop diseases in its range.",
+  "jei.immersivefarming.treated_water.info": "Fill a sprinkler with pesticide instead of water to cure and prevent crop diseases in its range. Pesticide is made in the Refinery from plant oil and water.",
   "jei.immersivefarming.energy": "%s RF",
   "jei.immersivefarming.time": "%ss"
 }

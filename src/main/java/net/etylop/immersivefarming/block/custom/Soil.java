@@ -50,6 +50,8 @@ public class Soil extends FarmBlock {
     private static final IFConfig.CropConfig cropConfig = IFConfig.get().cropConfig;
 
     public static final BooleanProperty CONTAMINATED = BooleanProperty.create("contaminated");
+    // Treated with Bordeaux mixture: the crop can't get sick until it is fully grown (or removed)
+    public static final BooleanProperty PROTECTED = BooleanProperty.create("protected");
 
     // Progress towards rich soil (one step per crop grown to maturity on it), RICHNESS_MAX = rich.
     // Rich soil gives a yield bonus, see RichSoilYieldModifier.
@@ -64,6 +66,7 @@ public class Soil extends FarmBlock {
                 .setValue(TILL, 0)
                 .setValue(FERTILITY, 0)
                 .setValue(CONTAMINATED, false)
+                .setValue(PROTECTED, false)
                 .setValue(RICHNESS, 0)
         );
     }
@@ -93,6 +96,7 @@ public class Soil extends FarmBlock {
         pBuilder.add(TILL);
         pBuilder.add(FERTILITY);
         pBuilder.add(CONTAMINATED);
+        pBuilder.add(PROTECTED);
         pBuilder.add(RICHNESS);
     }
 
@@ -166,7 +170,11 @@ public class Soil extends FarmBlock {
         // Update contaminated level
         boolean contaminated = pState.getValue(CONTAMINATED);
         boolean isUnderCrops = isUnderCrops(pLevel, pPos);
-        if (sprinkler == SprinklerRegistry.TREATED_WATER || !isUnderCrops) {
+        if (!isUnderCrops) {
+            // The protection only lasts for the crop it was applied to
+            newState = newState.setValue(CONTAMINATED, false).setValue(PROTECTED, false);
+        }
+        else if (sprinkler == SprinklerRegistry.TREATED_WATER || pState.getValue(PROTECTED)) {
             newState = newState.setValue(CONTAMINATED, false);
         }
         else if (!contaminated && Math.random()<cropConfig.start_contamination.get()) {
@@ -183,7 +191,7 @@ public class Soil extends FarmBlock {
                 if (blockpos.equals(pPos))
                     continue;
                 BlockState neighbour = pLevel.getBlockState(blockpos);
-                if (neighbour.getBlock() instanceof Soil && !neighbour.getValue(CONTAMINATED) && isUnderCrops(pLevel, blockpos) && Math.random()<cropConfig.proximity_contamination.get()) {
+                if (neighbour.getBlock() instanceof Soil && !neighbour.getValue(CONTAMINATED) && !neighbour.getValue(PROTECTED) && isUnderCrops(pLevel, blockpos) && Math.random()<cropConfig.proximity_contamination.get()) {
                     pLevel.setBlock(blockpos, neighbour.setValue(CONTAMINATED, true), 2);
                 }
             }

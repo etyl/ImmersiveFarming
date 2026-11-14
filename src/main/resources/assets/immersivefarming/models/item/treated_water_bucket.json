@@ -1,6 +1,5 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "minecraft:item/water_bucket"
-  }
+  "parent": "forge:item/bucket_drip",
+  "loader": "forge:fluid_container",
+  "fluid": "immersivefarming:treated_water_fluid"
 }

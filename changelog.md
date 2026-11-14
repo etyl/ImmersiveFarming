@@ -1,5 +1,9 @@
-##### Version 1.20.1-0.4.2
+##### Unreleased
 
+* Crop diseases
+  * Bordeaux mixture: crafted from copper dust, gunpowder and a water bottle, right click a growing crop to cure it and protect it until it is fully grown (8 uses per bottle)
+  * Treated water is renamed to Pesticide, and is now made in the Refinery from plant oil and water (2 mB + 18 mB), instead of copper and sulfur dust in the Mixer
+  * The trowel shows whether a crop is protected
 * Rich soil
   * Soil becomes rich after 8 crops grown to maturity on it (configurable), and stays rich
   * Mature crops on rich soil give 30% more loot (configurable)

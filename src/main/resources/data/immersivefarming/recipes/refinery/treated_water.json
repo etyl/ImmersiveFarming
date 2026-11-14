@@ -1,0 +1,16 @@
+{
+  "type": "immersiveengineering:refinery",
+  "input0": {
+    "tag": "forge:plantoil",
+    "amount": 2
+  },
+  "input1": {
+    "tag": "minecraft:water",
+    "amount": 18
+  },
+  "result": {
+    "fluid": "immersivefarming:treated_water_fluid",
+    "amount": 20
+  },
+  "energy": 80
+}
