@@ -90,7 +90,6 @@ public class IFBlockStateProvider extends BlockStateProvider {
 
         String name = getMultiblockPath(block) + add;
         NongeneratedModels.NongeneratedModel base = nongeneratedModels.withExistingParent(name, mcLoc("block"))
-                .ao(false)
                 .customLoader(ObjModelBuilder::begin).modelLocation(model).automaticCulling(false).flipV(true).end()
                 .texture("texture", texture)
                 .texture("particle", texture);
