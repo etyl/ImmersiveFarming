@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "immersivefarming.refmap.json",
   "mixins": [
+    "AgeableMobMixin",
+    "ChickenMixin",
     "ClocheBlockEntityMixin",
     "CropBlockMixin",
     "PitcherCropBlockMixin",

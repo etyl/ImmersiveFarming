@@ -1,0 +1,17 @@
+Raising Animals
+Hungry little ones
+
+<config;b;immersivefarming.babies_need_food;Baby farm animals do not grow up on their own, they need to be fed. After eating, a baby grows for a while, then stops growing until it eats again.;Baby farm animals grow up on their own here, and feeding them makes them grow faster, as in vanilla. The rest of this entry only applies when babies need food.>
+
+Each baby needs <config;i;immersivefarming.baby_min_meals> to <config;i;immersivefarming.baby_max_meals> meals to grow up.
+
+Babies eat the same food that makes adults breed: wheat for cows, sheep and goats, seeds for chickens, carrots, potatoes or beetroots for pigs, carrots or dandelions for rabbits.<config;b;immersivefarming.include_variants; Variants of these animals added by other mods need to be fed too, with their own breeding food.;> Right click a hungry baby with its food to feed it one meal.
+
+<config;b;immersivefarming.adults_need_food;Adults must eat to produce. Cows, goats and mooshrooms must eat before each milking or bowl of stew, and their milk takes <config;i;immersivefarming.milking_cooldown> seconds to come back. Chickens must eat before each egg: a hungry chicken keeps its egg until it has eaten. Sheared sheep must eat before their wool grows back, from a trough or by grazing grass. A hungry adult eats the food it is given, which can also make it breed.;Adults produce milk, eggs and wool without being fed, as in vanilla.>
+
+<&feeding_trough>
+The Feeding Trough feeds them for you. Hungry animals within 16 blocks walk to it and eat the food they like.
+
+The trough is built as a piece of fence: place it in the fence of a pen, fences connect to both its ends and animals cannot jump over it. Fill it from outside, the animals eat from inside.
+
+The trough takes the food of any animal that needs to be fed. Right click the trough with food to add it, or sneak to insert a whole stack. The trough holds 64 items of a single kind of food: it takes another food once it is empty. Animals only come to a trough holding food they eat. Hoppers and conveyors can fill it too, from either side. Right click with an empty hand to see what the trough contains, and sneak to take the food back.

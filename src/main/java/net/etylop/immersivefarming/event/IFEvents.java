@@ -2,19 +2,31 @@ package net.etylop.immersivefarming.event;
 
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.block.IFBlocks;
+import net.etylop.immersivefarming.block.custom.FeedingTroughBlock;
 import net.etylop.immersivefarming.block.custom.Soil;
 import net.etylop.immersivefarming.block.entity.SprinklerRegistry;
 import net.etylop.immersivefarming.config.IFConfig;
+import net.etylop.immersivefarming.entity.AnimalFeeding;
+import net.etylop.immersivefarming.entity.Livestock;
 import net.etylop.immersivefarming.utils.IFFunctions;
 import net.etylop.immersivefarming.utils.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.MushroomCow;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -46,8 +58,94 @@ public class IFEvents {
         }
 
         @SubscribeEvent
+        public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
+            if (!(event.getTarget() instanceof Animal animal)) return;
+            ItemStack held = event.getItemStack();
+            if (!animal.isFood(held)) return;
+            if (AnimalFeeding.needsFood(animal)) {
+                feedBaby(event, animal, held);
+            } else if (!event.getLevel().isClientSide && AnimalFeeding.isHungry(animal) && !isLeashedBy(animal, event.getEntity())) {
+                feedAdult(event, animal, held);
+            }
+        }
+
+        // Babies that need food eat one meal when hungry, instead of the vanilla growth boost
+        private static void feedBaby(PlayerInteractEvent.EntityInteract event, Animal animal, ItemStack held) {
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide));
+            if (event.getLevel().isClientSide) return;
+
+            Player player = event.getEntity();
+            if (!AnimalFeeding.isHungry(animal)) {
+                player.displayClientMessage(Component.translatable("entity.immersivefarming.baby.not_hungry"), true);
+                return;
+            }
+            AnimalFeeding.feed(animal, held);
+            if (!player.getAbilities().instabuild) held.shrink(1);
+        }
+
+        // A hungry adult eats the food (server side). Breeding still works as in vanilla: when the animal can fall in love,
+        // vanilla takes the item and the same item also makes it breed. Otherwise the meal takes the item here.
+        private static void feedAdult(PlayerInteractEvent.EntityInteract event, Animal animal, ItemStack held) {
+            AnimalFeeding.feed(animal, held);
+            if (animal.getAge() == 0 && animal.canFallInLove()) return;
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            if (!event.getEntity().getAbilities().instabuild) held.shrink(1);
+        }
+
+        // Hungry adults, and adults milked recently, can't be milked.
+        // The client doesn't know whether the animal is hungry and has already milked it on its side:
+        // send the player's inventory again to undo it.
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void onMilking(PlayerInteractEvent.EntityInteract event) {
+            if (event.getLevel().isClientSide || !(event.getTarget() instanceof Animal animal)) return;
+            Player player = event.getEntity();
+            if (!isMilking(animal, event.getItemStack()) || isLeashedBy(animal, player)) return;
+
+            String refusal = AnimalFeeding.getMilkingCooldown(animal) > 0 ? "entity.immersivefarming.animal.no_milk"
+                    : AnimalFeeding.isHungry(animal) ? "entity.immersivefarming.animal.hungry" : null;
+            if (refusal != null) {
+                event.setCanceled(true);
+                event.setCancellationResult(InteractionResult.CONSUME);
+                player.displayClientMessage(Component.translatable(refusal), true);
+                player.containerMenu.sendAllDataToRemote();
+            } else {
+                AnimalFeeding.produce(animal);
+            }
+        }
+
+        /** Vanilla milking: a bucket on a cow or goat, a bowl on a mooshroom (and their variants) */
+        private static boolean isMilking(Animal animal, ItemStack held) {
+            if (animal.isBaby()) return false;
+            return held.is(Items.BUCKET) && AnimalFeeding.isMilkable(animal)
+                    || held.is(Items.BOWL) && animal instanceof MushroomCow;
+        }
+
+        /** Right clicking an animal on the player's own lead unleashes it, before any other interaction */
+        private static boolean isLeashedBy(Animal animal, Player player) {
+            return animal.isLeashed() && animal.getLeashHolder() == player;
+        }
+
+        // Block#use is skipped when sneaking with an item: let the trough take whole stacks of food
+        @SubscribeEvent
+        public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+            if (event.getEntity().isSecondaryUseActive() && Livestock.isFeed(event.getItemStack(), event.getLevel())
+                    && event.getLevel().getBlockState(event.getPos()).getBlock() instanceof FeedingTroughBlock) {
+                event.setUseBlock(Event.Result.ALLOW);
+            }
+        }
+
+        @SubscribeEvent
         public static void onLevelUnload(LevelEvent.Unload event) {
             SprinklerRegistry.clear(event.getLevel());
+            // The livestock samples belong to a level, don't keep it loaded
+            Livestock.invalidate(event.getLevel().isClientSide());
+        }
+
+        @SubscribeEvent
+        public static void onTagsUpdated(TagsUpdatedEvent event) {
+            Livestock.invalidate(event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.CLIENT_PACKET_RECEIVED);
         }
 
         // Crops on soil can't be bonemealed (direct calls to performBonemeal are blocked by the mixins)

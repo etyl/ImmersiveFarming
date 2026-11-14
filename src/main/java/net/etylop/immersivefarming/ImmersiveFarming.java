@@ -5,6 +5,7 @@ import net.etylop.immersivefarming.block.IFBlockEntities;
 import net.etylop.immersivefarming.block.IFBlocks;
 import net.etylop.immersivefarming.block.IFMultiblockLogic;
 import net.etylop.immersivefarming.block.IFMultiblocks;
+import net.etylop.immersivefarming.block.IFPoiTypes;
 import net.etylop.immersivefarming.client.ClientInitializer;
 import net.etylop.immersivefarming.client.IFManual;
 import net.etylop.immersivefarming.client.IFSounds;
@@ -65,6 +66,7 @@ public class ImmersiveFarming {
         IFCreativeTab.register(eventBus);
         IFBlocks.register(eventBus);
         IFBlockEntities.register(eventBus);
+        IFPoiTypes.register(eventBus);
         IFParticles.register(eventBus);
         IFFluids.register(eventBus);
         IFMenuTypes.register(eventBus);

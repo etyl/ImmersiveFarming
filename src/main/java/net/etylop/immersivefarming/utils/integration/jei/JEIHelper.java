@@ -15,6 +15,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.api.crafting.ComposterRecipe;
 import net.etylop.immersivefarming.api.crafting.IFCachedRecipeList;
+import net.etylop.immersivefarming.block.IFBlocks;
 import net.etylop.immersivefarming.block.IFMultiblockLogic;
 import net.etylop.immersivefarming.gui.screen.ComposterScreen;
 import net.etylop.immersivefarming.item.IFItems;
@@ -64,6 +65,8 @@ public class JEIHelper implements IModPlugin{
 		CompostingBinRecipeCategory.registerInfo(registration);
 		registration.addIngredientInfo(new ItemStack(IFItems.TREATED_WATER_BUCKET.get()), VanillaTypes.ITEM_STACK,
 				Component.translatable("jei.immersivefarming.treated_water.info"));
+		registration.addIngredientInfo(new ItemStack(IFBlocks.FEEDING_TROUGH_ITEM.get()), VanillaTypes.ITEM_STACK,
+				Component.translatable("jei.immersivefarming.feeding_trough.info"));
 	}
 
 	private <T extends Recipe<?>> List<T> getRecipes(IFCachedRecipeList<T> cachedList)

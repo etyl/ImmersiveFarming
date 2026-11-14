@@ -1,0 +1,6 @@
+{
+  "feeding_trough": {
+    "type": "crafting",
+    "recipe": "immersivefarming:crafting/feeding_trough"
+  }
+}

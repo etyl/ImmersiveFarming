@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "immersivefarming:composting_bin"
+    "immersivefarming:composting_bin",
+    "immersivefarming:feeding_trough"
   ]
 }

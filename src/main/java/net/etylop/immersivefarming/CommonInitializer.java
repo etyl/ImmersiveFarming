@@ -2,12 +2,14 @@ package net.etylop.immersivefarming;
 
 import net.etylop.immersivefarming.config.ConfigSync;
 import net.etylop.immersivefarming.config.IFConfig;
+import net.etylop.immersivefarming.entity.ai.goal.EatFromTroughGoal;
 import net.etylop.immersivefarming.entity.ai.goal.PullCartGoal;
 import net.etylop.immersivefarming.utils.cart.GoalAdder;
 import net.etylop.immersivefarming.world.IFWorld;
 import net.etylop.immersivefarming.world.SimpleIFWorld;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
@@ -40,6 +42,11 @@ public class CommonInitializer implements Initializer {
         );
         GoalAdder.mobGoal(Mob.class)
             .add(1, PullCartGoal::new)
+            .build()
+            .register(mod.bus());
+        // Same priority as tempting: hungry babies leave their parents for the trough, but still flee danger
+        GoalAdder.mobGoal(Animal.class)
+            .add(3, EatFromTroughGoal::new)
             .build()
             .register(mod.bus());
         mod.bus().<TickEvent.LevelTickEvent>addListener(e -> {

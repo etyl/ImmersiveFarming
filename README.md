@@ -1,6 +1,6 @@
 # Description
 
-Immersive Farming is an addon for Immersive Engineering focusing on extending the farming experience. Players will be able to craft sprinklers or a watering can, to better irrigate their crops and make pesticides to prevent their crops from getting sick and dying. It also adds 2 multiblocks, the composting bin and industrial composter to make compost and speed up crop growth. Immersive Farming also introduces several new mechanics that change vanilla farming.
+Immersive Farming is an addon for Immersive Engineering focusing on extending the farming experience. Players will be able to craft sprinklers or a watering can, to better irrigate their crops and make pesticides to prevent their crops from getting sick and dying. It also adds 2 multiblocks, the composting bin and industrial composter to make compost and speed up crop growth, and a feeding trough to raise baby animals. Immersive Farming also introduces several new mechanics that change vanilla farming and animal husbandry.
 
 # Features
 
@@ -22,8 +22,8 @@ Features are explained in the engineer's manual, but here is an overview:
   * Plow: to till land faster
   * Sowing machine: to sow seeds and fertilize faster
 * Fertilization
-  * Compost can be made from the Industrial Composter multiblock or the composting bin
-  * Using compost on soil boosts crop growth
+  * Compost can be made from the Industrial Composter multiblock or the composting bin and boosts crop growth
+  * Soil becomes rich after 8 crops have grown to maturity on it, and stays rich: mature crops on rich soil give 30% more loot.
 * Farmland
   * Farmland can no longer be trampled by jumping on it
   * Tilling dirt now requires several clicks (but better hoes speed up this process)
@@ -38,9 +38,33 @@ Features are explained in the engineer's manual, but here is an overview:
 * Garden Cloche
   * The Immersive Engineering cloche is rebalanced so that it doesn't outclass field farming
   * It needs Industrial Fertilizer to work, grows plants slower and uses more energy
-* Configuration
-  * Growth speeds, evaporation, sunlight requirement, disease spreading, farmland replacement and cloche balance can be changed in the config file
-  * The engineer's manual reflects the config values (the server's values when playing on a server)
+* Raising animals
+  * Baby farm animals (cows, mooshrooms, sheep, pigs, chickens, goats and rabbits) need 4 to 8 meals to grow up (configurable)
+  * After eating, a baby grows for a while, then stops growing until it eats again
+  * Adults must eat to produce (configurable): cows, goats and mooshrooms before each milking (at most every 5 minutes), chickens before each egg, and sheared sheep before their wool grows back
+  * Animals eat their breeding food: feed them by hand when they are hungry, or fill a feeding trough
+  * Feeding trough: hungry animals within 16 blocks walk to it and eat. It holds 64 items of a single kind of food. Its content takes the color of the food inside
+  * The trough is built as a piece of fence: place it in the fence of a pen, fences connect to its ends and animals can't jump over it
+
+
+# Mod compatibility
+
+* **Immersive Engineering** (required)
+  * Pesticide is made in the Refinery, sprinklers and the Industrial Composter connect to fluid pipes, and the composter takes items from conveyors
+  * The Garden Cloche is rebalanced, and all features are explained in the engineer's manual
+* **JEI**: recipes for the Industrial Composter and the composting bin, information pages for pesticide and the feeding trough, and the Garden Cloche recipes reflect the fertilizer requirement
+* **Jade**: looking at an animal shows whether it is hungry or fed, how many meals a baby still needs, and when it can be milked again
+* **Farmer's Delight**: tilling rich soil gives rich soil, rich soil farmland becomes rich soil, and breaking rich soil gives back Farmer's Delight rich soil. The sowing machine plants tomato and cabbage seeds
+* **Crops from other mods**: any plant growing on soil follows the irrigation, fertilization and sunlight rules, and any tool able to till (modded hoes included) makes soil
+  * Other mods' farmland can be converted to soil (convertible_farmland config, block ids or tags such as #forge:farmland)
+  * The sowing machine plants any item in the #forge:seeds tag, items placing a crop, and the #immersivefarming:sower_seeds tag (Immersive Engineering hemp seeds included)
+* **Animals from other mods**
+  * Variants of the farm animals added by other mods (a modded cow...) need to be fed too, with their own breeding food (configurable). Modded chickens, cows, goats and sheep need food to produce if they use the vanilla egg laying, milking and wool
+  * Other animals can be added with the #immersivefarming:needs_food_to_grow entity tag, or excluded with #immersivefarming:grows_without_food
+  * The feeding trough accepts the breeding food of all these animals, plus the #immersivefarming:animal_feed item tag
+  * Animals using the newer brain AI (such as goats) go to the trough too
+* **Carts**: by default, the plow and sowing machine can be pulled by any animal that wears a saddle and isn't steered with an item (horses, donkeys, mules, camels and their modded equivalents), the list can be changed with the pull_animals config
+* **Automation**: the feeding trough can be filled by hoppers, conveyors and item pipes from either side (but not emptied, so a hopper below won't drain it), and the carts' inventories are accessible to item handlers
 
 
 # More information

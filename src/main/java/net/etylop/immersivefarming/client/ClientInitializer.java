@@ -3,6 +3,8 @@ package net.etylop.immersivefarming.client;
 
 import net.etylop.immersivefarming.CommonInitializer;
 import net.etylop.immersivefarming.ImmersiveFarming;
+import net.etylop.immersivefarming.block.IFBlocks;
+import net.etylop.immersivefarming.client.model.ContentModels;
 import net.etylop.immersivefarming.client.renderer.IFModelLayers;
 import net.etylop.immersivefarming.client.renderer.entity.PlowRenderer;
 import net.etylop.immersivefarming.client.renderer.entity.SowerRenderer;
@@ -22,11 +24,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.model.DynamicFluidContainerModel;
@@ -82,6 +87,13 @@ public final class ClientInitializer extends CommonInitializer {
             e.register((stack, tintIndex) -> tintIndex == 0 ? BordeauxMixtureItem.COLOR : -1, IFItems.BORDEAUX_MIXTURE.get());
             e.register(new DynamicFluidContainerModel.Colors(), IFItems.TREATED_WATER_BUCKET.get());
         });
+        mod.modBus().<RegisterColorHandlersEvent.Block>addListener(e ->
+            e.register(FeedColors::getBlockColor, IFBlocks.FEEDING_TROUGH.get())
+        );
+        mod.modBus().<ModelEvent.ModifyBakingResult>addListener(ContentModels::onModifyBakingResult);
+        mod.modBus().<RegisterClientReloadListenersEvent>addListener(e ->
+            e.registerReloadListener((ResourceManagerReloadListener) resourceManager -> FeedColors.clear())
+        );
         mod.modBus().<EntityRenderersEvent.RegisterRenderers>addListener(e -> {
             e.registerEntityRenderer(IFEntities.PLOW.get(), PlowRenderer::new);
             e.registerEntityRenderer(IFEntities.SOWER.get(), SowerRenderer::new);

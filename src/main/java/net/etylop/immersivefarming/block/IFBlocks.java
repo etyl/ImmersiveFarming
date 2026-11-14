@@ -4,6 +4,7 @@ import blusunrize.immersiveengineering.common.blocks.BlockItemIE;
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.block.custom.CompostingBinBlock;
 import net.etylop.immersivefarming.block.custom.DeadCrop;
+import net.etylop.immersivefarming.block.custom.FeedingTroughBlock;
 import net.etylop.immersivefarming.block.custom.Soil;
 import net.etylop.immersivefarming.block.custom.SprinklerBlock;
 import net.etylop.immersivefarming.block.custom.SprinklerExtendedBlock;
@@ -68,6 +69,18 @@ public class IFBlocks {
     );
     public static final RegistryObject<Item> COMPOSTING_BIN_ITEM = IFItems.ITEMS.register("composting_bin",
             () -> new BlockItem(COMPOSTING_BIN.get(), new Item.Properties()));
+
+    public static final RegistryObject<FeedingTroughBlock> FEEDING_TROUGH = BLOCKS.register(
+            "feeding_trough",
+            () -> new FeedingTroughBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.WOOD)
+                    .sound(SoundType.WOOD)
+                    .strength(2)
+                    .noOcclusion()
+                    .ignitedByLava())
+    );
+    public static final RegistryObject<Item> FEEDING_TROUGH_ITEM = IFItems.ITEMS.register("feeding_trough",
+            () -> new BlockItem(FEEDING_TROUGH.get(), new Item.Properties()));
 
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {

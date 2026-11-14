@@ -93,10 +93,12 @@ public final class IFConfig {
         public final CartConfig plow;
         public final CropConfig cropConfig;
         public final ClocheConfig cloche;
+        public final AnimalConfig animals;
 
         Common(final ForgeConfigSpec.Builder builder) {
             this.cropConfig = new CropConfig(builder);
             this.cloche = new ClocheConfig(builder);
+            this.animals = new AnimalConfig(builder);
             builder.comment("Configuration for all carts and cart-like vehicles\n\nDefault pull_animals = " + referencePullAnimals()).push("carts");
             this.plow = new CartConfig(builder, "plow", "The Plow, an animal pulled machine for tilling soil");
             builder.pop();
@@ -163,6 +165,39 @@ public final class IFConfig {
             this.growth_time_multiplier = builder.comment("Multiplier applied to the time a plant takes to grow in the cloche (Immersive Engineering recipe time)",
                             "(4 = plants take four times as long to grow, the fertilizer consumption per minute is unchanged)")
                     .defineInRange("growth_time_multiplier", 4.0D, 0.01D, 100.0D);
+            builder.pop();
+        }
+    }
+
+    public static class AnimalConfig {
+        public final ForgeConfigSpec.BooleanValue babies_need_food;
+        public final ForgeConfigSpec.IntValue min_meals;
+        public final ForgeConfigSpec.IntValue max_meals;
+        public final ForgeConfigSpec.BooleanValue include_variants;
+        public final ForgeConfigSpec.BooleanValue adults_need_food;
+        public final ForgeConfigSpec.IntValue milking_cooldown;
+
+        AnimalConfig(final ForgeConfigSpec.Builder builder) {
+            builder.comment("Baby animals (those in the #immersivefarming:needs_food_to_grow entity tag), and adults producing milk, eggs and wool").push("animals");
+            this.include_variants = builder.comment("Whether animals from other mods that are variants of these animals also need to be fed (their entity class extends one of them, such as a modded cow)",
+                            "Animals in the #immersivefarming:grows_without_food entity tag never need to be fed as babies")
+                    .define("include_variants", true);
+            this.babies_need_food = builder.comment("Whether baby animals need to be fed to grow up",
+                            "Each meal lets a baby grow for a while, it then stops growing until it eats again",
+                            "Babies eat their breeding food, by hand or from a feeding trough",
+                            "If false, babies grow on their own and feeding them speeds up their growth, as in vanilla")
+                    .define("babies_need_food", true);
+            this.min_meals = builder.comment("Minimum number of meals a baby needs to grow up (each baby needs a random number between min_meals and max_meals)")
+                    .defineInRange("min_meals", 4, 1, 64);
+            this.max_meals = builder.comment("Maximum number of meals a baby needs to grow up")
+                    .defineInRange("max_meals", 8, 1, 64);
+            this.adults_need_food = builder.comment("Whether adult animals need to be fed to produce",
+                            "Cows, goats and mooshrooms must eat before each milking (or bowl of stew), chickens before each egg, and sheared sheep before their wool grows back (eating grass still works too)",
+                            "They eat their breeding food, by hand or from a feeding trough")
+                    .define("adults_need_food", true);
+            this.milking_cooldown = builder.comment("When adults need food to produce: seconds before an animal can be milked again (or give another bowl of stew), it must also eat in between",
+                            "Chickens lay an egg every 5 to 10 minutes, as in vanilla")
+                    .defineInRange("milking_cooldown", 300, 0, 3600);
             builder.pop();
         }
     }

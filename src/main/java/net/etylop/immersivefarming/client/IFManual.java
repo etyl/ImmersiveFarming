@@ -41,7 +41,14 @@ public final class IFManual {
         if (!key.startsWith(PREFIX)) return null;
         IFConfig.CropConfig config = IFConfig.get().cropConfig;
         IFConfig.ClocheConfig cloche = IFConfig.get().cloche;
+        IFConfig.AnimalConfig animals = IFConfig.get().animals;
         return switch (key.substring(PREFIX.length())) {
+            case "babies_need_food" -> IFConfig.getSynced(animals.babies_need_food);
+            case "adults_need_food" -> IFConfig.getSynced(animals.adults_need_food);
+            case "milking_cooldown" -> IFConfig.getSynced(animals.milking_cooldown);
+            case "include_variants" -> IFConfig.getSynced(animals.include_variants);
+            case "baby_min_meals" -> Math.min(IFConfig.getSynced(animals.min_meals), IFConfig.getSynced(animals.max_meals));
+            case "baby_max_meals" -> Math.max(IFConfig.getSynced(animals.min_meals), IFConfig.getSynced(animals.max_meals));
             case "require_sunlight" -> IFConfig.getSynced(config.require_sunlight);
             case "replace_farmland" -> IFConfig.getSynced(config.replace_farmland);
             case "spread_contamination" -> IFConfig.getSynced(config.spread_contamination);
