@@ -41,7 +41,11 @@ public final class SowerEntity extends AbstractDrawnInventoryEntity {
     private static final int SEED_COUNT = 9;
     private static final int FERTILIZER_COUNT = 9;
     private static final double BLADEOFFSET = 1.7D;
+    /** Steps between an empty and a full hopper compartment, as shown by the model */
+    private static final int FILL_LEVELS = 16;
     private static final EntityDataAccessor<Boolean> PLOWING = SynchedEntityData.defineId(SowerEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> SEED_LEVEL = SynchedEntityData.defineId(SowerEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> FERTILIZER_LEVEL = SynchedEntityData.defineId(SowerEntity.class, EntityDataSerializers.INT);
 
     static final ImmutableList<EntityDataAccessor<ItemStack>> INVENTORY;
 
@@ -87,6 +91,39 @@ public final class SowerEntity extends AbstractDrawnInventoryEntity {
 
     public boolean getPlowing() {
         return this.entityData.get(PLOWING);
+    }
+
+    /** How full the seed compartment is, from 0 to 1. Known to the client */
+    public float getSeedFill() {
+        return (float) this.entityData.get(SEED_LEVEL) / FILL_LEVELS;
+    }
+
+    /** How full the fertilizer compartment is, from 0 to 1. Known to the client */
+    public float getFertilizerFill() {
+        return (float) this.entityData.get(FERTILIZER_LEVEL) / FILL_LEVELS;
+    }
+
+    private int computeFillLevel(final int firstSlot, final int slotCount) {
+        int count = 0;
+        int capacity = 0;
+        for (int slot = firstSlot; slot < firstSlot + slotCount; slot++) {
+            final ItemStack stack = this.inventory.getStackInSlot(slot);
+            count += stack.getCount();
+            capacity += stack.isEmpty() ? 64 : stack.getMaxStackSize();
+        }
+        // The least content shows
+        return count == 0 ? 0 : Math.max(1, Math.round((float) FILL_LEVELS * count / capacity));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.level().isClientSide) {
+            // Recomputed every tick rather than when a slot changes: stacks merged in place (shift click) change no slot.
+            // Only sent to the clients when the level changes
+            this.entityData.set(SEED_LEVEL, this.computeFillLevel(0, SEED_COUNT));
+            this.entityData.set(FERTILIZER_LEVEL, this.computeFillLevel(SEED_COUNT, FERTILIZER_COUNT));
+        }
     }
 
     @Override
@@ -210,6 +247,8 @@ public final class SowerEntity extends AbstractDrawnInventoryEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(PLOWING, false);
+        this.entityData.define(SEED_LEVEL, 0);
+        this.entityData.define(FERTILIZER_LEVEL, 0);
         for (final EntityDataAccessor<ItemStack> param : INVENTORY) {
             this.entityData.define(param, ItemStack.EMPTY);
         }

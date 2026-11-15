@@ -25,6 +25,7 @@
   * The cloche's engineer's manual entry moved to the Immersive Farming section, rewritten to match these rules and the config values
 * On a server, the engineer's manual and JEI now show the server's config values instead of the player's
 * Improved the Composter model (thanks to Peter!)
+* New Sowing Machine model
 
 
 ##### Version 1.20.1-0.4.1

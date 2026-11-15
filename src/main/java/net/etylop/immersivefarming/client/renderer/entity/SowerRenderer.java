@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 public final class SowerRenderer extends DrawnRenderer<SowerEntity, SowerModel> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveFarming.MOD_ID, "textures/entity/plow.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ImmersiveFarming.MOD_ID, "textures/entity/sower.png");
 
     public SowerRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new SowerModel(renderManager.bakeLayer(IFModelLayers.SOWER)));
