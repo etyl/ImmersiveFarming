@@ -5,6 +5,8 @@ import net.etylop.immersivefarming.block.IFBlocks;
 import net.etylop.immersivefarming.block.custom.FeedingTroughBlock;
 import net.etylop.immersivefarming.block.custom.Soil;
 import net.etylop.immersivefarming.block.entity.SprinklerRegistry;
+import net.etylop.immersivefarming.block.multiblocks.breeder.BreederBlock;
+import net.etylop.immersivefarming.block.multiblocks.breeder.BreederLogic;
 import net.etylop.immersivefarming.config.IFConfig;
 import net.etylop.immersivefarming.entity.AnimalFeeding;
 import net.etylop.immersivefarming.entity.Livestock;
@@ -25,6 +27,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
@@ -130,10 +134,25 @@ public class IFEvents {
         // Block#use is skipped when sneaking with an item: let the trough take whole stacks of food
         @SubscribeEvent
         public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-            if (event.getEntity().isSecondaryUseActive() && Livestock.isFeed(event.getItemStack(), event.getLevel())
-                    && event.getLevel().getBlockState(event.getPos()).getBlock() instanceof FeedingTroughBlock) {
+            if (!event.getEntity().isSecondaryUseActive() || event.getItemStack().isEmpty()) return;
+            Block block = event.getLevel().getBlockState(event.getPos()).getBlock();
+            // The trough of the breeder also takes the food of the animals in its stalls: it sorts the items out itself
+            if (block instanceof BreederBlock
+                    || (block instanceof FeedingTroughBlock && Livestock.isFeed(event.getItemStack(), event.getLevel()))) {
                 event.setUseBlock(Event.Result.ALLOW);
             }
+        }
+
+        // The animals in an animal breeder don't hop about
+        @SubscribeEvent
+        public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
+            BreederLogic.onJump(event.getEntity());
+        }
+
+        // What an animal breeder breeds comes out of its hatch
+        @SubscribeEvent
+        public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
+            BreederLogic.onEntityJoin(event.getEntity(), event.getLevel());
         }
 
         @SubscribeEvent

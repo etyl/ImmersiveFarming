@@ -7,7 +7,7 @@ Each baby needs <config;i;immersivefarming.baby_min_meals> to <config;i;immersiv
 
 Babies eat the same food that makes adults breed: wheat for cows, sheep and goats, seeds for chickens, carrots, potatoes or beetroots for pigs, carrots or dandelions for rabbits.<config;b;immersivefarming.include_variants; Variants of these animals added by other mods need to be fed too, with their own breeding food.;> Right click a hungry baby with its food to feed it one meal.
 
-<config;b;immersivefarming.adults_need_food;Adults must eat to produce. Cows, goats and mooshrooms must eat before each milking or bowl of stew, and their milk takes <config;i;immersivefarming.milking_cooldown> seconds to come back. Chickens must eat before each egg: a hungry chicken keeps its egg until it has eaten. Sheared sheep must eat before their wool grows back, from a trough or by grazing grass. A hungry adult eats the food it is given, which can also make it breed.;Adults produce milk, eggs and wool without being fed, as in vanilla.>
+<config;b;immersivefarming.adults_need_food;Adults must eat to produce. Cows, goats and mooshrooms must eat before each milking or bowl of stew, and their milk takes ;Adults produce milk, eggs and wool without being fed, as in vanilla.><config;str;immersivefarming.milking_cooldown_if_fed><config;b;immersivefarming.adults_need_food; seconds to come back. Chickens must eat before each egg: a hungry chicken keeps its egg until it has eaten. Sheared sheep must eat before their wool grows back, from a trough or by grazing grass. A hungry adult eats the food it is given, which can also make it breed.;>
 
 <&feeding_trough>
 The Feeding Trough feeds them for you. Hungry animals within 16 blocks walk to it and eat the food they like.

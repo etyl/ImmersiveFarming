@@ -6,6 +6,7 @@ import blusunrize.immersiveengineering.api.multiblocks.BlockMatcher;
 import blusunrize.immersiveengineering.api.multiblocks.MultiblockHandler;
 import com.google.common.collect.ImmutableList;
 import net.etylop.immersivefarming.block.multiblocks.IFTemplateMultiblock;
+import net.etylop.immersivefarming.block.multiblocks.breeder.BreederMultiblock;
 import net.etylop.immersivefarming.block.multiblocks.composter.ComposterMultiblock;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -23,6 +24,7 @@ public class IFMultiblocks {
     public static final List<MultiblockHandler.IMultiblock> IF_MULTIBLOCKS = new ArrayList<>();
 
     public static IFTemplateMultiblock COMPOSTER;
+    public static IFTemplateMultiblock BREEDER;
 
     public static void init()
     {
@@ -80,6 +82,7 @@ public class IFMultiblocks {
 
         //Init multiblocks
         COMPOSTER = register(new ComposterMultiblock());
+        BREEDER = register(new BreederMultiblock());
 
     }
 

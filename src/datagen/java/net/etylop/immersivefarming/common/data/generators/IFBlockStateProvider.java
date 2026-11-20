@@ -8,6 +8,7 @@ import com.google.common.base.Preconditions;
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.block.IFMultiblockLogic;
 import net.etylop.immersivefarming.block.IFMultiblocks;
+import net.etylop.immersivefarming.block.multiblocks.breeder.BreederMultiblock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -61,6 +62,7 @@ public class IFBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
         ImmersiveFarming.log.info("Registering block states...");
         composter();
+        breeder();
     }
 
     private void composter(){
@@ -74,7 +76,21 @@ public class IFBlockStateProvider extends BlockStateProvider {
         createMultiblock(IFMultiblocks.COMPOSTER.getBlock(), normal, mirrored, texture);
     }
 
-    private BlockModelBuilder multiblockModel(Block block, ResourceLocation model, ResourceLocation texture, String add, TemplateMultiblock mb, boolean mirror){
+    private void breeder(){
+        // The model uses the textures named in its .mtl, this one is only that of the particles
+        ResourceLocation texture = new ResourceLocation("immersiveengineering", "block/metal/sheetmetal_steel");
+        ResourceLocation model = modLoc("models/block/multiblock/breeder/breeder.obj");
+
+        // The moving parts of the model are drawn by the renderer
+        BlockModelBuilder normal = multiblockModel(IFMultiblockLogic.BREEDER.block().get(), model, texture, "", IFMultiblocks.BREEDER, false,
+                BreederMultiblock.getMovingParts().toArray(String[]::new));
+
+        // No mirrored state
+        createMultiblock(IFMultiblocks.BREEDER.getBlock(), normal, null, IEProperties.MULTIBLOCKSLAVE, IEProperties.FACING_HORIZONTAL, null, 180, texture);
+    }
+
+    /** @param hiddenParts objects of the model that are not part of the block model */
+    private BlockModelBuilder multiblockModel(Block block, ResourceLocation model, ResourceLocation texture, String add, TemplateMultiblock mb, boolean mirror, String... hiddenParts){
         loadTemplateFor(mb);
         UnaryOperator<BlockPos> transform = UnaryOperator.identity();
         if(mirror){
@@ -89,8 +105,11 @@ public class IFBlockStateProvider extends BlockStateProvider {
                 .map(p -> p.subtract(offset));
 
         String name = getMultiblockPath(block) + add;
-        NongeneratedModels.NongeneratedModel base = nongeneratedModels.withExistingParent(name, mcLoc("block"))
-                .customLoader(ObjModelBuilder::begin).modelLocation(model).automaticCulling(false).flipV(true).end()
+        ObjModelBuilder<NongeneratedModels.NongeneratedModel> obj = nongeneratedModels.withExistingParent(name, mcLoc("block"))
+                .customLoader(ObjModelBuilder::begin).modelLocation(model).automaticCulling(false).flipV(true);
+        for(String part : hiddenParts)
+            obj.visibility(part, false);
+        NongeneratedModels.NongeneratedModel base = obj.end()
                 .texture("texture", texture)
                 .texture("particle", texture);
 

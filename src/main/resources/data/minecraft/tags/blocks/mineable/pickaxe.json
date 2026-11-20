@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "immersivefarming:sprinkler",
-    "immersivefarming:sprinkler_extended"
+    "immersivefarming:sprinkler_extended",
+    "immersivefarming:breeder"
   ]
 }

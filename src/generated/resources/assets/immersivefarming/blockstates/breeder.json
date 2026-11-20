@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "immersivefarming:multiblock/breeder_split",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "immersivefarming:multiblock/breeder_split",
+      "uvlock": true
+    },
+    "facing=south": {
+      "model": "immersivefarming:multiblock/breeder_split",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "immersivefarming:multiblock/breeder_split",
+      "uvlock": true,
+      "y": 270
+    }
+  }
+}

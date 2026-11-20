@@ -41,6 +41,7 @@
   "manual.immersivefarming.farming": "Farming",
 
   "block.immersivefarming.feeding_trough": "Feeding Trough",
+  "block.immersivefarming.breeder": "Animal Breeder",
   "block.immersivefarming.feeding_trough.empty": "Empty",
   "block.immersivefarming.feeding_trough.contents": "Contains %s",
   "block.immersivefarming.feeding_trough.item": "%s %s",

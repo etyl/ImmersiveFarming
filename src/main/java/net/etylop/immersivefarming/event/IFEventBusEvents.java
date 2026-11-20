@@ -3,6 +3,8 @@ package net.etylop.immersivefarming.event;
 import blusunrize.immersiveengineering.common.gui.IEContainerMenu;
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.block.IFBlockEntities;
+import net.etylop.immersivefarming.block.IFMultiblockLogic;
+import net.etylop.immersivefarming.block.multiblocks.breeder.BreederRenderer;
 import net.etylop.immersivefarming.block.entity.SprinklerExtendedRenderer;
 import net.etylop.immersivefarming.block.entity.SprinklerRenderer;
 import net.etylop.immersivefarming.block.utils.IFDynamicModel;
@@ -47,6 +49,7 @@ public class IFEventBusEvents {
     {
         registerBERenderNoContext(event, IFBlockEntities.SPRINKLER.master(), SprinklerRenderer::new);
         registerBERenderNoContext(event, IFBlockEntities.SPRINKLER_EXTENDED.master(), SprinklerExtendedRenderer::new);
+        registerBERenderNoContext(event, IFMultiblockLogic.BREEDER.masterBE().get(), BreederRenderer::new);
     }
 
     private static <T extends BlockEntity>
@@ -65,6 +68,7 @@ public class IFEventBusEvents {
         {
             SprinklerRenderer.SPRINKLER_TOP = new IFDynamicModel(SprinklerRenderer.NAME_SPRINKLER);
             SprinklerExtendedRenderer.SPRINKLER_TOP = new IFDynamicModel(SprinklerExtendedRenderer.NAME_SPRINKLER);
+            BreederRenderer.initModels();
             IFBasicClientProperties.initModels();
         }
         IFDynamicModel.registerModels(ev);

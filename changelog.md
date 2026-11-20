@@ -7,6 +7,7 @@
   * Feeding Trough: a 2 block long wooden trough, crafted from planks and wooden slabs, hungry animals within 16 blocks walk to it and eat. It is built as a piece of fence: fences connect to its ends, and animals can't jump over it. Its content takes the color of the food inside. It holds 64 items (anything these animals breed with, plus the #immersivefarming:animal_feed item tag), filled by hand or by hoppers and conveyors
   * Jade shows whether an animal is hungry or fed, how many meals a baby still needs, and when an animal can be milked again
   * Works with animals from other mods: variants of these animals (whose entity class extends one of them) need to be fed too (the #immersivefarming:grows_without_food entity tag excludes animals)
+  * Animal Breeder: a 4x3x2 steel multiblock to automatically breed animals. 
 * Crop diseases
   * Bordeaux mixture: crafted from copper dust, gunpowder and a water bottle, right click a growing crop to cure it and protect it until it is fully grown (8 uses per bottle)
   * Treated water is renamed to Pesticide, and is now made in the Refinery from plant oil and water (2 mB + 18 mB), instead of copper and sulfur dust in the Mixer

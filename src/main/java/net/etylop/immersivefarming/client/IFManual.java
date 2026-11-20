@@ -12,6 +12,7 @@ import net.minecraftforge.fml.ModList;
 /**
  * Exposes config values to the engineer's manual, so that entries can use
  * {@code <config;b;immersivefarming.KEY;text if true;text if false>} or {@code <config;i;immersivefarming.KEY>}.
+ * Tags cannot be nested: IE reads a tag up to the first {@code >}, and fails to load the entry (and those after it) otherwise.
  * The manual text is built when resources are (re)loaded. It is rebuilt when joining a world, once IE's server config
  * has been synced, and when the server sends its own values of our config (see IFConfig#getSynced).
  * Note: IE replaces the tags with String#replaceFirst, so the texts must not contain regex characters such as ( ) [ ] ? * + $
@@ -46,6 +47,10 @@ public final class IFManual {
             case "babies_need_food" -> IFConfig.getSynced(animals.babies_need_food);
             case "adults_need_food" -> IFConfig.getSynced(animals.adults_need_food);
             case "milking_cooldown" -> IFConfig.getSynced(animals.milking_cooldown);
+            // A tag cannot be nested in the text of another one: the cooldown of a sentence only shown when adults need food
+            case "milking_cooldown_if_fed" -> IFConfig.getSynced(animals.adults_need_food) ? String.valueOf(IFConfig.getSynced(animals.milking_cooldown)) : "";
+            case "breeder_time" -> IFConfig.getSynced(animals.breeder_time);
+            case "breeder_food" -> 2 * IFConfig.getSynced(animals.breeder_food);
             case "include_variants" -> IFConfig.getSynced(animals.include_variants);
             case "baby_min_meals" -> Math.min(IFConfig.getSynced(animals.min_meals), IFConfig.getSynced(animals.max_meals));
             case "baby_max_meals" -> Math.max(IFConfig.getSynced(animals.min_meals), IFConfig.getSynced(animals.max_meals));

@@ -1,0 +1,12 @@
+{
+  "loader": "forge:obj",
+  "model": "immersivefarming:models/block/multiblock/breeder/breeder.obj",
+  "flip_v": true,
+  "automatic_culling": false,
+  "visibility": {
+    "frame": false,
+    "gate_left": false,
+    "gate_right": false,
+    "curtain": false
+  }
+}

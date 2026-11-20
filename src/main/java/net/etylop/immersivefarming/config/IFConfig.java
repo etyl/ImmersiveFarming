@@ -176,6 +176,8 @@ public final class IFConfig {
         public final ForgeConfigSpec.BooleanValue include_variants;
         public final ForgeConfigSpec.BooleanValue adults_need_food;
         public final ForgeConfigSpec.IntValue milking_cooldown;
+        public final ForgeConfigSpec.IntValue breeder_time;
+        public final ForgeConfigSpec.IntValue breeder_food;
 
         AnimalConfig(final ForgeConfigSpec.Builder builder) {
             builder.comment("Baby animals (those in the #immersivefarming:needs_food_to_grow entity tag), and adults producing milk, eggs and wool").push("animals");
@@ -198,6 +200,11 @@ public final class IFConfig {
             this.milking_cooldown = builder.comment("When adults need food to produce: seconds before an animal can be milked again (or give another bowl of stew), it must also eat in between",
                             "Chickens lay an egg every 5 to 10 minutes, as in vanilla")
                     .defineInRange("milking_cooldown", 300, 0, 3600);
+            this.breeder_time = builder.comment("Animal breeder: seconds between the meal of the two animals and the birth",
+                            "The parents then rest before they can breed again, as after any breeding (5 minutes for vanilla animals)")
+                    .defineInRange("breeder_time", 30, 1, 3600);
+            this.breeder_food = builder.comment("Animal breeder: food items each of the two animals eats from the trough to breed")
+                    .defineInRange("breeder_food", 1, 1, 32);
             builder.pop();
         }
     }
