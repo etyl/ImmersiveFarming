@@ -12,6 +12,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.Set;
+
 public class IFCreativeTab {
     public static final DeferredRegister<CreativeModeTab> REGISTER =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ImmersiveFarming.MOD_ID);
@@ -21,9 +23,13 @@ public class IFCreativeTab {
                     .title(Component.translatable("itemGroup.immersivefarmingtab"))
                     .icon(() -> new ItemStack(IFBlocks.SPRINKLER.get()))
                     .displayItems((params, output) -> {
+                        // Multiblock items are only obtained by forming the multiblock
+                        Set<Item> hidden = Set.of(
+                                IFMultiblockLogic.COMPOSTER.blockItem().get(),
+                                IFMultiblockLogic.BREEDER.blockItem().get(),
+                                IFMultiblockLogic.ANIMAL_PEN.blockItem().get());
                         for (RegistryObject<Item> item : IFItems.ITEMS.getEntries()) {
-                            // Only obtained by forming the multiblock
-                            if (item.get() != IFMultiblockLogic.COMPOSTER.blockItem().get())
+                            if (!hidden.contains(item.get()))
                                 output.accept(item.get());
                         }
                     })
