@@ -129,6 +129,9 @@ dependencies {
     // Farmer's Delight at runtime only, to test compatibility (rich soil, crops) in the dev run
     runtimeOnly(fg.deobf("maven.modrinth:farmers-delight:${version_farmersdelight}"))
 
+    // Immersive Petroleum at runtime only, to test compatibility with other IE addons (shared manual autoload.json)
+    runtimeOnly(fg.deobf("maven.modrinth:immersivepetroleum:${version_immersivepetroleum}"))
+
     // Jade: optional, shows whether baby animals are hungry (the plugin is only loaded when Jade is installed)
     compileOnly(fg.deobf("maven.modrinth:jade:${version_jade}"))
     runtimeOnly(fg.deobf("maven.modrinth:jade:${version_jade}"))
