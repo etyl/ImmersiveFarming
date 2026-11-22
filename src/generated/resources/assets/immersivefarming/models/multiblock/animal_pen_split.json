@@ -1,0 +1,112 @@
+{
+  "parent": "minecraft:block/block",
+  "dynamic": false,
+  "inner_model": {
+    "parent": "minecraft:block/block",
+    "automatic_culling": false,
+    "flip_v": true,
+    "loader": "forge:obj",
+    "model": "immersivefarming:models/block/multiblock/animal_pen/animal_pen.obj",
+    "textures": {
+      "particle": "immersiveengineering:block/metal/sheetmetal_steel",
+      "texture": "immersiveengineering:block/metal/sheetmetal_steel"
+    },
+    "visibility": {
+      "feed": false,
+      "gate": false
+    }
+  },
+  "loader": "immersiveengineering:basic_split",
+  "split_parts": [
+    [
+      -1,
+      0,
+      0
+    ],
+    [
+      -1,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      1
+    ],
+    [
+      -1,
+      0,
+      -1
+    ],
+    [
+      0,
+      0,
+      -1
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      -1
+    ],
+    [
+      -1,
+      1,
+      -1
+    ],
+    [
+      -1,
+      1,
+      0
+    ],
+    [
+      -1,
+      1,
+      1
+    ],
+    [
+      0,
+      1,
+      -1
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      1
+    ],
+    [
+      1,
+      1,
+      -1
+    ],
+    [
+      1,
+      1,
+      0
+    ],
+    [
+      1,
+      1,
+      1
+    ]
+  ]
+}

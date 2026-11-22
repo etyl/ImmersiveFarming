@@ -8,6 +8,7 @@
   * Jade shows whether an animal is hungry or fed, how many meals a baby still needs, and when an animal can be milked again
   * Works with animals from other mods: variants of these animals (whose entity class extends one of them) need to be fed too (the #immersivefarming:grows_without_food entity tag excludes animals)
   * Animal Breeder: a 4x3x2 steel multiblock to automatically breed animals. 
+  * Animal Pen: a 3x3x2 steel multiblock that slaughters animals.
 * Crop diseases
   * Bordeaux mixture: crafted from copper dust, gunpowder and a water bottle, right click a growing crop to cure it and protect it until it is fully grown (8 uses per bottle)
   * Treated water is renamed to Pesticide, and is now made in the Refinery from plant oil and water (2 mB + 18 mB), instead of copper and sulfur dust in the Mixer
@@ -27,6 +28,7 @@
 * On a server, the engineer's manual and JEI now show the server's config values instead of the player's
 * Improved the Composter model (thanks to Peter!)
 * New Sowing Machine model
+* Fixed flowing water washing away a block of the Industrial Composter, which broke it
 
 
 ##### Version 1.20.1-0.4.1

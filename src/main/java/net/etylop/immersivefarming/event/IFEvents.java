@@ -5,8 +5,11 @@ import net.etylop.immersivefarming.block.IFBlocks;
 import net.etylop.immersivefarming.block.custom.FeedingTroughBlock;
 import net.etylop.immersivefarming.block.custom.Soil;
 import net.etylop.immersivefarming.block.entity.SprinklerRegistry;
+import net.etylop.immersivefarming.block.multiblocks.AnimalStall;
 import net.etylop.immersivefarming.block.multiblocks.breeder.BreederBlock;
 import net.etylop.immersivefarming.block.multiblocks.breeder.BreederLogic;
+import net.etylop.immersivefarming.block.multiblocks.animalpen.AnimalPenBlock;
+import net.etylop.immersivefarming.block.multiblocks.animalpen.AnimalPenLogic;
 import net.etylop.immersivefarming.config.IFConfig;
 import net.etylop.immersivefarming.entity.AnimalFeeding;
 import net.etylop.immersivefarming.entity.Livestock;
@@ -28,6 +31,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -136,17 +140,24 @@ public class IFEvents {
         public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
             if (!event.getEntity().isSecondaryUseActive() || event.getItemStack().isEmpty()) return;
             Block block = event.getLevel().getBlockState(event.getPos()).getBlock();
-            // The trough of the breeder also takes the food of the animals in its stalls: it sorts the items out itself
-            if (block instanceof BreederBlock
+            // The troughs of the breeder and of the animal pen also take the food of the animals in their stalls:
+            // they sort the items out themselves, and pass on anything else, which is then placed against them
+            if (block instanceof BreederBlock || block instanceof AnimalPenBlock
                     || (block instanceof FeedingTroughBlock && Livestock.isFeed(event.getItemStack(), event.getLevel()))) {
                 event.setUseBlock(Event.Result.ALLOW);
             }
         }
 
-        // The animals in an animal breeder don't hop about
+        // The animals held in a stall (animal breeder, animal pen) don't hop about
         @SubscribeEvent
         public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
-            BreederLogic.onJump(event.getEntity());
+            AnimalStall.onJump(event.getEntity());
+        }
+
+        // What an animal pen harvests comes out of its hatch
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void onLivingDrops(LivingDropsEvent event) {
+            AnimalPenLogic.onDrops(event);
         }
 
         // What an animal breeder breeds comes out of its hatch

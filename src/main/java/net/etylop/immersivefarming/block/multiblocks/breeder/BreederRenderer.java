@@ -7,31 +7,26 @@ import blusunrize.immersiveengineering.client.utils.RenderUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.etylop.immersivefarming.block.multiblocks.GateBars;
 import net.etylop.immersivefarming.block.utils.IFDynamicModel;
 import net.etylop.immersivefarming.client.FeedColors;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 /**
  * Moving parts of the animal breeder: the two gates, the strip curtain of the hatch, and the food in the trough.
  * They are objects of the model of the multiblock (see {@link BreederMultiblock#GATES}), where they are at rest:
  * gates closed, curtain hanging, trough full. Each has its own model, which shows this object only, and is moved
- * from there. Heights are in pixels.
+ * from there (see {@link GateBars} for the gates). Heights are in pixels.
  */
 public class BreederRenderer extends IEBlockEntityRenderer<MultiblockBlockEntityMaster<BreederLogic.State>>
 {
     private static final IFDynamicModel[] GATES = new IFDynamicModel[BreederLogic.STALLS];
-    private static final Bars[] BARS = new Bars[BreederLogic.STALLS];
+    private static final GateBars[] BARS = new GateBars[BreederLogic.STALLS];
     private static IFDynamicModel CURTAIN;
     private static IFDynamicModel FEED;
 
@@ -75,16 +70,9 @@ public class BreederRenderer extends IEBlockEntityRenderer<MultiblockBlockEntity
 
         for(int stall = 0; stall < BreederLogic.STALLS; stall++)
         {
-            // Each bar slides up on its own, none changes shape
             float open = 1-Mth.lerp(partialTicks, state.prevGate[stall], state.gate[stall]);
-            Bars bars = getBars(stall);
-            for(int bar = 0; bar < bars.quads.size(); bar++)
-            {
-                pose.pushPose();
-                pose.translate(0, bars.rise[bar]*open, 0);
-                RenderUtils.renderModelTESRFast(bars.quads.get(bar), buffer, pose, light, overlay);
-                pose.popPose();
-            }
+            BARS[stall] = GateBars.of(BARS[stall], GATES[stall], GATE_TOP);
+            BARS[stall].render(pose, buffer, open, light, overlay);
         }
 
         // Pushed open from the inside, around its top edge
@@ -108,82 +96,5 @@ public class BreederRenderer extends IEBlockEntityRenderer<MultiblockBlockEntity
             pose.popPose();
         }
         pose.popPose();
-    }
-
-    /** The bars of a gate, worked out again when the models are reloaded */
-    private static Bars getBars(int stall)
-    {
-        BakedModel model = GATES[stall].get();
-        Bars bars = BARS[stall];
-        if(bars==null||bars.model!=model)
-        {
-            bars = Bars.of(model, GATES[stall].getNullQuads());
-            BARS[stall] = bars;
-        }
-        return bars;
-    }
-
-    /**
-     * A gate is a single object of the model, made of several bars: whatever is apart from the rest in height.
-     * When the gate opens, the bars are stacked under the top of the machine, the highest first.
-     *
-     * @param quads the faces of each bar, from the lowest to the highest
-     * @param rise how far each bar goes up when the gate opens (blocks)
-     */
-    private record Bars(BakedModel model, List<List<BakedQuad>> quads, float[] rise)
-    {
-        private static final float GAP = 1e-3F;
-
-        static Bars of(BakedModel model, List<BakedQuad> all)
-        {
-            List<BakedQuad> sorted = new ArrayList<>(all);
-            sorted.sort(Comparator.comparingDouble(Bars::minY));
-            List<List<BakedQuad>> quads = new ArrayList<>();
-            List<float[]> ranges = new ArrayList<>();
-            for(BakedQuad quad : sorted)
-            {
-                float[] range = ranges.isEmpty()?null: ranges.get(ranges.size()-1);
-                if(range==null||minY(quad) > range[1]+GAP)
-                {
-                    // Above everything seen so far: another bar
-                    quads.add(new ArrayList<>());
-                    range = new float[]{minY(quad), maxY(quad)};
-                    ranges.add(range);
-                }
-                range[1] = Math.max(range[1], maxY(quad));
-                quads.get(quads.size()-1).add(quad);
-            }
-            float[] rise = new float[quads.size()];
-            float top = GATE_TOP;
-            for(int bar = quads.size()-1; bar >= 0; bar--)
-            {
-                float[] range = ranges.get(bar);
-                top -= range[1]-range[0];
-                rise[bar] = top-range[0];
-            }
-            return new Bars(model, quads, rise);
-        }
-
-        private static float minY(BakedQuad quad)
-        {
-            float min = Float.MAX_VALUE;
-            for(int vertex = 0; vertex < 4; vertex++)
-                min = Math.min(min, y(quad, vertex));
-            return min;
-        }
-
-        private static float maxY(BakedQuad quad)
-        {
-            float max = -Float.MAX_VALUE;
-            for(int vertex = 0; vertex < 4; vertex++)
-                max = Math.max(max, y(quad, vertex));
-            return max;
-        }
-
-        /** Height of a corner of a face: baked vertices are 8 integers each, the position comes first */
-        private static float y(BakedQuad quad, int vertex)
-        {
-            return Float.intBitsToFloat(quad.getVertices()[vertex*8+1]);
-        }
     }
 }

@@ -8,10 +8,12 @@ import blusunrize.immersiveengineering.api.multiblocks.blocks.env.IMultiblockLev
 import blusunrize.immersiveengineering.api.multiblocks.blocks.logic.IMultiblockLogic;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.logic.IMultiblockState;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.util.CapabilityPosition;
+import blusunrize.immersiveengineering.api.multiblocks.blocks.util.RelativeBlockFace;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.util.ShapeType;
 import blusunrize.immersiveengineering.api.multiblocks.blocks.util.StoredCapability;
 import blusunrize.immersiveengineering.api.tool.conveyor.ConveyorHandler;
-import net.etylop.immersivefarming.ImmersiveFarming;
+import net.etylop.immersivefarming.block.multiblocks.AnimalStall;
+import net.etylop.immersivefarming.block.multiblocks.TroughHandler;
 import net.etylop.immersivefarming.config.IFConfig;
 import net.etylop.immersivefarming.entity.Livestock;
 import net.minecraft.core.BlockPos;
@@ -28,9 +30,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -47,13 +46,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -72,7 +66,9 @@ import static net.etylop.immersivefarming.block.multiblocks.breeder.BreederShape
  * Right clicking the back of the machine opens or closes the gate on that side: opening a gate lets its animal
  * out, a gate closed on an empty stall keeps animals out.</li>
  * <li>The animals are real entities, kept apart by the middle section and held in their stalls by the shapes of the
- * multiblock: nothing is stored in the machine but who they are.</li>
+ * multiblock: nothing is stored in the machine but who they are (see {@link AnimalStall}).</li>
+ * <li>The trough is filled through the feed input above it, at the top of the machine (by hoppers, conveyors, or
+ * items dropped on it), and as a feeding trough: by hand, and from its sides.</li>
  * <li>When both animals are ready to breed, each eats from the trough, and after a while the newborn comes out of
  * the hatch between the two gates: it is put down right behind the machine, on the conveyor if there is one.
  * The parents then rest, as after any breeding (vanilla cooldown), and start again.</li>
@@ -87,8 +83,10 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
     public static final int TROUGH_CAPACITY = 64;
     private static final BlockPos TROUGH_POS = new BlockPos(1, 0, 2);
     private static final BlockPos HATCH_POS = new BlockPos(1, 0, 0);
-    /** The blocks of the trough */
+    /** The blocks of the trough, and those above them */
     private static final int TROUGH_Z = 2;
+    /** Top of the feed input, above the trough */
+    private static final CapabilityPosition FEED_INPUT = new CapabilityPosition(1, 1, TROUGH_Z, RelativeBlockFace.UP);
 
     /** How far behind an open gate an animal is taken in (blocks) */
     private static final double APPROACH = 0.875;
@@ -104,18 +102,8 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
     private static final double OUTPUT_HEIGHT = 0.8;
     /** The newborn is put down on what is behind the hatch (a conveyor, a carpet, a slab), up to this height */
     private static final double OUTPUT_MAX_STEP = 0.5;
-    /** An animal this close to its place in its stall is not walked there, but brought there slowly (blocks) */
-    private static final double HOLD_RADIUS = 0.2;
-    private static final double HOLD_SPEED = 0.03;
-    /** How far the head of a held animal turns away from the trough (degrees): its body follows its head */
-    private static final float HOLD_HEAD_TURN = 20;
-    /** Ticks before the gate of a missing animal opens: entities are loaded after block entities */
-    private static final int MISSING_GRACE = 100;
     /** Ticks the hatch stays open after a birth (client) */
     private static final int FLAP_TIME = 30;
-
-    /** Persistent data of an animal: game time of the last tick a breeder walked or held it, see {@link #onJump} */
-    private static final String CONTROLLED = ImmersiveFarming.MOD_ID+":breeder";
 
     /** Where the entities spawned by the breeding in progress are moved (server thread), see {@link #onEntityJoin} */
     @Nullable
@@ -133,6 +121,8 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
         boolean sync = false;
         for(int i = 0; i < STALLS; i++)
             sync |= tickStall(state, level, i);
+        if(level.shouldTickModulo(8))
+            state.trough.collect(level.getRawLevel(), state.feedAreas);
         sync |= tickBreeding(context, state, level);
         if(sync)
             context.markDirtyAndSync();
@@ -141,46 +131,13 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
     /** @return whether the clients must be told of a change */
     private boolean tickStall(State state, IMultiblockLevel level, int index)
     {
-        final Stall stall = state.stalls[index];
-        final Level rawLevel = level.getRawLevel();
-        if(stall.occupant!=null)
-        {
-            Animal animal = findOccupant(rawLevel, stall, state.interior[index]);
-            if(animal==null)
-            {
-                // Dead, taken away... or not loaded yet
-                if(++stall.missingTicks < MISSING_GRACE)
-                    return false;
-                stall.clear();
-                playSound(level, gatePos(index), SoundEvents.IRON_TRAPDOOR_OPEN);
-                return true;
-            }
-            stall.missingTicks = 0;
-            hold(animal, state.standing[index], state.troughYaw);
+        // The second stall only takes a partner the first animal can breed with
+        Animal other = state.stalls[1-index].getAnimal();
+        AnimalStall.Change change = state.stalls[index].tick(level.getRawLevel(), state.places[index],
+                animal -> isAccepted(animal)&&animal!=other&&(other==null||canBreed(animal, other)));
+        if(change==AnimalStall.Change.NONE)
             return false;
-        }
-        // Closed by hand on an empty stall: nothing comes in
-        if(stall.closed)
-            return false;
-        // The animal that was let out is not taken back in before it has left
-        if(stall.released!=null&&rawLevel.getEntitiesOfClass(Animal.class, state.doorway[index], a -> a.getUUID().equals(stall.released)).isEmpty())
-            stall.released = null;
-
-        Animal other = state.stalls[1-index].animal;
-        Animal candidate = findCandidate(rawLevel, state.doorway[index], state.standing[index], other, stall.released);
-        if(candidate==null)
-            return false;
-        // Walk it in, whatever it was doing
-        control(candidate);
-        Vec3 target = state.standing[index];
-        candidate.getMoveControl().setWantedPosition(target.x, candidate.getY(), target.z, 1);
-        if(!isInside(candidate.getBoundingBox(), state.interior[index])||!isAlone(rawLevel, candidate, state.interior[index]))
-            return false;
-        stall.occupant = candidate.getUUID();
-        stall.animal = candidate;
-        stall.missingTicks = 0;
-        stall.closed = true;
-        playSound(level, gatePos(index), SoundEvents.IRON_TRAPDOOR_CLOSE);
+        playSound(level, gatePos(index), change==AnimalStall.Change.TAKEN?SoundEvents.IRON_TRAPDOOR_CLOSE: SoundEvents.IRON_TRAPDOOR_OPEN);
         return true;
     }
 
@@ -327,67 +284,10 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
 
     // ------------------------------------------------------------------ animals
 
-    /** The animal held in this stall, null if it is gone */
-    @Nullable
-    private static Animal findOccupant(Level level, Stall stall, AABB interior)
-    {
-        Animal known = stall.animal;
-        if(known!=null&&known.isAlive()&&known.level()==level&&known.getUUID().equals(stall.occupant)
-                &&known.getBoundingBox().intersects(interior))
-            return known;
-        stall.animal = null;
-        // Not looked for every tick: its gate stays closed in the meantime
-        if(stall.missingTicks%10!=0)
-            return null;
-        List<Animal> found = level.getEntitiesOfClass(Animal.class, interior, a -> a.isAlive()&&a.getUUID().equals(stall.occupant));
-        if(!found.isEmpty())
-            stall.animal = found.get(0);
-        return stall.animal;
-    }
-
-    /** The animal to take in: the one closest to its place in the stall, among those standing in the doorway */
-    @Nullable
-    private static Animal findCandidate(Level level, AABB doorway, Vec3 standing, @Nullable Animal partner, @Nullable UUID released)
-    {
-        Animal best = null;
-        double bestDistance = Double.MAX_VALUE;
-        for(Animal animal : level.getEntitiesOfClass(Animal.class, doorway, a -> isAccepted(a)&&doorway.contains(a.getX(), a.getY()+0.5, a.getZ())))
-        {
-            if(animal==partner||animal.getUUID().equals(released)||(partner!=null&&!canBreed(animal, partner)))
-                continue;
-            double distance = animal.distanceToSqr(standing);
-            if(distance < bestDistance)
-            {
-                best = animal;
-                bestDistance = distance;
-            }
-        }
-        return best;
-    }
-
-    /** The animal a gate closed by hand is closed on: the one closest to its place, among those inside the stall */
-    @Nullable
-    private static Animal findInside(Level level, AABB interior, Vec3 standing)
-    {
-        Animal best = null;
-        double bestDistance = Double.MAX_VALUE;
-        for(Animal animal : level.getEntitiesOfClass(Animal.class, interior, a -> isAccepted(a)&&isInside(a.getBoundingBox(), interior)))
-        {
-            double distance = animal.distanceToSqr(standing);
-            if(distance < bestDistance)
-            {
-                best = animal;
-                bestDistance = distance;
-            }
-        }
-        return best;
-    }
-
     /** Adults that fit in a stall, on their own feet. Leashed animals are left to whoever leads them */
     private static boolean isAccepted(Animal animal)
     {
-        return animal.isAlive()&&!animal.isBaby()&&!animal.isLeashed()&&!animal.isPassenger()&&!animal.isVehicle()
-                &&animal.getBbWidth() <= MAX_WIDTH&&animal.getBbHeight() <= MAX_HEIGHT;
+        return AnimalStall.isFree(animal)&&!animal.isBaby()&&animal.getBbWidth() <= MAX_WIDTH&&animal.getBbHeight() <= MAX_HEIGHT;
     }
 
     /**
@@ -412,80 +312,6 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
             first.setInLoveTime(firstLove);
             second.setInLoveTime(secondLove);
         }
-    }
-
-    /** Whether the animal has passed the gate (the walls keep it in on the other sides) */
-    private static boolean isInside(AABB animal, AABB interior)
-    {
-        final double margin = 1e-4;
-        return animal.minX >= interior.minX-margin&&animal.maxX <= interior.maxX+margin
-                &&animal.minZ >= interior.minZ-margin&&animal.maxZ <= interior.maxZ+margin;
-    }
-
-    /**
-     * The gate does not close on anything else: a baby following its parent, an animal that is not taken in,
-     * or a player, who would be locked in
-     */
-    private static boolean isAlone(Level level, Animal animal, AABB interior)
-    {
-        return level.getEntitiesOfClass(LivingEntity.class, interior, e -> e!=animal&&e.isAlive()&&!e.isSpectator()).isEmpty();
-    }
-
-    /** Called every tick an animal is walked in or held: it stops going its own way */
-    private static void control(Animal animal)
-    {
-        animal.getNavigation().stop();
-        animal.getPersistentData().putLong(CONTROLLED, animal.level().getGameTime());
-    }
-
-    /**
-     * Called when a living entity jumps. Mobs jump whenever they walk inside a block that has a collision shape
-     * (they take it for a step), which the blocks of the stalls have: the animals of a breeder would hop about.
-     */
-    public static void onJump(LivingEntity entity)
-    {
-        if(entity.level().isClientSide||!entity.getPersistentData().contains(CONTROLLED))
-            return;
-        if(entity.level().getGameTime()-entity.getPersistentData().getLong(CONTROLLED) > 2)
-            return;
-        // The event comes after the jump: take its upward speed back
-        Vec3 motion = entity.getDeltaMovement();
-        entity.setDeltaMovement(motion.x, Math.min(motion.y, 0), motion.z);
-    }
-
-    /**
-     * Keeps an animal still in its stall: at its place, facing the trough. It no longer walks or jumps of its own
-     * accord (wandering, following food, fleeing), and only looks around a little.
-     */
-    private static void hold(Animal animal, Vec3 standing, float troughYaw)
-    {
-        control(animal);
-        // The animal sets these flags back itself every few ticks (Mob#updateControlFlags), which is before the
-        // breeder ticks: they stay off as long as it is held, and nothing is left to undo when it is let go
-        animal.goalSelector.disableControlFlag(Goal.Flag.MOVE);
-        animal.goalSelector.disableControlFlag(Goal.Flag.JUMP);
-        // Animals with a brain (goats, camels, ...) walk to this instead
-        animal.getBrain().eraseMemory(MemoryModuleType.WALK_TARGET);
-
-        double dx = standing.x-animal.getX();
-        double dz = standing.z-animal.getZ();
-        double distance = Math.sqrt(dx*dx+dz*dz);
-        if(distance > HOLD_RADIUS)
-        {
-            // Just taken in, or pushed away
-            animal.getMoveControl().setWantedPosition(standing.x, animal.getY(), standing.z, 0.8);
-            return;
-        }
-        Vec3 motion = animal.getDeltaMovement();
-        animal.setDeltaMovement(0, Math.min(motion.y, 0), 0);
-        if(distance > 1e-3)
-        {
-            double step = Math.min(distance, HOLD_SPEED)/distance;
-            animal.setPos(animal.getX()+dx*step, animal.getY(), animal.getZ()+dz*step);
-        }
-        animal.setYRot(Mth.approachDegrees(animal.getYRot(), troughYaw, 10));
-        animal.setYBodyRot(Mth.approachDegrees(animal.yBodyRot, troughYaw, 10));
-        animal.setYHeadRot(Mth.rotateIfNecessary(animal.getYHeadRot(), troughYaw, HOLD_HEAD_TURN));
     }
 
     // ------------------------------------------------------------------ status
@@ -541,67 +367,30 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
     )
     {
         int gate = BreederShapes.getGate(posInMultiblock);
+        // The blocks of the trough, not those above them
+        boolean trough = posInMultiblock.getZ()==TROUGH_Z&&posInMultiblock.getY()==0;
         // The trough and the gates are all there is to use
-        if(posInMultiblock.getZ()!=TROUGH_Z&&gate < 0)
+        if(!trough&&gate < 0)
+            return InteractionResult.PASS;
+        // What the trough does not take is used as on any other block, and so is what is held when sneaking: a block
+        // is placed against the machine. Sneaking only uses the trough, to put a whole stack of food in it
+        ItemStack held = player.getItemInHand(hand);
+        if(!held.isEmpty()&&(trough?!ctx.getState().trough.isItemValid(0, held): player.isSecondaryUseActive()))
             return InteractionResult.PASS;
         if(isClient)
             return InteractionResult.SUCCESS;
         final State state = ctx.getState();
         final IMultiblockLevel level = ctx.getLevel();
-        if(posInMultiblock.getZ()==TROUGH_Z)
-            clickTrough(state, level, player, hand);
+        if(trough)
+            state.trough.click(player, hand, sound -> playSound(level, TROUGH_POS, sound));
         else
         {
             state.locate(level);
-            Stall stall = state.stalls[gate];
-            if(stall.closed)
-            {
-                // Opens: its animal is free to leave, and the gate will close behind the next one
-                stall.released = stall.occupant;
-                stall.clear();
-                playSound(level, gatePos(gate), SoundEvents.IRON_TRAPDOOR_OPEN);
-            }
-            else
-            {
-                // Closes, on the animal standing in the stall if there is one: an empty stall stays empty
-                Animal inside = findInside(level.getRawLevel(), state.interior[gate], state.standing[gate]);
-                stall.closed = true;
-                stall.released = null;
-                stall.missingTicks = 0;
-                stall.animal = inside;
-                stall.occupant = inside==null?null: inside.getUUID();
-                playSound(level, gatePos(gate), SoundEvents.IRON_TRAPDOOR_CLOSE);
-            }
+            boolean closed = state.stalls[gate].toggle(level.getRawLevel(), state.places[gate], BreederLogic::isAccepted);
+            playSound(level, gatePos(gate), closed?SoundEvents.IRON_TRAPDOOR_CLOSE: SoundEvents.IRON_TRAPDOOR_OPEN);
             ctx.markDirtyAndSync();
         }
         return InteractionResult.CONSUME;
-    }
-
-    /** As a feeding trough: food is added one item at a time, or a stack when sneaking, and taken back with an empty hand */
-    private static void clickTrough(State state, IMultiblockLevel level, Player player, InteractionHand hand)
-    {
-        final Trough trough = state.trough;
-        ItemStack held = player.getItemInHand(hand);
-        if(held.isEmpty())
-        {
-            if(player.isShiftKeyDown()&&!trough.getFood().isEmpty())
-            {
-                ItemStack taken = trough.extractItem(0, TROUGH_CAPACITY, false);
-                if(!player.getInventory().add(taken))
-                    player.drop(taken, false);
-                playSound(level, TROUGH_POS, SoundEvents.ITEM_PICKUP);
-            }
-            return;
-        }
-        if(!state.isFeed(held))
-            return;
-        ItemStack toInsert = held.copyWithCount(player.isShiftKeyDown()?held.getCount(): 1);
-        int inserted = toInsert.getCount()-trough.insertItem(0, toInsert, false).getCount();
-        if(inserted==0)
-            return;
-        if(!player.getAbilities().instabuild)
-            held.shrink(inserted);
-        playSound(level, TROUGH_POS, SoundEvents.COMPOSTER_FILL);
     }
 
     private static BlockPos gatePos(int stall)
@@ -617,8 +406,9 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
     @Override
     public <T> LazyOptional<T> getCapability(IMultiblockContext<State> ctx, CapabilityPosition position, Capability<T> cap)
     {
-        // The trough is filled from any of its sides, as a feeding trough
-        if(cap==ForgeCapabilities.ITEM_HANDLER&&position.posInMultiblock().getZ()==TROUGH_Z)
+        // The trough is filled through the top of the feed input, and from any of its sides, as a feeding trough
+        final BlockPos pos = position.posInMultiblock();
+        if(cap==ForgeCapabilities.ITEM_HANDLER&&(FEED_INPUT.equalsOrNullFace(position)||(pos.getZ()==TROUGH_Z&&pos.getY()==0)))
             return ctx.getState().troughInput.cast(ctx);
         return LazyOptional.empty();
     }
@@ -677,50 +467,10 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
 
     // ------------------------------------------------------------------ state
 
-    /** One of the two stalls */
-    public static class Stall
-    {
-        /** The animal held in the stall, null if the stall is free */
-        @Nullable
-        private UUID occupant;
-        /** Its entity, when it is known (not saved) */
-        @Nullable
-        private Animal animal;
-        private int missingTicks;
-        /** Whether the gate is closed: behind its animal, or by hand on an empty stall (synced) */
-        public boolean closed;
-        /** The animal let out when the gate was opened by hand, until it has left the doorway (not saved) */
-        @Nullable
-        private UUID released;
-
-        /** Lets the animal go, and opens the gate */
-        private void clear()
-        {
-            if(animal!=null)
-                animal.getPersistentData().remove(CONTROLLED);
-            occupant = null;
-            animal = null;
-            missingTicks = 0;
-            closed = false;
-        }
-
-        /** The animal held in the stall, if it is there */
-        @Nullable
-        private Animal getAnimal()
-        {
-            return occupant!=null&&animal!=null&&animal.isAlive()&&missingTicks==0?animal: null;
-        }
-
-        public boolean isOccupied()
-        {
-            return occupant!=null;
-        }
-    }
-
     public static class State implements IMultiblockState
     {
-        public final Stall[] stalls = {new Stall(), new Stall()};
-        public final Trough trough;
+        public final AnimalStall[] stalls = {new AnimalStall(), new AnimalStall()};
+        public final TroughHandler trough;
         /** Ticks since the animals ate, 0 when they are not breeding */
         private int progress;
         /** Number of births, the hatch opens when it changes (synced) */
@@ -738,13 +488,9 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
 
         // Absolute positions, computed once (server only)
         private boolean located;
-        /** Inside of each stall */
-        private final AABB[] interior = new AABB[STALLS];
-        /** Inside of each stall, and what lies behind its gate */
-        private final AABB[] doorway = new AABB[STALLS];
-        /** Where the animal of each stall stands */
-        private final Vec3[] standing = new Vec3[STALLS];
-        private float troughYaw;
+        private final AnimalStall.Place[] places = new AnimalStall.Place[STALLS];
+        /** Where dropped food is taken: on the feed input, and in the trough */
+        private AABB[] feedAreas;
 
         private final Supplier<Level> level;
         private final StoredCapability<IItemHandler> troughInput;
@@ -754,25 +500,31 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
             final Runnable markDirty = ctx.getMarkDirtyRunnable();
             final Runnable sync = ctx.getSyncRunnable();
             this.level = ctx.levelSupplier();
-            this.trough = new Trough(this, () -> {
+            this.trough = new TroughHandler(TROUGH_CAPACITY, this::isFeed, () -> {
                 markDirty.run();
                 sync.run();
             });
-            this.troughInput = new StoredCapability<>(new InsertOnlyHandler(trough));
+            this.troughInput = new StoredCapability<>(trough.insertOnly());
         }
 
         private void locate(IMultiblockLevel level)
         {
             if(located)
                 return;
-            for(int i = 0; i < STALLS; i++)
-            {
-                interior[i] = level.toAbsolute(BreederShapes.px(STALL_MIN_X[i], 0, STALL_MIN_Z, STALL_MAX_X[i], 32, STALL_MAX_Z));
-                doorway[i] = level.toAbsolute(BreederShapes.px(STALL_MIN_X[i], 0, -APPROACH*16, STALL_MAX_X[i], 32, STALL_MAX_Z));
-                standing[i] = level.toAbsolute(new Vec3((STALL_MIN_X[i]+STALL_MAX_X[i])/32D, 1/16D, STAND_Z/16));
-            }
             // The front of the multiblock (in IE's terms) is the direction its gates face
-            troughYaw = Mth.wrapDegrees(level.getOrientation().front().toYRot()+180);
+            float troughYaw = Mth.wrapDegrees(level.getOrientation().front().toYRot()+180);
+            for(int i = 0; i < STALLS; i++)
+                places[i] = new AnimalStall.Place(
+                        level.toAbsolute(BreederShapes.px(STALL_MIN_X[i], 0, STALL_MIN_Z, STALL_MAX_X[i], 32, STALL_MAX_Z)),
+                        level.toAbsolute(BreederShapes.px(STALL_MIN_X[i], 0, -APPROACH*16, STALL_MAX_X[i], 32, STALL_MAX_Z)),
+                        level.toAbsolute(new Vec3((STALL_MIN_X[i]+STALL_MAX_X[i])/32D, 1/16D, STAND_Z/16)),
+                        troughYaw
+                );
+            feedAreas = new AABB[]{
+                    level.toAbsolute(BreederShapes.px(BreederShapes.INPUT_MIN_X, 32-2, BreederShapes.INPUT_MIN_Z,
+                            BreederShapes.INPUT_MAX_X, 32+8, BreederShapes.INPUT_MAX_Z)),
+                    level.toAbsolute(BreederShapes.px(2, 10, STALL_MAX_Z, 62, 20, 48))
+            };
             located = true;
         }
 
@@ -781,7 +533,7 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
         {
             if(Livestock.isFeed(stack, level.get()))
                 return true;
-            for(Stall stall : stalls)
+            for(AnimalStall stall : stalls)
             {
                 Animal animal = stall.getAnimal();
                 if(animal!=null&&animal.isFood(stack))
@@ -800,13 +552,7 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
         public void writeSaveNBT(CompoundTag nbt)
         {
             for(int i = 0; i < STALLS; i++)
-            {
-                CompoundTag stall = new CompoundTag();
-                if(stalls[i].occupant!=null)
-                    stall.putUUID("occupant", stalls[i].occupant);
-                stall.putBoolean("closed", stalls[i].closed);
-                nbt.put("stall"+i, stall);
-            }
+                nbt.put("stall"+i, stalls[i].save());
             nbt.put("food", trough.getFood().save(new CompoundTag()));
             nbt.putInt("progress", progress);
             nbt.putInt("births", births);
@@ -816,12 +562,7 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
         public void readSaveNBT(CompoundTag nbt)
         {
             for(int i = 0; i < STALLS; i++)
-            {
-                CompoundTag stall = nbt.getCompound("stall"+i);
-                stalls[i].occupant = stall.hasUUID("occupant")?stall.getUUID("occupant"): null;
-                stalls[i].animal = null;
-                stalls[i].closed = stall.getBoolean("closed");
-            }
+                stalls[i].load(nbt.getCompound("stall"+i));
             trough.setFood(ItemStack.of(nbt.getCompound("food")));
             progress = nbt.getInt("progress");
             births = nbt.getInt("births");
@@ -858,90 +599,6 @@ public class BreederLogic implements IMultiblockLogic<BreederLogic.State>, IServ
             else if(newBirths!=births)
                 flapTicks = FLAP_TIME;
             births = newBirths;
-        }
-    }
-
-    /** A single slot of {@link #TROUGH_CAPACITY} items: the trough holds one kind of food until it is empty */
-    public static class Trough extends ItemStackHandler
-    {
-        private final State state;
-        private final Runnable onChange;
-
-        private Trough(State state, Runnable onChange)
-        {
-            super(1);
-            this.state = state;
-            this.onChange = onChange;
-        }
-
-        public ItemStack getFood()
-        {
-            return stacks.get(0);
-        }
-
-        /** When loading: no update */
-        private void setFood(ItemStack food)
-        {
-            stacks.set(0, food);
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack)
-        {
-            ItemStack current = stacks.get(slot);
-            return current.isEmpty()?state.isFeed(stack): ItemHandlerHelper.canItemStacksStack(current, stack);
-        }
-
-        @Override
-        public int getSlotLimit(int slot)
-        {
-            return TROUGH_CAPACITY;
-        }
-
-        @Override
-        protected void onContentsChanged(int slot)
-        {
-            onChange.run();
-        }
-    }
-
-    /** Automation can fill the trough, but not empty it */
-    private record InsertOnlyHandler(IItemHandler inner) implements IItemHandler
-    {
-        @Override
-        public int getSlots()
-        {
-            return inner.getSlots();
-        }
-
-        @Override
-        public @NotNull ItemStack getStackInSlot(int slot)
-        {
-            return inner.getStackInSlot(slot);
-        }
-
-        @Override
-        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
-        {
-            return inner.insertItem(slot, stack, simulate);
-        }
-
-        @Override
-        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
-        {
-            return ItemStack.EMPTY;
-        }
-
-        @Override
-        public int getSlotLimit(int slot)
-        {
-            return inner.getSlotLimit(slot);
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack)
-        {
-            return inner.isItemValid(slot, stack);
         }
     }
 }

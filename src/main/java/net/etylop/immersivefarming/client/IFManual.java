@@ -51,6 +51,7 @@ public final class IFManual {
             case "milking_cooldown_if_fed" -> IFConfig.getSynced(animals.adults_need_food) ? String.valueOf(IFConfig.getSynced(animals.milking_cooldown)) : "";
             case "breeder_time" -> IFConfig.getSynced(animals.breeder_time);
             case "breeder_food" -> 2 * IFConfig.getSynced(animals.breeder_food);
+            case "animal_pen_energy" -> IFConfig.getSynced(animals.animal_pen_energy);
             case "include_variants" -> IFConfig.getSynced(animals.include_variants);
             case "baby_min_meals" -> Math.min(IFConfig.getSynced(animals.min_meals), IFConfig.getSynced(animals.max_meals));
             case "baby_max_meals" -> Math.max(IFConfig.getSynced(animals.min_meals), IFConfig.getSynced(animals.max_meals));

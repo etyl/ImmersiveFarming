@@ -9,6 +9,7 @@ import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.block.IFMultiblockLogic;
 import net.etylop.immersivefarming.block.IFMultiblocks;
 import net.etylop.immersivefarming.block.multiblocks.breeder.BreederMultiblock;
+import net.etylop.immersivefarming.block.multiblocks.animalpen.AnimalPenMultiblock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -63,6 +64,7 @@ public class IFBlockStateProvider extends BlockStateProvider {
         ImmersiveFarming.log.info("Registering block states...");
         composter();
         breeder();
+        animalPen();
     }
 
     private void composter(){
@@ -87,6 +89,17 @@ public class IFBlockStateProvider extends BlockStateProvider {
 
         // No mirrored state
         createMultiblock(IFMultiblocks.BREEDER.getBlock(), normal, null, IEProperties.MULTIBLOCKSLAVE, IEProperties.FACING_HORIZONTAL, null, 180, texture);
+    }
+
+    private void animalPen(){
+        // As the breeder: the textures are named in the .mtl, the moving parts are drawn by the renderer, no mirrored state
+        ResourceLocation texture = new ResourceLocation("immersiveengineering", "block/metal/sheetmetal_steel");
+        ResourceLocation model = modLoc("models/block/multiblock/animal_pen/animal_pen.obj");
+
+        BlockModelBuilder normal = multiblockModel(IFMultiblockLogic.ANIMAL_PEN.block().get(), model, texture, "", IFMultiblocks.ANIMAL_PEN, false,
+                AnimalPenMultiblock.getMovingParts().toArray(String[]::new));
+
+        createMultiblock(IFMultiblocks.ANIMAL_PEN.getBlock(), normal, null, IEProperties.MULTIBLOCKSLAVE, IEProperties.FACING_HORIZONTAL, null, 180, texture);
     }
 
     /** @param hiddenParts objects of the model that are not part of the block model */

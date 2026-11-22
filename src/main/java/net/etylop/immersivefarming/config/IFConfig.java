@@ -178,6 +178,7 @@ public final class IFConfig {
         public final ForgeConfigSpec.IntValue milking_cooldown;
         public final ForgeConfigSpec.IntValue breeder_time;
         public final ForgeConfigSpec.IntValue breeder_food;
+        public final ForgeConfigSpec.IntValue animal_pen_energy;
 
         AnimalConfig(final ForgeConfigSpec.Builder builder) {
             builder.comment("Baby animals (those in the #immersivefarming:needs_food_to_grow entity tag), and adults producing milk, eggs and wool").push("animals");
@@ -205,6 +206,9 @@ public final class IFConfig {
                     .defineInRange("breeder_time", 30, 1, 3600);
             this.breeder_food = builder.comment("Animal breeder: food items each of the two animals eats from the trough to breed")
                     .defineInRange("breeder_food", 1, 1, 32);
+            this.animal_pen_energy = builder.comment("Animal pen: energy (FE) used to slaughter a grown animal, the only thing the machine uses energy for",
+                            "(it stores up to 32000 FE)")
+                    .defineInRange("animal_pen_energy", 8000, 0, 32000);
             builder.pop();
         }
     }

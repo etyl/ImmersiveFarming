@@ -1,0 +1,15 @@
+Animal Pen
+From newborn to harvest
+
+<&multiblock>
+The Animal Pen slaughters the animals it is given: a grown animal after a few seconds, a baby once it has grown up in the pen.
+
+Its stall is behind a gate at the back, between two coils. The open gate takes in the animal standing in front of it, and closes behind it. Animals carried past the gate, or up to it, by a conveyor are taken in too.
+
+The trough is at the front. It is filled through the input at the top of the machine, on its left: by a hopper, a conveyor, or by dropping food on it. It can also be filled by hand, as a Feeding Trough.<config;b;immersivefarming.babies_need_food; A baby eats from it whenever it is hungry, and grows.; Babies grow up on their own here: the trough is not needed.>
+
+The power plug is on top of the machine, at the back. The coils electrocute the grown animal: this takes <config;i;immersivefarming.animal_pen_energy> Flux, and is all the machine uses energy for. What the animal drops comes out of the output on the left of the trough, under the input: into the inventory or onto the conveyor in front of it, onto the ground otherwise. The gate then opens for the next animal.
+
+A redstone signal on the box on the right of the trough stops the coils, as it stops a Tesla Coil: the grown animal waits in its stall. An Engineer's Screwdriver on this box inverts the signal.
+
+Right click the back of the machine to open or close the gate: opening it lets the animal out, and a gate closed on an empty stall keeps animals out. Pets are never taken in.

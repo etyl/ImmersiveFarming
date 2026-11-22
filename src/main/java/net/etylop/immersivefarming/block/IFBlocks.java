@@ -26,13 +26,23 @@ import java.util.function.Supplier;
 
 public class IFBlocks {
 
-    public static final BlockBehaviour.Properties METAL_NO_OCCLUSION = Block.Properties.of()
-            .mapColor(MapColor.METAL)
-            .sound(SoundType.METAL)
-            .strength(3, 15)
-            .requiresCorrectToolForDrops()
-            .isViewBlocking((state, blockReader, pos) -> false)
-            .noOcclusion();
+    public static final BlockBehaviour.Properties METAL_NO_OCCLUSION = metalNoOcclusion();
+
+    /**
+     * Blocks of the multiblocks. Their shapes depend on their block entity, so the game takes them for small blocks
+     * that fluids wash away: a stream of water would replace one of them, and break the machine
+     */
+    public static final BlockBehaviour.Properties METAL_MULTIBLOCK = metalNoOcclusion().forceSolidOn();
+
+    private static BlockBehaviour.Properties metalNoOcclusion() {
+        return Block.Properties.of()
+                .mapColor(MapColor.METAL)
+                .sound(SoundType.METAL)
+                .strength(3, 15)
+                .requiresCorrectToolForDrops()
+                .isViewBlocking((state, blockReader, pos) -> false)
+                .noOcclusion();
+    }
 
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, ImmersiveFarming.MOD_ID);

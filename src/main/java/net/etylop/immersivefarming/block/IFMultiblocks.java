@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import net.etylop.immersivefarming.block.multiblocks.IFTemplateMultiblock;
 import net.etylop.immersivefarming.block.multiblocks.breeder.BreederMultiblock;
 import net.etylop.immersivefarming.block.multiblocks.composter.ComposterMultiblock;
+import net.etylop.immersivefarming.block.multiblocks.animalpen.AnimalPenMultiblock;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -25,6 +26,7 @@ public class IFMultiblocks {
 
     public static IFTemplateMultiblock COMPOSTER;
     public static IFTemplateMultiblock BREEDER;
+    public static IFTemplateMultiblock ANIMAL_PEN;
 
     public static void init()
     {
@@ -83,6 +85,7 @@ public class IFMultiblocks {
         //Init multiblocks
         COMPOSTER = register(new ComposterMultiblock());
         BREEDER = register(new BreederMultiblock());
+        ANIMAL_PEN = register(new AnimalPenMultiblock());
 
     }
 
