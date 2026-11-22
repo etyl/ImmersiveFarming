@@ -39,7 +39,7 @@ public final class IFConfig {
         return Holder.COMMON_SPEC.isLoaded();
     }
 
-    /* Values received from the server, by config path ("cloche.energy_multiplier"), empty when not connected to a server */
+    /* Values received from the server, by config path ("animals.babies_need_food"), empty when not connected to a server */
     private static volatile Map<String, Object> synced = Map.of();
 
     /** The value to show on the client: the server's value if it sent one, else the local value (or its default if not loaded yet) */
@@ -92,12 +92,10 @@ public final class IFConfig {
     public static class Common {
         public final CartConfig plow;
         public final CropConfig cropConfig;
-        public final ClocheConfig cloche;
         public final AnimalConfig animals;
 
         Common(final ForgeConfigSpec.Builder builder) {
             this.cropConfig = new CropConfig(builder);
-            this.cloche = new ClocheConfig(builder);
             this.animals = new AnimalConfig(builder);
             builder.comment("Configuration for all carts and cart-like vehicles\n\nDefault pull_animals = " + referencePullAnimals()).push("carts");
             this.plow = new CartConfig(builder, "plow", "The Plow, an animal pulled machine for tilling soil");
@@ -141,30 +139,6 @@ public final class IFConfig {
                 .defineInRange("slow_speed", -0.0D, -1.0D, 0.0D);
             this.pullSpeed = builder.comment("Base speed modifier applied to animals (-0.5 = half normal speed)")
                 .defineInRange("pull_speed", -0.5D, -1.0D, 0.0D);
-            builder.pop();
-        }
-    }
-
-    public static class ClocheConfig {
-        public final ForgeConfigSpec.BooleanValue require_fertilizer;
-        public final ForgeConfigSpec.DoubleValue energy_multiplier;
-        public final ForgeConfigSpec.IntValue fertilizer_consumption;
-        public final ForgeConfigSpec.DoubleValue growth_time_multiplier;
-
-        ClocheConfig(final ForgeConfigSpec.Builder builder) {
-            builder.comment("Immersive Engineering garden cloche").push("cloche");
-            this.require_fertilizer = builder.comment("Whether the cloche needs a fertilizer to work (Industrial Fertilizer, see the immersiveengineering:fertilizer recipes)",
-                            "If false, the cloche runs on water alone and fertilizers only speed it up, as in Immersive Engineering")
-                    .define("require_fertilizer", true);
-            this.energy_multiplier = builder.comment("Multiplier applied to the cloche energy consumption (Immersive Engineering server config, 8 FE/t by default)",
-                            "The cloche can't receive more than 256 FE/t (or the IE consumption value if higher)")
-                    .defineInRange("energy_multiplier", 4.0D, 0.0D, 32.0D);
-            this.fertilizer_consumption = builder.comment("Multiplier applied to the speed at which the cloche uses up its fertilizer",
-                            "(2 = a dose lasts half the Immersive Engineering server config duration)")
-                    .defineInRange("fertilizer_consumption", 1, 1, 100);
-            this.growth_time_multiplier = builder.comment("Multiplier applied to the time a plant takes to grow in the cloche (Immersive Engineering recipe time)",
-                            "(4 = plants take four times as long to grow, the fertilizer consumption per minute is unchanged)")
-                    .defineInRange("growth_time_multiplier", 4.0D, 0.01D, 100.0D);
             builder.pop();
         }
     }

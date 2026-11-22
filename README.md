@@ -35,9 +35,6 @@ Features are explained in the engineer's manual, but here is an overview:
   * Bordeaux mixture (copper dust, gunpowder and a water bottle) cures a crop by hand and protects it until it is fully grown, 8 uses per bottle
   * Using pesticide in the sprinklers will prevent and cure diseases automatically
   * Pesticide is made in the Refinery from plant oil and water
-* Garden Cloche
-  * The Immersive Engineering cloche is rebalanced so that it doesn't outclass field farming
-  * It needs Industrial Fertilizer to work, grows plants slower and uses more energy
 * Raising animals
   * Baby farm animals (cows, mooshrooms, sheep, pigs, chickens, goats and rabbits) need 4 to 8 meals to grow up (configurable)
   * After eating, a baby grows for a while, then stops growing until it eats again
@@ -51,8 +48,8 @@ Features are explained in the engineer's manual, but here is an overview:
 
 * **Immersive Engineering** (required)
   * Pesticide is made in the Refinery, sprinklers and the Industrial Composter connect to fluid pipes, and the composter takes items from conveyors
-  * The Garden Cloche is rebalanced, and all features are explained in the engineer's manual
-* **JEI**: recipes for the Industrial Composter and the composting bin, information pages for pesticide and the feeding trough, and the Garden Cloche recipes reflect the fertilizer requirement
+  * All features are explained in the engineer's manual
+* **JEI**: recipes for the Industrial Composter and the composting bin, and information pages for pesticide and the feeding trough
 * **Jade**: looking at an animal shows whether it is hungry or fed, how many meals a baby still needs, and when it can be milked again
 * **Farmer's Delight**: tilling rich soil gives rich soil, rich soil farmland becomes rich soil, and breaking rich soil gives back Farmer's Delight rich soil. The sowing machine plants tomato and cabbage seeds
 * **Crops from other mods**: any plant growing on soil follows the irrigation, fertilization and sunlight rules, and any tool able to till (modded hoes included) makes soil

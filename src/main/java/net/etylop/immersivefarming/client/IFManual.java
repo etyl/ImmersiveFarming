@@ -1,11 +1,9 @@
 package net.etylop.immersivefarming.client;
 
 import blusunrize.immersiveengineering.api.ManualHelper;
-import blusunrize.immersiveengineering.common.config.IEServerConfig;
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.config.IFConfig;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
 
@@ -13,8 +11,8 @@ import net.minecraftforge.fml.ModList;
  * Exposes config values to the engineer's manual, so that entries can use
  * {@code <config;b;immersivefarming.KEY;text if true;text if false>} or {@code <config;i;immersivefarming.KEY>}.
  * Tags cannot be nested: IE reads a tag up to the first {@code >}, and fails to load the entry (and those after it) otherwise.
- * The manual text is built when resources are (re)loaded. It is rebuilt when joining a world, once IE's server config
- * has been synced, and when the server sends its own values of our config (see IFConfig#getSynced).
+ * The manual text is built when resources are (re)loaded. It is rebuilt when joining a world,
+ * and when the server sends its own values of our config (see IFConfig#getSynced).
  * Note: IE replaces the tags with String#replaceFirst, so the texts must not contain regex characters such as ( ) [ ] ? * + $
  */
 public final class IFManual {
@@ -41,7 +39,6 @@ public final class IFManual {
     private static Object getConfigValue(String key) {
         if (!key.startsWith(PREFIX)) return null;
         IFConfig.CropConfig config = IFConfig.get().cropConfig;
-        IFConfig.ClocheConfig cloche = IFConfig.get().cloche;
         IFConfig.AnimalConfig animals = IFConfig.get().animals;
         return switch (key.substring(PREFIX.length())) {
             case "babies_need_food" -> IFConfig.getSynced(animals.babies_need_food);
@@ -64,19 +61,7 @@ public final class IFManual {
             case "harvests_to_enrich" -> IFConfig.getSynced(config.harvests_to_enrich);
             case "rich_yield_bonus_percent" -> (int) Math.round(IFConfig.getSynced(config.rich_yield_bonus) * 100);
             case "flooded_growth_percent" -> (int) Math.round(IFConfig.getSynced(config.flooded_growth) * 100);
-            case "cloche_require_fertilizer" -> IFConfig.getSynced(cloche.require_fertilizer);
-            // Actual values, combining IE's server config (synced to the client) with ours
-            case "cloche_energy" -> (int) Math.round(ieConfig(IEServerConfig.MACHINES.cloche_consumption, 8) * IFConfig.getSynced(cloche.energy_multiplier));
-            case "cloche_dose_seconds" -> ieConfig(IEServerConfig.MACHINES.cloche_fertilizer, 6000) / IFConfig.getSynced(cloche.fertilizer_consumption) / 20;
             default -> null;
         };
-    }
-
-    private static int ieConfig(ForgeConfigSpec.IntValue value, int fallback) {
-        try {
-            return value.get();
-        } catch (IllegalStateException e) { // server config not loaded yet
-            return fallback;
-        }
     }
 }

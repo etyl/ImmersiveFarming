@@ -7,16 +7,11 @@
   "mixins": [
     "AgeableMobMixin",
     "ChickenMixin",
-    "ClocheBlockEntityMixin",
     "CropBlockMixin",
     "PitcherCropBlockMixin",
     "StemBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "client": [
-    "ClocheRecipeCategoryMixin",
-    "ManualInstanceMixin"
-  ]
+  }
 }

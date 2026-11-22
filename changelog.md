@@ -18,14 +18,7 @@
   * Mature crops on rich soil give 30% more loot (configurable)
   * Farmer's Delight compatibility: tilling rich soil gives rich soil, rich soil farmland becomes rich soil, and breaking rich soil gives back Farmer's Delight rich soil
 * Compost can now be applied by right clicking a crop, to fertilize the soil below it
-* Garden Cloche rebalance (configurable)
-  * The cloche needs Industrial Fertilizer to work: it no longer runs on water alone, and stops once its current dose runs out
-  * Industrial Fertilizer is the only cloche fertilizer (bone meal, slag, saltpeter and sulfur are removed), and no longer speeds up growth
-  * Plants take 4 times as long to grow
-  * Uses 4 times more energy (32 FE/t)
-  * A dose (Industrial Fertilizer + 250 mB of water) lasts 5 minutes: a harvest uses about 0.5 Industrial Fertilizer
-  * The cloche's engineer's manual entry moved to the Immersive Farming section, rewritten to match these rules and the config values
-* On a server, the engineer's manual and JEI now show the server's config values instead of the player's
+* On a server, the engineer's manual now shows the server's config values instead of the player's
 * Improved the Composter model (thanks to Peter!)
 * New Sowing Machine model
 * Fixed flowing water washing away a block of the Industrial Composter, which broke it
