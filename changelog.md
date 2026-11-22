@@ -1,27 +1,26 @@
-##### Unreleased
+##### Version 1.20.1-0.5
 
 * Raising animals
-  * Baby farm animals (the #immersivefarming:needs_food_to_grow entity tag) need 4 to 8 meals to grow up: after eating, a baby grows for a while, then stops growing until it eats again. Adults are not affected
-  * Babies eat their breeding food, by hand (only when hungry, instead of the vanilla growth boost) or from a Feeding Trough
-  * Adults must eat to produce: cows, goats and mooshrooms before each milking or bowl of stew (which can then only happen every 5 minutes), chickens before each egg, sheared sheep before their wool grows back (grazing grass still works). Hand feeding a hungry adult also makes it breed, as in vanilla
-  * Feeding Trough: a 2 block long wooden trough, crafted from planks and wooden slabs, hungry animals within 16 blocks walk to it and eat. It is built as a piece of fence: fences connect to its ends, and animals can't jump over it. Its content takes the color of the food inside. It holds 64 items (anything these animals breed with, plus the #immersivefarming:animal_feed item tag), filled by hand or by hoppers and conveyors
-  * Jade shows whether an animal is hungry or fed, how many meals a baby still needs, and when an animal can be milked again
-  * Works with animals from other mods: variants of these animals (whose entity class extends one of them) need to be fed too (the #immersivefarming:grows_without_food entity tag excludes animals)
-  * Animal Breeder: a 4x3x2 steel multiblock to automatically breed animals. 
-  * Animal Pen: a 3x3x2 steel multiblock that slaughters animals.
+  * Baby farm animals need 4 to 8 meals to grow up
+  * Adults must eat before producing milk, eggs or wool
+  * Feeding Trough: hungry animals nearby walk to it and eat, can be filled by hoppers and conveyors
+  * Animal Breeder: multiblock that breeds two animals automatically
+  * Animal Pen: powered multiblock that slaughters animals
+  * Jade shows hunger and growth info
+  * Works with modded animals (configurable with entity tags)
 * Crop diseases
-  * Bordeaux mixture: crafted from copper dust, gunpowder and a water bottle, right click a growing crop to cure it and protect it until it is fully grown (8 uses per bottle)
-  * Treated water is renamed to Pesticide, and is now made in the Refinery from plant oil and water (2 mB + 18 mB), instead of copper and sulfur dust in the Mixer
+  * Bordeaux mixture: cures a crop and protects it until fully grown
+  * Treated water renamed to Pesticide, now made in the Refinery from plant oil and water
   * The trowel shows whether a crop is protected
 * Rich soil
-  * Soil becomes rich after 8 crops grown to maturity on it (configurable), and stays rich
-  * Mature crops on rich soil give 30% more loot (configurable)
-  * Farmer's Delight compatibility: tilling rich soil gives rich soil, rich soil farmland becomes rich soil, and breaking rich soil gives back Farmer's Delight rich soil
-* Compost can now be applied by right clicking a crop, to fertilize the soil below it
-* On a server, the engineer's manual now shows the server's config values instead of the player's
-* Improved the Composter model (thanks to Peter!)
+  * Soil becomes rich after 8 harvests, mature crops on it give 30% more loot (configurable)
+  * Farmer's Delight rich soil compatibility
+* Compost can be applied by right clicking a crop
+* Engineer's manual shows the server's config values
+* New Composter model (thanks to Peter!)
 * New Sowing Machine model
-* Fixed flowing water washing away a block of the Industrial Composter, which broke it
+* Improved sprinkler performance
+* Fixed flowing water breaking the Industrial Composter
 
 
 ##### Version 1.20.1-0.4.1

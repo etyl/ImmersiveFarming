@@ -1,6 +1,6 @@
 # Description
 
-Immersive Farming is an addon for Immersive Engineering focusing on extending the farming experience. Players will be able to craft sprinklers or a watering can, to better irrigate their crops and make pesticides to prevent their crops from getting sick and dying. It also adds 2 multiblocks, the composting bin and industrial composter to make compost and speed up crop growth, and a feeding trough to raise baby animals. Immersive Farming also introduces several new mechanics that change vanilla farming and animal husbandry.
+Immersive Farming is an addon for Immersive Engineering focusing on extending the farming experience. Players will be able to craft sprinklers or a watering can, to better irrigate their crops and make pesticides to prevent their crops from getting sick and dying. It also adds multiblocks: the composting bin and industrial composter to make compost and speed up crop growth, and the animal breeder and animal pen to automate livestock, along with a feeding trough to raise baby animals. Immersive Farming also introduces several new mechanics that change vanilla farming and animal husbandry.
 
 # Features
 
@@ -42,6 +42,8 @@ Features are explained in the engineer's manual, but here is an overview:
   * Animals eat their breeding food: feed them by hand when they are hungry, or fill a feeding trough
   * Feeding trough: hungry animals within 16 blocks walk to it and eat. It holds 64 items of a single kind of food. Its content takes the color of the food inside
   * The trough is built as a piece of fence: place it in the fence of a pen, fences connect to its ends and animals can't jump over it
+  * Animal Breeder: a multiblock that breeds two animals from its trough, and releases the newborn through a hatch
+  * Animal Pen: a powered multiblock that raises babies and slaughters grown animals, outputting their drops into an inventory or onto a conveyor
 
 
 # Mod compatibility
@@ -61,7 +63,7 @@ Features are explained in the engineer's manual, but here is an overview:
   * The feeding trough accepts the breeding food of all these animals, plus the #immersivefarming:animal_feed item tag
   * Animals using the newer brain AI (such as goats) go to the trough too
 * **Carts**: by default, the plow and sowing machine can be pulled by any animal that wears a saddle and isn't steered with an item (horses, donkeys, mules, camels and their modded equivalents), the list can be changed with the pull_animals config
-* **Automation**: the feeding trough can be filled by hoppers, conveyors and item pipes from either side (but not emptied, so a hopper below won't drain it), and the carts' inventories are accessible to item handlers
+* **Automation**: the feeding trough can be filled by hoppers, conveyors and item pipes from either side (but not emptied, so a hopper below won't drain it), the Animal Breeder and Animal Pen are fed through their top input and the pen outputs drops to an inventory or conveyor, and the carts' inventories are accessible to item handlers
 
 
 # More information
