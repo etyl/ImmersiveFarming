@@ -1,3 +1,7 @@
+##### Version 1.20.1-0.5.1
+
+* Fixed the Immersive Farming manual entries conflicting with other Immersive Engineering addons
+
 ##### Version 1.20.1-0.5
 
 * Raising animals
